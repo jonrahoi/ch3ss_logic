@@ -1,0 +1,25 @@
+{
+  "name": "ch3ss_logic",
+  "version": "1.0.0",
+  "description": "logic for 3d chess",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonrahoi/ch3ss_logic.git"
+  },
+  "keywords": [
+    "chess"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonrahoi/ch3ss_logic/issues"
+  },
+  "homepage": "https://github.com/jonrahoi/ch3ss_logic#readme",
+  "dependencies": {
+    "javascript-state-machine": "^3.1.0"
+  }
+}
