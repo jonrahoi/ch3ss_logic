@@ -1,4 +1,4 @@
-export enum Piece {
+export enum PieceType {
     Pawn,
     Knight,
     Rook,
@@ -8,3 +8,14 @@ export enum Piece {
     King
 }
 
+export class Piece {
+    isWhite: boolean
+    type: PieceType
+    constructor(type: PieceType, white: boolean = false) {
+        this.isWhite = white
+        this.type = type
+    }
+    validMoves(cb: any, position: any): number[] {
+        return [1, 2, 3]
+    }
+}
