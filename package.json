@@ -5,7 +5,7 @@
   "main": "dist/Game.js",
   "scripts": {
     "build": "run-s clean && run-p build:*",
-    "build:main": "rm -r dist/*; tsc -p tsconfig.json",
+    "build:main": "rm -r dist/*; tsc --declaration",
     "build:module": "tsc -p tsconfig.module.json",
     "fix": "run-s fix:*",
     "fix:prettier": "prettier \"src/**/*.ts\" --write",

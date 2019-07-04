@@ -1,3 +1,5 @@
+"use strict";
+exports.__esModule = true;
 var Board = (function () {
     function Board() {
         this.pieces = Board.setupBoard();
@@ -15,4 +17,5 @@ var Board = (function () {
     };
     return Board;
 }());
+exports["default"] = Board;
 //# sourceMappingURL=Board.js.map

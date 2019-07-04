@@ -1,12 +1,13 @@
 "use strict";
 exports.__esModule = true;
+var Board_1 = require("./Board");
 var Game = (function () {
     function Game() {
         this.moves = 0;
-        this.board = new Board();
+        this.board = new Board_1["default"]();
     }
     Game.prototype.newGame = function () {
-        this.board = new Board();
+        this.board = new Board_1["default"]();
     };
     Game.prototype.move = function (a, b) {
         return true;

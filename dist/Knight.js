@@ -1,3 +1,4 @@
+"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -11,6 +12,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+exports.__esModule = true;
 var Knight = (function (_super) {
     __extends(Knight, _super);
     function Knight() {
@@ -58,4 +60,5 @@ var Knight = (function (_super) {
     };
     return Knight;
 }(Piece));
+exports["default"] = Knight;
 //# sourceMappingURL=Knight.js.map

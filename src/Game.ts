@@ -3,7 +3,8 @@ import Board from "./Board"
 // game writes to JSON file for history of moves
 
 export class Game {
-
+    // id?
+    // name?
     moves: number = 0;
     board: Board = new Board();
 
