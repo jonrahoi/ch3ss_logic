@@ -1,4 +1,5 @@
 // game contains a board (with pieces)
+import Board from "./Board"
 // game writes to JSON file for history of moves
 
 export class Game {

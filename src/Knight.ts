@@ -1,4 +1,4 @@
-class Knight extends Piece {
+export default class Knight extends Piece {
     canMoveTo(position: Position) {
         const distance = this.position.distanceFrom(position)
 

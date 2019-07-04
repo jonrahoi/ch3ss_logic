@@ -1,7 +1,9 @@
+import Knight from "./Knight"
+
 // game contains a board (with pieces)
 // game contains history of moves
 
-class Board {
+export default class Board {
 
     private pieces = Board.setupBoard()
 
