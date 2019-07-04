@@ -10,25 +10,21 @@
 
 
 type Color = "Black" | "White"
-type LevelZ = "A" | "B" | "C" | "D" | "E"
-type FileX = "a" | "b" | "c" | "d" | "e"
-type RankY = 1 | 2 | 3 | 4 | 5
-
 
 class Position {
     constructor(
-        private levelZ: LevelZ,
-        private fileX: FileX,
-        private rankY: RankY
-    )
-    {}
-    distanceFrom(position: Position) {
+        private x: number,
+        private y: number,
+        private z: number
+    ) { }
+    distanceFrom(position: Position): {z: number, x: number, y: number} {
         return {
-            levelZ: Math.abs(position.levelZ.charCodeAt(0 - this.levelZ.charCodeAt(0))),
-            fileX: Math.abs(position.fileX.charCodeAt(0 - this.fileX.charCodeAt(0))),
-            rankY: Math.abs(position.rankY = this.rankY)
+            z: Math.abs(position.z - this.z),
+            x: Math.abs(position.x  - this.x),
+            y: Math.abs(position.y = this.y)
         }
     }
+    move() {}
 }
 
 
@@ -48,15 +44,14 @@ abstract class Piece {
     protected position: Position
     constructor(
         private readonly color: Color,
-        levelZ: LevelZ,
-        fileX: FileX,
-        rankY: RankY
+        x: number,
+        y: number,
+        z: number
     ) {
-        this.position = new Position(levelZ, fileX, rankY)
+        this.position = new Position(z, x, y)
     }
     moveTo(position: Position) {
         this.position = position
     }
     abstract canMoveTo(position: Position): boolean
-
 }

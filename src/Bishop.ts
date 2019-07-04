@@ -1,16 +1,16 @@
 class Bishop extends Piece {
     canMoveTo(position: Position) {
-        let distance = this.position.distanceFrom(position)
+        const distance = this.position.distanceFrom(position)
 
-        if (distance.rankY < 1 && distance.fileX < 1 && distance.levelZ < 1) {
+        if (distance.y < 1 && distance.x < 1 && distance.z < 1) {
             return false; // same postion
         }
 
         // two out of three distance has to be greater than 0
         // those two non-zero numbers have to be equal
 
-        else if (distance.levelZ < 1) {
-            if (distance.rankY == distance.fileX) {
+        else if (distance.z < 1) {
+            if (distance.y == distance.x) {
                 return true;
             }
             else {
@@ -18,8 +18,8 @@ class Bishop extends Piece {
             }
         }
 
-        else if (distance.rankY < 1) {
-            if (distance.levelZ == distance.fileX) {
+        else if (distance.y < 1) {
+            if (distance.z == distance.x) {
                 return true;
             }
             else {
@@ -27,8 +27,8 @@ class Bishop extends Piece {
             }
         }
 
-        else if (distance.fileX < 1) {
-            if (distance.rankY == distance.levelZ) {
+        else if (distance.x < 1) {
+            if (distance.y == distance.z) {
                 return true;
             }
             else {

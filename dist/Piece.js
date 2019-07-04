@@ -1,25 +1,27 @@
-"use strict";
-exports.__esModule = true;
-var PieceType;
-(function (PieceType) {
-    PieceType[PieceType["Pawn"] = 0] = "Pawn";
-    PieceType[PieceType["Knight"] = 1] = "Knight";
-    PieceType[PieceType["Rook"] = 2] = "Rook";
-    PieceType[PieceType["Bishop"] = 3] = "Bishop";
-    PieceType[PieceType["Queen"] = 4] = "Queen";
-    PieceType[PieceType["Unicorn"] = 5] = "Unicorn";
-    PieceType[PieceType["King"] = 6] = "King";
-})(PieceType = exports.PieceType || (exports.PieceType = {}));
-var Piece = (function () {
-    function Piece(type, white) {
-        if (white === void 0) { white = false; }
-        this.isWhite = white;
-        this.type = type;
+var Position = (function () {
+    function Position(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
-    Piece.prototype.validMoves = function (cb, position) {
-        return [1, 2, 3];
+    Position.prototype.distanceFrom = function (position) {
+        return {
+            z: Math.abs(position.z - this.z),
+            x: Math.abs(position.x - this.x),
+            y: Math.abs(position.y = this.y)
+        };
+    };
+    Position.prototype.move = function () { };
+    return Position;
+}());
+var Piece = (function () {
+    function Piece(color, x, y, z) {
+        this.color = color;
+        this.position = new Position(z, x, y);
+    }
+    Piece.prototype.moveTo = function (position) {
+        this.position = position;
     };
     return Piece;
 }());
-exports.Piece = Piece;
 //# sourceMappingURL=Piece.js.map

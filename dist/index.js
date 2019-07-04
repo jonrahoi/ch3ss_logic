@@ -1,13 +1,13 @@
 "use strict";
 exports.__esModule = true;
-var Ch3ss = (function () {
-    function Ch3ss() {
+var Game = (function () {
+    function Game() {
     }
-    Ch3ss.prototype.play = function () { };
-    Ch3ss.prototype.toJSON = function () { };
-    Ch3ss.prototype.fromJSON = function () { };
-    Ch3ss.prototype.toMove = function () { };
-    return Ch3ss;
+    Game.prototype.play = function () { };
+    Game.prototype.toJSON = function () { };
+    Game.prototype.fromJSON = function () { };
+    Game.prototype.toMove = function () { };
+    return Game;
 }());
-exports.Ch3ss = Ch3ss;
+exports.Game = Game;
 //# sourceMappingURL=index.js.map

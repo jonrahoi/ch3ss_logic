@@ -2,9 +2,13 @@ class Knight extends Piece {
     canMoveTo(position: Position) {
         const distance = this.position.distanceFrom(position)
 
-        const z = distance.levelZ;
-        const x = distance.fileX;
-        const y = distance.rankY;
+        const z = distance.z;
+        const x = distance.x;
+        const y = distance.y;
+        // sum of the abs of the distances should be 3
+        // one is zero
+        // none are 3
+
         if (z == 0) {
 
             if (x == 1 && y == 2) {
