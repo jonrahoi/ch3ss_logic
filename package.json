@@ -2,7 +2,7 @@
   "name": "@rahoi/ch3ss_logic",
   "version": "1.0.1",
   "description": "logic for 3d chess",
-  "main": "Game.js",
+  "main": "dist/Game.js",
   "scripts": {
     "build": "run-s clean && run-p build:*",
     "build:main": "rm -r dist/*; tsc -p tsconfig.json",
