@@ -1,5 +1,5 @@
 {
-  "name": "ch3ss_logic",
+  "name": "@rahoi/ch3ss_logic",
   "version": "1.0.0",
   "description": "logic for 3d chess",
   "main": "Game.js",
