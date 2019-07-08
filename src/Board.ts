@@ -3,6 +3,24 @@ import Knight from "./Knight"
 // game contains a board (with pieces)
 // game contains history of moves
 
+class Point {
+    constructor(
+        private x: number,
+        private y: number,
+        private z: number
+    ) { }
+    getX(): number {
+        return this.x;
+    }
+    getY(): number {
+        return this.y;
+    }
+    getZ(): number {
+        return this.z;
+    }
+    move() {}
+}
+
 export default class Board {
 
     private pieces = Board.setupBoard()
@@ -67,6 +85,7 @@ export default class Board {
     }
 
     move(a: Position, b: Position): boolean {
+
     // is there a piece in Position A?
     // are A and B on the Board?
     // move from space a to space b
@@ -79,18 +98,82 @@ export default class Board {
     // is enPassant available? (NOT IN RAUMSCHACH)
     // if it is a pawn is it moving the right direction
 
-    // for (const piece in this.pieces) {
-    //     if (piece instanceof King){
-
-    //     }
-    // }
 
     return true;
     }
 
     // checks if piece in way of the
-    pieceInWay(a: string, b: string): boolean {
+    // pieceInWay(a: number, b: number, c: number, x: number, y: number, z: number): boolean {
+    //     return false;
+    // }
+
+
+    pieceLocatedAt(a: Position): boolean {
+
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (this.pieces[i].isAtPosition(a)) {
+                return true;
+            }
+        }
         return false;
+    }
+
+    spaceNotOnBoard(a: Position): boolean {
+        if (a.getX() < 1 || a.getX() > 5) {
+            return true;
+        }
+        if (a.getY() < 1 || a.getY() > 5) {
+            return true;
+        }
+        if (a.getZ() < 1 || a.getZ() > 5) {
+            return true;
+        }
+
+    }
+
+    pieceInWay(a: Position, b: Position): boolean {
+        // let x = a.getX;
+        // iterate through all the places between position a and position b
+        if (this.getTypeofPiece(a) == "Knight") {
+            return false;
+        }
+        // TODO
+
+        const dx = this.change(a.getX(), b.getX());
+        const dy = this.change(a.getY(), b.getY());
+        const dz = this.change(a.getZ(), b.getZ());
+
+        let c = a;
+        c.setX(a.getX() - dx);
+        c.setY(a.getY() - dy);
+        c.setZ(a.getZ() - dz);
+        while (c != b || this.spaceNotOnBoard(c)) {
+            if (this.pieceLocatedAt(c)) {
+                return true;
+            }
+            c.setX(a.getX() - dx);
+            c.setY(a.getY() - dy);
+            c.setZ(a.getZ() - dz);
+        }
+        return false;
+    }
+
+    getTypeofPiece(a: Position): any {
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (this.pieces[i].isAtPosition(a)) {
+                return this.pieces[i].getName;
+            }
+        }
+    }
+
+    change(a: number, b: number): number {
+        if (a < b) {
+            return -1;
+        }
+        if (a > b) {
+            return 1;
+        }
+        return 0;
     }
 
 }

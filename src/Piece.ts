@@ -24,6 +24,26 @@ class Position {
             y: Math.abs(position.y = this.y)
         }
     }
+    getX(): number {
+        return this.x;
+    }
+    getY(): number {
+        return this.y;
+    }
+    getZ(): number {
+        return this.z;
+    }
+
+
+    setX(x: number) {
+        this.x = x;
+    }
+    setY(y: number) {
+        this.y = y;
+    }
+    setZ(x: number) {
+        this.z = z;
+    }
     move() {}
 }
 
@@ -53,5 +73,34 @@ abstract class Piece {
     moveTo(position: Position) {
         this.position = position
     }
+
+    getPosition(): Position {
+        return this.position;
+    }
+
+    getColor(): Color {
+        return this.color;
+    }
+
+    getName() {
+        return (this as any).constructor.name;
+      }
+
     abstract canMoveTo(position: Position): boolean
+
+    isAtPosition(position: Position): boolean {
+        position.getX
+        if (position.getX == this.position.getX && 
+            position.getY == this.position.getY && 
+            position.getZ == this.position.getZ) {
+                return true;
+        }
+        return false;
+    }
+
+    isBlockingMove(a: Position, b: Position): boolean {
+        // TODO
+        return false;
+
+    }
 }
