@@ -24,6 +24,7 @@ class Point {
 export default class Board {
 
     private pieces = Board.setupBoard()
+    private moves = 0;
 
     private static setupBoard() {
 
@@ -84,30 +85,146 @@ export default class Board {
         ]
     }
 
-    move(a: Position, b: Position): boolean {
+    executeMove(a: Position, b: Position): boolean {
 
-    // is there a piece in Position A?
-    // are A and B on the Board?
-    // move from space a to space b
-    // is there a piece in B?
-    // if so, is it our team?
-    // ask the pieceType if this move shape is good with it
-    // is the King in check?
-    // would the King be in check if you move that piece?
-    // is castling available? (NOT IN RAUMSCHACH)
-    // is enPassant available? (NOT IN RAUMSCHACH)
-    // if it is a pawn is it moving the right direction
+        // are A and B on the Board?
+        if (!this.spaceOnBoard(a) || !this.spaceOnBoard(b)) {
+            return false;
+        }
+        // is there a piece in Position A?
+        if (!this.pieceLocatedAt(a)) {
+            return false;
+        }
 
+        // TODO probably change above method to return the piece at space A, will reduce iterating through pieces and increase efficiency
 
-    return true;
+        // is it the right color
+        if ((this.moves % 2 == 1 && this.colorOfPieceIsWhite(a)) || (this.moves % 2 == 0 && !this.colorOfPieceIsWhite(a))) {
+            return false;
+        }
+        let enemyPieceAtB = false;
+        // is there a piece at space B?
+        // TODO probably change to returning piece at B to increase efficiency
+        if (this.pieceLocatedAt(b)) {
+            // is the piece there on the same team?
+            if ((this.moves % 2 == 0 && this.colorOfPieceIsWhite(b)) || (this.moves % 2 == 1 && !this.colorOfPieceIsWhite(b))) {
+                return false;
+            }
+            enemyPieceAtB = true;
+        }
+        // is the move shape correct for that piece
+        if (!this.moveShapeCorrectForPiece(a, b)) {
+            return false;
+        }
+        let whoseTurn = "White";
+        if (this.moves % 2 == 1) {
+            whoseTurn = "Black";
+        }
+        // get current location of king
+        const whoseTurnKingPosition = this.getLocationOfKingGivenColor(whoseTurn);
+
+        // is the King in check?, if you're king is in check then you have to move the king
+        if (this.playersKingInCheckAtSpace(whoseTurn, whoseTurnKingPosition) && this.getLocationOfKingGivenColor(whoseTurn) != a) {
+            return false;
+        }
+        // is King moving into check?
+        if (this.playersKingInCheckAtSpace(whoseTurn, b)) {
+            return false;
+        }
+        // if it is a pawn is it moving the right direction
+        if (this.getTypeofPiece(a) instanceof Pawn) {
+            if (!this.pawnMoveDirectionCorrect(whoseTurn, a, b)) {
+                return false;
+            }
+        }
+        // delete piece if there
+        if (enemyPieceAtB) {
+            this.deletePieceAtPosition(b);
+        }
+        // move pieces
+        this.getPieceLocatedAt(a).moveTo(b);
+        // increment move count
+        this.moves++;
+        return true; // move executed successfully
+
+        // TODO
+        // is castling available? (NOT IN RAUMSCHACH)
+        // is enPassant available? (NOT IN RAUMSCHACH)
     }
 
-    // checks if piece in way of the
-    // pieceInWay(a: number, b: number, c: number, x: number, y: number, z: number): boolean {
-    //     return false;
-    // }
+    pawnMoveDirectionCorrect(whoseTurn: string, a: Position, b: Position): boolean {
+        // if white needs to move up(dz is positive) or across (dy is positive)
+        // if black needs to move down(dz is negative) or across (dy is positive)
+        const dy = this.slope(a.getY(), b.getY());
+        const dz = this.slope(a.getZ(), b.getZ());
+        if (whoseTurn.localeCompare("White") && dy >= 0 && dz >= 0) {
+            return true;
+        }
+        if (whoseTurn.localeCompare("Black") && dy <= 0 && dz <= 0) {
+            return true;
+        }
+        return false;
+    }
 
+    deletePieceAtPosition(b: Position) {
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (!this.pieces[i].isAtPosition(b)) {
+                delete this.pieces[i];
+                return;
+            }
+        }
+    }
+    // TODO check, checkmate, draw
+    isKingInCheckNow(): boolean {
 
+        return false;
+    }
+
+    isKingCheckMated(): boolean {
+        // is the
+        return false;
+    }
+
+    // check for draw
+    canKingMove(): boolean {
+
+        return true;
+    }
+
+    playersKingInCheckAtSpace(whoseTurn: string, positionKing: Position): boolean {
+        for (let i = 0; i < this.pieces.length; i++) {
+            // if opposing team, can move to where the King is, and isn't blocked
+            if (!this.pieces[i].getColor().localeCompare("whoseTurn") && 
+            this.pieces[i].canMoveTo(positionKing) && 
+            !this.pieceInWay(this.pieces[i].getPosition(), positionKing)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    getLocationOfKingGivenColor(color: string): Position {
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (this.pieces[i] instanceof King && this.pieces[i].getColor().localeCompare(color)) {
+                return this.pieces[i].getPosition();
+            }
+        }
+
+    }
+
+    moveShapeCorrectForPiece(a: Position, b: Position): boolean {
+
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (this.pieces[i].isAtPosition(a)) {
+                if (this.pieces[i].canMoveTo(b)) {
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
     pieceLocatedAt(a: Position): boolean {
 
         for (let i = 0; i < this.pieces.length; i++) {
@@ -118,17 +235,35 @@ export default class Board {
         return false;
     }
 
-    spaceNotOnBoard(a: Position): boolean {
+    getPieceLocatedAt(a: Position): Piece {
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (this.pieces[i].isAtPosition(a)) {
+                return this.pieces[i];
+            }
+        }
+    }
+
+    colorOfPieceIsWhite(a: Position): boolean {
+
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (this.pieces[i].isAtPosition(a) && this.pieces[i].getColor().localeCompare("White") == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    spaceOnBoard(a: Position): boolean {
         if (a.getX() < 1 || a.getX() > 5) {
-            return true;
+            return false;
         }
         if (a.getY() < 1 || a.getY() > 5) {
-            return true;
+            return false;
         }
         if (a.getZ() < 1 || a.getZ() > 5) {
-            return true;
+            return false;
         }
-
+        return true;
     }
 
     pieceInWay(a: Position, b: Position): boolean {
@@ -137,17 +272,16 @@ export default class Board {
         if (this.getTypeofPiece(a) == "Knight") {
             return false;
         }
-        // TODO
 
-        const dx = this.change(a.getX(), b.getX());
-        const dy = this.change(a.getY(), b.getY());
-        const dz = this.change(a.getZ(), b.getZ());
-
-        let c = a;
+        const dx = this.slope(a.getX(), b.getX());
+        const dy = this.slope(a.getY(), b.getY());
+        const dz = this.slope(a.getZ(), b.getZ());
+        let c: Position;
+        c = a;
         c.setX(c.getX() + dx);
         c.setY(c.getY() + dy);
         c.setZ(c.getZ() + dz);
-        while (c != b || this.spaceNotOnBoard(c)) {
+        while (c != b && this.spaceOnBoard(c)) {
             if (this.pieceLocatedAt(c)) {
                 return true;
             }
@@ -166,7 +300,7 @@ export default class Board {
         }
     }
 
-    change(a: number, b: number): number {
+    slope(a: number, b: number): number {
         if (a < b) {
             return 1;
         }
@@ -178,5 +312,4 @@ export default class Board {
 
     // TODO taking a piece code, removing from board
     // TODO checkmates, draw
-
 }
