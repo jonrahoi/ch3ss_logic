@@ -144,16 +144,16 @@ export default class Board {
         const dz = this.change(a.getZ(), b.getZ());
 
         let c = a;
-        c.setX(a.getX() - dx);
-        c.setY(a.getY() - dy);
-        c.setZ(a.getZ() - dz);
+        c.setX(c.getX() + dx);
+        c.setY(c.getY() + dy);
+        c.setZ(c.getZ() + dz);
         while (c != b || this.spaceNotOnBoard(c)) {
             if (this.pieceLocatedAt(c)) {
                 return true;
             }
-            c.setX(a.getX() - dx);
-            c.setY(a.getY() - dy);
-            c.setZ(a.getZ() - dz);
+            c.setX(c.getX() + dx);
+            c.setY(c.getY() + dy);
+            c.setZ(c.getZ() + dz);
         }
         return false;
     }
@@ -168,12 +168,15 @@ export default class Board {
 
     change(a: number, b: number): number {
         if (a < b) {
-            return -1;
+            return 1;
         }
         if (a > b) {
-            return 1;
+            return -1;
         }
         return 0;
     }
+
+    // TODO taking a piece code, removing from board
+    // TODO checkmates, draw
 
 }
