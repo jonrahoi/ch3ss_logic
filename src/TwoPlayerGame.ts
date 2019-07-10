@@ -101,4 +101,3 @@ export class TwoPlayerGame {
         return true;
     }
 }
-
