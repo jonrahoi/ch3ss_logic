@@ -3,6 +3,7 @@ import Knight from "./Knight"
 // game contains a board (with pieces)
 // game contains history of moves
 
+// test bug
 class Point {
     constructor(
         private x: number,
@@ -88,38 +89,32 @@ export default class Board {
     executeMove(a: Position, b: Position): boolean {
 
         // are A and B on the Board?
-        if (!this.spaceOnBoard(a) || !this.spaceOnBoard(b)) {
-            return false;
-        }
+        // if (!this.spaceOnBoard(a) || !this.spaceOnBoard(b)) {
+        //     return false;
+        // }
+
         // is there a piece in Position A?
-        if (!this.pieceLocatedAt(a)) {
+        const colorOfPosA = this.colorOfPiece(a);
+        if (colorOfPosA.localeCompare("none")) {
             return false;
         }
 
-        // TODO probably change above method to return the piece at space A, will reduce iterating through pieces and increase efficiency
-
-        // is it the right color
-        if ((this.moves % 2 == 1 && this.colorOfPieceIsWhite(a)) || (this.moves % 2 == 0 && !this.colorOfPieceIsWhite(a))) {
-            return false;
-        }
-        let enemyPieceAtB = false;
-        // is there a piece at space B?
-        // TODO probably change to returning piece at B to increase efficiency
-        if (this.pieceLocatedAt(b)) {
-            // is the piece there on the same team?
-            if ((this.moves % 2 == 0 && this.colorOfPieceIsWhite(b)) || (this.moves % 2 == 1 && !this.colorOfPieceIsWhite(b))) {
-                return false;
-            }
-            enemyPieceAtB = true;
-        }
-        // is the move shape correct for that piece
-        if (!this.moveShapeCorrectForPiece(a, b)) {
-            return false;
-        }
+        // is it the right color, whose turn it is?
         let whoseTurn = "White";
         if (this.moves % 2 == 1) {
             whoseTurn = "Black";
         }
+
+        if (!colorOfPosA.localeCompare(whoseTurn)) {
+            return false;
+        }
+
+        if (!this.moveIsLegal(a, b)) {
+            return false;
+        }
+        // is there a piece at space B?
+        const enemyPieceAtB = this.pieceLocatedAt(b);
+
         // get current location of king
         const whoseTurnKingPosition = this.getLocationOfKingGivenColor(whoseTurn);
 
@@ -143,13 +138,28 @@ export default class Board {
         }
         // move pieces
         this.getPieceLocatedAt(a).moveTo(b);
-        // increment move count
-        this.moves++;
         return true; // move executed successfully
 
         // TODO
         // is castling available? (NOT IN RAUMSCHACH)
         // is enPassant available? (NOT IN RAUMSCHACH)
+    }
+
+    moveIsLegal(a: Position, b: Position): boolean {
+
+        if (this.getPieceLocatedAt(a).getColor == this.getPieceLocatedAt(b).getColor) {
+            return false;
+        }
+        if (!this.moveShapeCorrectForPiece(a, b)) {
+            return false;
+        }
+        if (this.pieceInWay(a, b)) {
+            return false;
+        }
+        return true;
+    }
+    incrementMoveCount() {
+        this.moves++;
     }
 
     pawnMoveDirectionCorrect(whoseTurn: string, a: Position, b: Position): boolean {
@@ -200,7 +210,6 @@ export default class Board {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -210,7 +219,6 @@ export default class Board {
                 return this.pieces[i].getPosition();
             }
         }
-
     }
 
     moveShapeCorrectForPiece(a: Position, b: Position): boolean {
@@ -226,7 +234,6 @@ export default class Board {
         return false;
     }
     pieceLocatedAt(a: Position): boolean {
-
         for (let i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].isAtPosition(a)) {
                 return true;
@@ -243,14 +250,13 @@ export default class Board {
         }
     }
 
-    colorOfPieceIsWhite(a: Position): boolean {
-
+    colorOfPiece(a: Position): string {
         for (let i = 0; i < this.pieces.length; i++) {
-            if (this.pieces[i].isAtPosition(a) && this.pieces[i].getColor().localeCompare("White") == 0) {
-                return true;
+            if (this.pieces[i].isAtPosition(a)) {
+                return this.pieces[i].getColor();
             }
         }
-        return false;
+        return "none";
     }
 
     spaceOnBoard(a: Position): boolean {
@@ -308,6 +314,30 @@ export default class Board {
             return -1;
         }
         return 0;
+    }
+
+
+    getAllPossibleMoves(a: Position): string[] {
+
+        let possibleMoves: string[];
+        // TODO iterate through all spaces on board
+        for (let i = 1; i< 6; i++) {
+            for (let j = 1; j < 6; j++) {
+                for (let k = 1; k < 6; k++) {
+                    // create a position with the three iterators
+                    let space: Position;
+                    space.setX(i);
+                    space.setY(j);
+                    space.setZ(k);
+                    if (this.moveIsLegal(a, space)) {
+                        let legal: string;
+                        legal = i.toString() + j.toString() + k.toString();
+                        possibleMoves.push(legal);
+                    }
+                }
+            }
+        }
+        return possibleMoves;
     }
 
     // TODO taking a piece code, removing from board
