@@ -34,14 +34,13 @@ class Position {
         return this.z;
     }
 
-
     setX(x: number) {
         this.x = x;
     }
     setY(y: number) {
         this.y = y;
     }
-    setZ(x: number) {
+    setZ(z: number) {
         this.z = z;
     }
     move() {}
@@ -78,13 +77,24 @@ abstract class Piece {
         return this.position;
     }
 
-    getColor(): Color {
-        return this.color;
+    getPostionString(): string {
+        let loc: string;
+        loc.concat(this.position.getX().toString());
+        loc.concat(this.position.getY().toString());
+        loc.concat(this.position.getZ().toString());
+        return loc;
+    }
+
+    getColor(): string {
+        if (this.color.localeCompare("White")) {
+            return "White";
+        }
+        return "Black";
     }
 
     getName() {
         return (this as any).constructor.name;
-      }
+    }
 
     abstract canMoveTo(position: Position): boolean
 

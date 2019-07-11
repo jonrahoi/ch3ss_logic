@@ -5,87 +5,132 @@ import Board from "./Board"
 export class TwoPlayerGame {
     // id?
     // name?
-    moves: number = 0;
+    moveCount: number = 0;
+    moveHistory: string[];
     board: Board = new Board();
-
-    // TODO play, etc
-
-    // TODO check whose turn it is
-
-    // is player now in check?
-        // if in check are they checkmated?
-    // is there a draw? (player can't move)
 
     // Create a new game
     newGame() {
         this.board = new Board();
+        this.moveHistory = [];
     }
 
-    // TODO
     move(a: string, b: string): boolean {
-        // can parse strings here or in Board
         if (!this.validSpaceFromString(a) && !this.validSpaceFromString(b)) {
             return false;
         }
+        const posA = this.getPositionFromString(a);
+        const posB = this.getPositionFromString(b);
+        const moveExecutedBool = this.board.executeMove(posA, posB);
+        if (moveExecutedBool) {
+            this.moveHistory.push(a);
+            this.moveHistory.push(b);
+            this.board.incrementMoveCount;
+        }
+        return moveExecutedBool;
+    }
+
+    // logic should be:
+    // move A to B
+    // if player in check
+    // if player in checkmate say checkmate
+    // else is player in draw
+    // if player not in check is 
+    GameIsDrawn(): boolean {
+        return this.board.gameIsDrawn();
+    }
+
+    getPositionFromString(a: string): Position {
         let posA: Position;
         posA.setX(+a.charAt(0));
         posA.setY(+a.charAt(1));
         posA.setZ(+a.charAt(2));
-        let posB: Position;
-        posB.setX(+a.charAt(0));
-        posB.setY(+a.charAt(1));
-        posB.setZ(+a.charAt(2));
-        const moveExecuted = this.board.executeMove(posA, posB);
-        if (moveExecuted) {
-            this.board.incrementMoveCount;
-            this.moves++;
-        }
-        return moveExecuted;
+        return posA;
+    }
+
+    getWhitePieceLocations(): string[] {
+         return this.board.getWhitePieceLocations();
+    }
+
+    getBlackPieceLocations(): string[] {
+        return this.board.getBlackPieceLocations();
     }
 
     playerInCheck(): boolean {
-        return this.board.isKingInCheckNow();
+        const lastMove = this.moveHistory[this.moveHistory.length - 1];
+        return this.board.kingInCheckNow(this.getPositionFromString(lastMove));
     }
 
     playerCheckmated(): boolean {
-        return this.board.isKingCheckMated();
+        // get location of king
+        let color = "Black";
+        if (this.getWhoseTurnItIs().localeCompare("Black")) {
+            color = "White";
+        }
+        const locationKing = this.board.getLocationOfKingGivenColor(color);
+        if (this.board.getAllPossibleMovesSpace(locationKing).length < 1) {
+            return true;
+        }
+        return false;
     }
 
     getWhoseTurnItIs(): string {
-        if (this.moves % 2 == 0) {
+        if (this.moveCount % 2 == 0) {
             return "White";
         }
         return "Black";
     }
 
     getPossibleMovesForPieceAtSpace(a: string): string[] {
+
         let possibleMoves: string[];
         if (!this.validSpaceFromString(a)) {
             return possibleMoves;
         }
-        let posA: Position;
-        posA.setX(+a.charAt(0));
-        posA.setY(+a.charAt(1));
-        posA.setZ(+a.charAt(2));
-        if (!this.board.pieceLocatedAt(posA)) {
+        let posA = this.getPositionFromString(a);
+        if (!this.board.pieceLocatedAtBool(posA)) {
             return possibleMoves;
         }
-        possibleMoves = this.board.getAllPossibleMoves(posA);
+        possibleMoves = this.board.getAllPossibleMovesSpace(posA);
         return possibleMoves;
     }
 
+    getWhitePiecesTaken(): string[] {
+        return this.board.getWhitePiecesTaken();
+    }
+
+    getBlackPiecesTaken(): string[] {
+        return  this.board.getBlackPiecesTaken();
+    }
     // TODO
-    loadGame(arrayFromMoves: [], arrayToMoves: []) {
-        // go through array and move the board each space
+    loadGame() {
+        // go through moves array and move the board each space
+        this.moveHistory = JSON.parse("moveHistory");
+        for (let i = 0; i < this.moveHistory.length; i += 2) {
+            const a = this.moveHistory[i];
+            const b = this.moveHistory[i + 1];
+            this.board.executeMoveNoCheck(this.getPositionFromString(a), this.getPositionFromString(b));
+            this.moveCount++;
+        }
     }
 
     saveGame() {
+        JSON.stringify(this.moveHistory);
     }
 
     goBackOneMove() {
+        JSON.stringify(this.moveHistory);
+        this.moveHistory = JSON.parse("moveHistory");
+        this.newGame();
+        for (let i = 0; i < this.moveHistory.length; i += 2) {
+            const a = this.moveHistory[i];
+            const b = this.moveHistory[i + 1];
+            this.board.executeMoveNoCheck(this.getPositionFromString(a), this.getPositionFromString(b));
+        }
     }
 
     goForwardOneMove() {
+        // TODO
     }
 
     // validates proper space

@@ -1,48 +1,31 @@
 export default class Knight extends Piece {
     canMoveTo(position: Position) {
         const distance = this.position.distanceFrom(position)
-
-        const z = distance.z;
-        const x = distance.x;
-        const y = distance.y;
+        let distances: number[];
+        distances.push(distance.x);
+        distances.push(distance.y);
+        distances.push(distance.z);
+        // some combination of 0,1,2
         // sum of the abs of the distances should be 3
         // one is zero
         // none are 3
-
-        if (z == 0) {
-
-            if (x == 1 && y == 2) {
-                return true;
-            }
-            else if (x == 2 && y == 1) {
-                return true;
-            }
-            else {
+        let sum: number;
+        let countOnes = 0;
+        for (let i = 0; i < 3; i++) {
+            sum += distances[i];
+            if (distances[i] > 3) {
                 return false;
             }
-        }
-        else if (y == 0) {
-            if (x == 1 && z == 2) {
-                return true;
-            }
-            else if (x == 2 && z == 1) {
-                return true;
-            }
-            else {
-                return false;
+            if (distances[i] == 1) {
+                countOnes++;
+                if (countOnes > 1) {
+                    return false;
+                }
             }
         }
-        else if (x == 0) {
-            if (y == 1 && z == 2) {
-                return true;
-            }
-            else if (y == 2 && z == 1) {
-                return true;
-            }
-            else {
-                return false;
-            }
+        if (sum > 3) {
+            return false;
         }
-        return false;
+        return true;
     }
 }
