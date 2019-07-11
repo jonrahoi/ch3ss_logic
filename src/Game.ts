@@ -12,6 +12,10 @@ export class Game {
 
     // TODO check whose turn it is
 
+    // is player now in check?
+        // if in check are they checkmated?
+    // is there a draw? (player can't move)
+
     // Create a new game
     newGame() {
         this.board = new Board();
@@ -19,8 +23,23 @@ export class Game {
 
     // TODO
     move(a: string, b: string): boolean {
-        return true;
+        // TODO parse strings here or in Board
+        let posA: Position;
+        let posB: Position;
+        const moveExecuted = this.board.executeMove(posA, posB);
+        if (moveExecuted == true) {
+            this.moves++;
+        }
+        return moveExecuted;
     }
+
+    // playerInCheck(): boolean {
+    //     return this.board.isKingInCheckNow();
+    // }
+
+    // playerCheckmated(): boolean {
+    //     return this.board.isKingCheckMated();
+    // }
 
     // TODO
     loadGame(arrayFromMoves: [], arrayToMoves: []) {

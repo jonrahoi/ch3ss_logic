@@ -4,6 +4,7 @@ class Pawn extends Piece {
     canMoveTo(position: Position) {
 
         const distance = this.position.distanceFrom(position)
+
         if (distance.x > 0) {
             return false; // moving along X illegal
         }
