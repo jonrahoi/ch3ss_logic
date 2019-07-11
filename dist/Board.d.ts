@@ -1,6 +1,30 @@
+import { Piece, Position } from "./Piece";
 export default class Board {
     private pieces;
+    private moves;
+    private piecesTaken;
     private static setupBoard;
-    move(a: Position, b: Position): boolean;
-    pieceInWay(a: string, b: string): boolean;
+    executeMove(a: Position, b: Position): boolean;
+    moveIsLegal(movePiece: Piece, b: Position): boolean;
+    executeMoveNoCheck(a: Position, b: Position): void;
+    kingInCheckNow(a: Position): boolean;
+    gameIsDrawn(): boolean;
+    incrementMoveCount(): void;
+    movePieceIsRightColor(piece: Piece): boolean;
+    getStringWhoseTurn(): string;
+    getWhitePieceLocations(): string[];
+    getWhitePiecesTaken(): string[];
+    getBlackPiecesTaken(): string[];
+    getBlackPieceLocations(): string[];
+    pawnMoveDirectionCorrect(colorOfPawn: string, a: Position, b: Position): boolean;
+    deletePieceAtPosition(b: Position): void;
+    playersKingInCheckAtSpace(whoseTurn: string, positionKing: Position): boolean;
+    getLocationOfKingGivenColor(color: string): Position;
+    pieceLocatedAtBool(a: Position): boolean;
+    getPieceLocatedAt(a: Position): Piece;
+    spaceOnBoard(a: Position): boolean;
+    pieceInWay(a: Position, b: Position): boolean;
+    getSlope(a: number, b: number): number;
+    getAllPossibleMovesPiece(movePiece: Piece): string[];
+    getAllPossibleMovesSpace(a: Position): string[];
 }

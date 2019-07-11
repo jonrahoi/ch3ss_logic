@@ -1,10 +1,9 @@
-export default class Knight extends Piece {
+import { Piece, Position, Color } from "./Piece"
+
+export class Knight extends Piece {
     canMoveTo(position: Position) {
         const distance = this.position.distanceFrom(position)
-        let distances: number[];
-        distances.push(distance.x);
-        distances.push(distance.y);
-        distances.push(distance.z);
+        const distances: number[] = [distance.x, distance.y, distance.z];
         // some combination of 0,1,2
         // sum of the abs of the distances should be 3
         // one is zero

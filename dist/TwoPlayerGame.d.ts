@@ -1,5 +1,6 @@
 import Board from "./Board";
-export declare class Game {
+import { Position } from "./Piece";
+export declare class TwoPlayerGame {
     moveCount: number;
     moveHistory: string[];
     board: Board;

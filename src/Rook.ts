@@ -1,4 +1,6 @@
-class Rook extends Piece {
+import { Piece, Position, Color } from "./Piece"
+
+export class Rook extends Piece {
     canMoveTo(position: Position) {
         // if change along one direction like a rook
         const distance = this.position.distanceFrom(position)

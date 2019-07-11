@@ -1,5 +1,7 @@
 // game contains a board (with pieces)
 import Board from "./Board"
+import { Piece, Position, Color } from "./Piece"
+
 // game writes to JSON file for history of moves
 
 export class TwoPlayerGame {
@@ -28,7 +30,7 @@ export class TwoPlayerGame {
     // if player in check
     // if player in checkmate say checkmate
     // else is player in draw
-    // if player not in check is 
+    // if player not in check is
     if (game.playerInCheck) {
         if (game.playerCheckmated) {
             //message on screen player checkmated
@@ -67,11 +69,7 @@ export class TwoPlayerGame {
     }
 
     getPositionFromString(a: string): Position {
-        let posA: Position;
-        posA.setX(+a.charAt(0));
-        posA.setY(+a.charAt(1));
-        posA.setZ(+a.charAt(2));
-        return posA;
+        return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
     }
 
     getWhitePieceLocations(): string[] {
@@ -113,7 +111,7 @@ export class TwoPlayerGame {
         if (!this.validSpaceFromString(a)) {
             return possibleMoves;
         }
-        let posA = this.getPositionFromString(a);
+        const posA = this.getPositionFromString(a);
         if (!this.board.pieceLocatedAtBool(posA)) {
             return possibleMoves;
         }

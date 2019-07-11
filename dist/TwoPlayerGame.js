@@ -1,17 +1,17 @@
 "use strict";
 exports.__esModule = true;
 var Board_1 = require("./Board");
-var Game = (function () {
-    function Game() {
+var Piece_1 = require("./Piece");
+var TwoPlayerGame = (function () {
+    function TwoPlayerGame() {
         this.moveCount = 0;
-        this.moveHistory = [];
         this.board = new Board_1["default"]();
     }
-    Game.prototype.newGame = function () {
+    TwoPlayerGame.prototype.newGame = function () {
         this.board = new Board_1["default"]();
         this.moveHistory = [];
     };
-    Game.prototype.move = function (a, b) {
+    TwoPlayerGame.prototype.move = function (a, b) {
         if (!this.validSpaceFromString(a) && !this.validSpaceFromString(b)) {
             return false;
         }
@@ -25,23 +25,23 @@ var Game = (function () {
         }
         return moveExecutedBool;
     };
-    Game.prototype.gameIsDrawn = function () {
+    TwoPlayerGame.prototype.gameIsDrawn = function () {
         return this.board.gameIsDrawn();
     };
-    Game.prototype.getPositionFromString = function (a) {
-        return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
+    TwoPlayerGame.prototype.getPositionFromString = function (a) {
+        return new Piece_1.Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
     };
-    Game.prototype.getWhitePieceLocations = function () {
+    TwoPlayerGame.prototype.getWhitePieceLocations = function () {
         return this.board.getWhitePieceLocations();
     };
-    Game.prototype.getBlackPieceLocations = function () {
+    TwoPlayerGame.prototype.getBlackPieceLocations = function () {
         return this.board.getBlackPieceLocations();
     };
-    Game.prototype.playerInCheck = function () {
+    TwoPlayerGame.prototype.playerInCheck = function () {
         var lastMove = this.moveHistory[this.moveHistory.length - 1];
         return this.board.kingInCheckNow(this.getPositionFromString(lastMove));
     };
-    Game.prototype.playerCheckmated = function () {
+    TwoPlayerGame.prototype.playerCheckmated = function () {
         var color = "Black";
         if (this.getWhoseTurnItIs().localeCompare("Black")) {
             color = "White";
@@ -52,13 +52,13 @@ var Game = (function () {
         }
         return false;
     };
-    Game.prototype.getWhoseTurnItIs = function () {
+    TwoPlayerGame.prototype.getWhoseTurnItIs = function () {
         if (this.moveCount % 2 == 0) {
             return "White";
         }
         return "Black";
     };
-    Game.prototype.getPossibleMovesForPieceAtSpace = function (a) {
+    TwoPlayerGame.prototype.getPossibleMovesForPieceAtSpace = function (a) {
         var possibleMoves;
         if (!this.validSpaceFromString(a)) {
             return possibleMoves;
@@ -70,13 +70,13 @@ var Game = (function () {
         possibleMoves = this.board.getAllPossibleMovesSpace(posA);
         return possibleMoves;
     };
-    Game.prototype.getWhitePiecesTaken = function () {
+    TwoPlayerGame.prototype.getWhitePiecesTaken = function () {
         return this.board.getWhitePiecesTaken();
     };
-    Game.prototype.getBlackPiecesTaken = function () {
+    TwoPlayerGame.prototype.getBlackPiecesTaken = function () {
         return this.board.getBlackPiecesTaken();
     };
-    Game.prototype.loadGame = function () {
+    TwoPlayerGame.prototype.loadGame = function () {
         this.moveHistory = JSON.parse("moveHistory");
         for (var i = 0; i < this.moveHistory.length; i += 2) {
             var a = this.moveHistory[i];
@@ -85,10 +85,10 @@ var Game = (function () {
             this.moveCount++;
         }
     };
-    Game.prototype.saveGame = function () {
+    TwoPlayerGame.prototype.saveGame = function () {
         JSON.stringify(this.moveHistory);
     };
-    Game.prototype.goBackOneMove = function () {
+    TwoPlayerGame.prototype.goBackOneMove = function () {
         JSON.stringify(this.moveHistory);
         this.moveHistory = JSON.parse("moveHistory");
         this.newGame();
@@ -98,9 +98,9 @@ var Game = (function () {
             this.board.executeMoveNoCheck(this.getPositionFromString(a), this.getPositionFromString(b));
         }
     };
-    Game.prototype.goForwardOneMove = function () {
+    TwoPlayerGame.prototype.goForwardOneMove = function () {
     };
-    Game.prototype.validSpaceFromString = function (str) {
+    TwoPlayerGame.prototype.validSpaceFromString = function (str) {
         if (str.length != 3) {
             return false;
         }
@@ -111,7 +111,7 @@ var Game = (function () {
         }
         return true;
     };
-    return Game;
+    return TwoPlayerGame;
 }());
-exports.Game = Game;
-//# sourceMappingURL=Game.js.map
+exports.TwoPlayerGame = TwoPlayerGame;
+//# sourceMappingURL=TwoPlayerGame.js.map

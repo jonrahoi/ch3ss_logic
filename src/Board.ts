@@ -1,4 +1,11 @@
-import Knight from "./Knight"
+import {Knight} from "./Knight"
+import {King} from "./King"
+import {Bishop} from "./Bishop"
+import {Rook} from "./Rook"
+import {Unicorn} from "./Unicorn"
+import {Pawn} from "./Pawn"
+import {Queen} from "./Queen"
+import { Piece, Position, Color } from "./Piece"
 
 // game contains a board (with pieces)
 // game contains history of moves
@@ -191,7 +198,7 @@ export default class Board {
         }
         return true;
     }
-    
+
     incrementMoveCount() {
         this.moves++;
     }
@@ -209,7 +216,7 @@ export default class Board {
     }
 
     getWhitePieceLocations(): string[] {
-        let locations: string[];
+        const locations: string[] = [];
         for (let i = 0; i < this.pieces.length; i++) {
             if (!this.pieces[i].getColor().localeCompare("White")) {
                 locations.push(this.pieces[i].getPostionString() + this.pieces[i].getName());
@@ -219,7 +226,7 @@ export default class Board {
     }
 
     getWhitePiecesTaken(): string[] {
-        let piecesTakenArray: string[];
+        const piecesTakenArray: string[] = [];
         for (let i = 0; i < this.piecesTaken.length; i++) {
             if (!this.pieces[i].getColor().localeCompare("White")) {
                 piecesTakenArray.push(this.pieces[i].getName());
@@ -229,7 +236,7 @@ export default class Board {
     }
 
     getBlackPiecesTaken(): string[] {
-        let piecesTakenArray: string[];
+        const piecesTakenArray: string[] = [];
         for (let i = 0; i < this.piecesTaken.length; i++) {
             if (!this.pieces[i].getColor().localeCompare("Black")) {
                 piecesTakenArray.push(this.pieces[i].getName());
@@ -239,7 +246,7 @@ export default class Board {
     }
 
     getBlackPieceLocations(): string[] {
-        let locations: string[];
+        const locations: string[] = [];
         for (let i = 0; i < this.pieces.length; i++) {
             if (!this.pieces[i].getColor().localeCompare("White")) {
                 locations.push(this.pieces[i].getPostionString() + this.pieces[i].getName());
@@ -275,8 +282,8 @@ export default class Board {
     playersKingInCheckAtSpace(whoseTurn: string, positionKing: Position): boolean {
         for (let i = 0; i < this.pieces.length; i++) {
             // if opposing team, can move to where the King is, and isn't blocked
-            if (!this.pieces[i].getColor().localeCompare("whoseTurn") && 
-            this.pieces[i].canMoveTo(positionKing) && 
+            if (!this.pieces[i].getColor().localeCompare("whoseTurn") &&
+            this.pieces[i].canMoveTo(positionKing) &&
             !this.pieceInWay(this.pieces[i].getPosition(), positionKing)) {
                 return true;
             }
@@ -353,16 +360,13 @@ export default class Board {
     }
 
     getAllPossibleMovesPiece(movePiece: Piece): string[] {
-        let possibleMoves: string[];
+        const possibleMoves: string[] = [];
         // TODO iterate through all spaces on board
         for (let i = 1; i < 6; i++) {
             for (let j = 1; j < 6; j++) {
                 for (let k = 1; k < 6; k++) {
                     // create a position with the three iterators
-                    let space: Position;
-                    space.setX(i);
-                    space.setY(j);
-                    space.setZ(k);
+                    const space: Position = new Position(i, j, k);
                     if (this.moveIsLegal(movePiece, space)) {
                         let legal: string;
                         legal = i.toString() + j.toString() + k.toString();
@@ -375,7 +379,7 @@ export default class Board {
     }
 
     getAllPossibleMovesSpace(a: Position): string[] {
-        let possibleMoves: string[];
+        const possibleMoves: string[] = [];
         if (!this.pieceLocatedAtBool(a)) {
             return possibleMoves;
         }
@@ -385,10 +389,7 @@ export default class Board {
             for (let j = 1; j < 6; j++) {
                 for (let k = 1; k < 6; k++) {
                     // create a position with the three iterators
-                    let space: Position;
-                    space.setX(i);
-                    space.setY(j);
-                    space.setZ(k);
+                    const space: Position = new Position(i, j, k);
                     if (this.moveIsLegal(movePiece, space)) {
                         let legal: string;
                         legal = i.toString() + j.toString() + k.toString();

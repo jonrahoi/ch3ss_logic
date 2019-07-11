@@ -1,4 +1,6 @@
-class Bishop extends Piece {
+import { Piece, Position, Color } from "./Piece"
+
+export class Bishop extends Piece {
     canMoveTo(position: Position) {
         const distance = this.position.distanceFrom(position)
 

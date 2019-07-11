@@ -9,9 +9,9 @@
 // }
 
 
-type Color = "Black" | "White"
+export type Color = "Black" | "White"
 
-class Position {
+export class Position {
     constructor(
         private x: number,
         private y: number,
@@ -59,7 +59,7 @@ class Position {
 //     }
 // }
 
-abstract class Piece {
+export abstract class Piece {
     protected position: Position
     constructor(
         private readonly color: Color,
@@ -78,7 +78,7 @@ abstract class Piece {
     }
 
     getPostionString(): string {
-        let loc: string;
+        const loc: string = "";
         loc.concat(this.position.getX().toString());
         loc.concat(this.position.getY().toString());
         loc.concat(this.position.getZ().toString());
@@ -100,8 +100,8 @@ abstract class Piece {
 
     isAtPosition(position: Position): boolean {
         position.getX
-        if (position.getX == this.position.getX && 
-            position.getY == this.position.getY && 
+        if (position.getX == this.position.getX &&
+            position.getY == this.position.getY &&
             position.getZ == this.position.getZ) {
                 return true;
         }

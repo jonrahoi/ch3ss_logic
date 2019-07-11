@@ -1,3 +1,4 @@
+"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -11,6 +12,8 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+exports.__esModule = true;
+var Piece_1 = require("./Piece");
 var Rook = (function (_super) {
     __extends(Rook, _super);
     function Rook() {
@@ -33,5 +36,6 @@ var Rook = (function (_super) {
         return false;
     };
     return Rook;
-}(Piece));
+}(Piece_1.Piece));
+exports.Rook = Rook;
 //# sourceMappingURL=Rook.js.map

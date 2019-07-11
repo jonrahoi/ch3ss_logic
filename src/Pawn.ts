@@ -1,4 +1,6 @@
-class Pawn extends Piece {
+import { Piece, Position, Color } from "./Piece"
+
+export class Pawn extends Piece {
 
 
     canMoveTo(position: Position) {

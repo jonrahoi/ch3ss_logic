@@ -1,4 +1,7 @@
-class Queen extends Piece {
+import { Piece, Position, Color } from "./Piece"
+
+
+export class Queen extends Piece {
     canMoveTo(position: Position) {
         // Rook like move
         const distance = this.position.distanceFrom(position)

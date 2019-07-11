@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
+var Piece_1 = require("./Piece");
 var Knight = (function (_super) {
     __extends(Knight, _super);
     function Knight() {
@@ -20,45 +21,27 @@ var Knight = (function (_super) {
     }
     Knight.prototype.canMoveTo = function (position) {
         var distance = this.position.distanceFrom(position);
-        var z = distance.z;
-        var x = distance.x;
-        var y = distance.y;
-        if (z == 0) {
-            if (x == 1 && y == 2) {
-                return true;
-            }
-            else if (x == 2 && y == 1) {
-                return true;
-            }
-            else {
+        var distances = [distance.x, distance.y, distance.z];
+        var sum;
+        var countOnes = 0;
+        for (var i = 0; i < 3; i++) {
+            sum += distances[i];
+            if (distances[i] > 3) {
                 return false;
             }
-        }
-        else if (y == 0) {
-            if (x == 1 && z == 2) {
-                return true;
-            }
-            else if (x == 2 && z == 1) {
-                return true;
-            }
-            else {
-                return false;
+            if (distances[i] == 1) {
+                countOnes++;
+                if (countOnes > 1) {
+                    return false;
+                }
             }
         }
-        else if (x == 0) {
-            if (y == 1 && z == 2) {
-                return true;
-            }
-            else if (y == 2 && z == 1) {
-                return true;
-            }
-            else {
-                return false;
-            }
+        if (sum > 3) {
+            return false;
         }
-        return false;
+        return true;
     };
     return Knight;
-}(Piece));
-exports["default"] = Knight;
+}(Piece_1.Piece));
+exports.Knight = Knight;
 //# sourceMappingURL=Knight.js.map

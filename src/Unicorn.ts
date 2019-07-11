@@ -1,4 +1,6 @@
-class Unicorn extends Piece {
+import { Piece, Position, Color } from "./Piece"
+
+export class Unicorn extends Piece {
     canMoveTo(position: Position) {
         const distance = this.position.distanceFrom(position)
 
