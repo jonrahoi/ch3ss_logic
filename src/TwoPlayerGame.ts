@@ -14,6 +14,38 @@ export class TwoPlayerGame {
         this.board = new Board();
         this.moveHistory = [];
     }
+/*
+    let game = TwoPlayerGame();
+
+    // for moving:
+    // get strings a and b from textboxes
+    let moveSuccessful = game.move(a, b);
+    if (!moveSuccessful) {
+
+    }
+      // logic should be:
+    // move A to B
+    // if player in check
+    // if player in checkmate say checkmate
+    // else is player in draw
+    // if player not in check is 
+    if (game.playerInCheck) {
+        if (game.playerCheckmated) {
+            //message on screen player checkmated
+        }
+        else
+        //message on screen player in check
+    }
+    else if (game.GameIsDrawn()) {
+        //message game is drawn
+    }
+
+    // for getting possible moves
+    // get string from textbox space a
+    let moveArray = game.getAllPossibleMovesSpace(a);
+    // display possible moves
+   */
+
 
     move(a: string, b: string): boolean {
         if (!this.validSpaceFromString(a) && !this.validSpaceFromString(b)) {
@@ -30,13 +62,7 @@ export class TwoPlayerGame {
         return moveExecutedBool;
     }
 
-    // logic should be:
-    // move A to B
-    // if player in check
-    // if player in checkmate say checkmate
-    // else is player in draw
-    // if player not in check is 
-    GameIsDrawn(): boolean {
+    gameIsDrawn(): boolean {
         return this.board.gameIsDrawn();
     }
 
