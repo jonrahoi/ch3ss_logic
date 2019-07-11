@@ -1,6 +1,9 @@
 // game contains a board (with pieces)
 import Board from "./Board"
+import { Piece, Position, Color } from "./Piece"
+
 // game writes to JSON file for history of moves
+
 
 export class Game {
     // id?
@@ -46,6 +49,14 @@ export class Game {
     // display possible moves
    */
 
+
+    getPositionOfWhitePiecesArray(): string[] {
+            return this.board.getWhitePieceLocations();
+    }
+
+    getPositionOfBlackPiecesArray(): string[] {
+        return this.board.getBlackPieceLocations();
+    }
 
     move(a: string, b: string): boolean {
         if (!this.validSpaceFromString(a) && !this.validSpaceFromString(b)) {
@@ -124,7 +135,7 @@ export class Game {
     getBlackPiecesTaken(): string[] {
         return  this.board.getBlackPiecesTaken();
     }
-    // TODO
+
     loadGame() {
         // go through moves array and move the board each space
         this.moveHistory = JSON.parse("moveHistory");

@@ -1,5 +1,5 @@
-import {Knight} from "./Knight"
-import {King} from "./King"
+import { Knight } from "./Knight"
+import {King } from "./King"
 import {Bishop} from "./Bishop"
 import {Rook} from "./Rook"
 import {Unicorn} from "./Unicorn"
@@ -75,8 +75,12 @@ export default class Board {
         ]
     }
 
-    executeMove(a: Position, b: Position): boolean {
+    // getPiecesArray(): string[] {
+    //     return this.pieces;
+    // }
 
+
+    executeMove(a: Position, b: Position): boolean {
         // are A and B on the Board?
         // currently checked in TwoPlayerGame space entry validation
         // if (!this.spaceOnBoard(a) || !this.spaceOnBoard(b)) {
