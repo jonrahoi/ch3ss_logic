@@ -1,4 +1,4 @@
-import * as Lab from "@hapi/lab";
+import  * as Lab from "@hapi/lab";
 import { Game } from "../Game"
 const { expect } = require("@hapi/code");
 const lab = Lab.script();
