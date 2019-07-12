@@ -32,9 +32,12 @@
   "homepage": "https://github.com/jonrahoi/ch3ss_logic#readme",
   "dependencies": {
     "@hapi/code": "^5.3.1",
-    "@hapi/lab": "^19.1.0",
+    "@types/node": "^12.6.2",
     "javascript-state-machine": "^3.1.0",
     "tslint": "^5.17.0",
     "typescript": "^3.5.2"
+  },
+  "devDependencies": {
+    "@hapi/lab": "^19.1.0"
   }
 }

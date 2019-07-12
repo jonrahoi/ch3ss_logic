@@ -9,7 +9,7 @@ export class Game {
     // id?
     // name?
     moveCount: number = 0;
-    moveHistory: string[] = [];
+    moveHistory: Position[] = [];
     board: Board = new Board();
 
     // Create a new game
@@ -50,21 +50,19 @@ export class Game {
    */
 
 
-    getPositionOfWhitePiecesArray(): string[] {
-            return this.board.getWhitePieceLocations();
+    getPositionOfWhitePiecesArray(): Piece[] {
+            return this.board.getWhitePieces();
     }
 
-    getPositionOfBlackPiecesArray(): string[] {
-        return this.board.getBlackPieceLocations();
+    getPositionOfBlackPiecesArray(): Piece[] {
+        return this.board.getBlackPieces();
     }
 
-    move(a: string, b: string): boolean {
-        if (!this.validSpaceFromString(a) && !this.validSpaceFromString(b)) {
+    move(a: Position, b: Position): boolean {
+        if (!this.validSpace(a) && !this.validSpace(b)) {
             return false;
         }
-        const posA = this.getPositionFromString(a);
-        const posB = this.getPositionFromString(b);
-        const moveExecutedBool = this.board.executeMove(posA, posB);
+        const moveExecutedBool = this.board.executeMove(a, b);
         if (moveExecutedBool) {
             this.moveHistory.push(a);
             this.moveHistory.push(b);
@@ -81,17 +79,17 @@ export class Game {
         return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
     }
 
-    getWhitePieceLocations(): string[] {
-         return this.board.getWhitePieceLocations();
+    getWhitePieces(): Piece[] {
+         return this.board.getWhitePieces();
     }
 
-    getBlackPieceLocations(): string[] {
-        return this.board.getBlackPieceLocations();
+    getBlackPieces(): Piece[] {
+        return this.board.getBlackPieces();
     }
 
     playerInCheck(): boolean {
         const lastMove = this.moveHistory[this.moveHistory.length - 1];
-        return this.board.kingInCheckNow(this.getPositionFromString(lastMove));
+        return this.board.kingInCheckNow(lastMove);
     }
 
     playerCheckmated(): boolean {
@@ -101,7 +99,7 @@ export class Game {
             color = "White";
         }
         const locationKing = this.board.getLocationOfKingGivenColor(color);
-        if (this.board.getAllPossibleMovesSpace(locationKing).length < 1) {
+        if (this.board.getAllPossibleMovesPosition(locationKing).length < 1) {
             return true;
         }
         return false;
@@ -114,25 +112,21 @@ export class Game {
         return "Black";
     }
 
-    getPossibleMovesForPieceAtSpace(a: string): string[] {
+    getPossibleMovesForPieceAtSpace(posA: Position): Position[] {
 
-        let possibleMoves: string[];
-        if (!this.validSpaceFromString(a)) {
+        let possibleMoves: Position[];
+            if (!this.board.pieceLocatedAtBool(posA)) {
             return possibleMoves;
         }
-        const posA = this.getPositionFromString(a);
-        if (!this.board.pieceLocatedAtBool(posA)) {
-            return possibleMoves;
-        }
-        possibleMoves = this.board.getAllPossibleMovesSpace(posA);
+        possibleMoves = this.board.getAllPossibleMovesPosition(posA);
         return possibleMoves;
     }
 
-    getWhitePiecesTaken(): string[] {
+    getWhitePiecesTaken(): Piece[] {
         return this.board.getWhitePiecesTaken();
     }
 
-    getBlackPiecesTaken(): string[] {
+    getBlackPiecesTaken(): Piece[] {
         return  this.board.getBlackPiecesTaken();
     }
 
@@ -140,9 +134,7 @@ export class Game {
         // go through moves array and move the board each space
         this.moveHistory = JSON.parse("moveHistory");
         for (let i = 0; i < this.moveHistory.length; i += 2) {
-            const a = this.moveHistory[i];
-            const b = this.moveHistory[i + 1];
-            this.board.executeMoveNoCheck(this.getPositionFromString(a), this.getPositionFromString(b));
+            this.board.executeMoveNoCheck(this.moveHistory[i], this.moveHistory[i + 1]);
             this.moveCount++;
         }
     }
@@ -156,9 +148,7 @@ export class Game {
         this.moveHistory = JSON.parse("moveHistory");
         this.newGame();
         for (let i = 0; i < this.moveHistory.length; i += 2) {
-            const a = this.moveHistory[i];
-            const b = this.moveHistory[i + 1];
-            this.board.executeMoveNoCheck(this.getPositionFromString(a), this.getPositionFromString(b));
+            this.board.executeMoveNoCheck(this.moveHistory[i], this.moveHistory[i + 1]);
         }
     }
 
@@ -166,16 +156,7 @@ export class Game {
         // TODO
     }
 
-    // validates proper space
-    validSpaceFromString(str: string): boolean {
-        if (str.length != 3) {
-            return false
-        }
-        for (let i = 0; i < 3; i++) {
-            if (str.charAt(i) < "1" || str.charAt(i) > "5") {
-                return false;
-            }
-        }
-        return true;
+    validSpace(a: Position): boolean {
+        return this.board.spaceOnBoard(a);
     }
 }

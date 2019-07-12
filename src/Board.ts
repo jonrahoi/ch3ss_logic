@@ -1,10 +1,10 @@
 import { Knight } from "./Knight"
-import {King } from "./King"
-import {Bishop} from "./Bishop"
-import {Rook} from "./Rook"
-import {Unicorn} from "./Unicorn"
-import {Pawn} from "./Pawn"
-import {Queen} from "./Queen"
+import { King } from "./King"
+import { Bishop } from "./Bishop"
+import { Rook } from "./Rook"
+import { Unicorn } from "./Unicorn"
+import { Pawn } from "./Pawn"
+import { Queen } from "./Queen"
 import { Piece, Position, Color } from "./Piece"
 
 // game contains a board (with pieces)
@@ -75,11 +75,6 @@ export default class Board {
         ]
     }
 
-    // getPiecesArray(): string[] {
-    //     return this.pieces;
-    // }
-
-
     executeMove(a: Position, b: Position): boolean {
         // are A and B on the Board?
         // currently checked in TwoPlayerGame space entry validation
@@ -107,7 +102,7 @@ export default class Board {
         if (!this.moveIsLegal(movePiece, b)) {
             return false;
         }
-        const whoseTurn = this.getStringWhoseTurn();
+        const whoseTurn = this.getWhoseTurn();
         // get current location of king
         const whoseTurnKingPosition = this.getLocationOfKingGivenColor(whoseTurn);
         // is the King in check?, if you're king is in check then you have to move the king
@@ -181,7 +176,7 @@ export default class Board {
     // TODO check, checkmate
     kingInCheckNow(a: Position): boolean {
         const piece = this.getPieceLocatedAt(a);
-        let color = "Black";
+        let color: Color = "Black";
         if (piece.getColor().localeCompare("Black")) {
             color = "White";
         }
@@ -192,7 +187,7 @@ export default class Board {
     }
 
     gameIsDrawn(): boolean {
-        const whoseTurn = this.getStringWhoseTurn();
+        const whoseTurn = this.getWhoseTurn();
         for (let i = 0; i < this.piecesTaken.length; i++) {
             if (!this.pieces[i].getColor().localeCompare(whoseTurn)) {
                 if (this.getAllPossibleMovesPiece(this.pieces[i]).length > 0) {
@@ -207,11 +202,11 @@ export default class Board {
         this.moves++;
     }
     movePieceIsRightColor(piece: Piece): boolean {
-        if (piece.getColor().localeCompare(this.getStringWhoseTurn())) {
+        if (piece.getColor().localeCompare("Black") && this.getWhoseTurn().localeCompare("Black")) {
             return false;
         }
     }
-    getStringWhoseTurn(): string {
+    getWhoseTurn(): string {
         let whoseTurn = "White";
         if (this.moves % 2 == 1) {
             whoseTurn = "Black";
@@ -219,18 +214,38 @@ export default class Board {
         return whoseTurn;
     }
 
-    getWhitePieceLocations(): string[] {
-        const locations: string[] = [];
+    // getWhitePieceLocations(): string[] {
+    //     const locations: string[] = [];
+    //     for (let i = 0; i < this.pieces.length; i++) {
+    //         if (!this.pieces[i].getColor().localeCompare("White")) {
+    //             locations.push(this.pieces[i].getPostionString() + this.pieces[i].getName());
+    //         }
+    //     }
+    //     return locations;
+    // }
+
+    getWhitePieces(): Piece[] {
+        const pieces: Piece[] = [];
         for (let i = 0; i < this.pieces.length; i++) {
             if (!this.pieces[i].getColor().localeCompare("White")) {
-                locations.push(this.pieces[i].getPostionString() + this.pieces[i].getName());
+                pieces.push(this.pieces[i]);
             }
         }
-        return locations;
+        return pieces;
     }
 
-    getWhitePiecesTaken(): string[] {
-        const piecesTakenArray: string[] = [];
+    getBlackPieces(): Piece[] {
+        const pieces: Piece[] = [];
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (!this.pieces[i].getColor().localeCompare("Black")) {
+                pieces.push(this.pieces[i]);
+            }
+        }
+        return pieces;
+    }
+
+    getWhitePiecesTaken(): Piece[] {
+        const piecesTakenArray: Piece[] = [];
         for (let i = 0; i < this.piecesTaken.length; i++) {
             if (!this.pieces[i].getColor().localeCompare("White")) {
                 piecesTakenArray.push(this.pieces[i].getName());
@@ -239,8 +254,8 @@ export default class Board {
         return piecesTakenArray;
     }
 
-    getBlackPiecesTaken(): string[] {
-        const piecesTakenArray: string[] = [];
+    getBlackPiecesTaken(): Piece[] {
+        const piecesTakenArray: Piece[] = [];
         for (let i = 0; i < this.piecesTaken.length; i++) {
             if (!this.pieces[i].getColor().localeCompare("Black")) {
                 piecesTakenArray.push(this.pieces[i].getName());
@@ -249,17 +264,7 @@ export default class Board {
         return piecesTakenArray;
     }
 
-    getBlackPieceLocations(): string[] {
-        const locations: string[] = [];
-        for (let i = 0; i < this.pieces.length; i++) {
-            if (!this.pieces[i].getColor().localeCompare("White")) {
-                locations.push(this.pieces[i].getPostionString() + this.pieces[i].getName());
-            }
-        }
-        return locations;
-    }
-
-    pawnMoveDirectionCorrect(colorOfPawn: string, a: Position, b: Position): boolean {
+    pawnMoveDirectionCorrect(colorOfPawn: Color, a: Position, b: Position): boolean {
         // if white needs to move up(dz is positive) or across (dy is positive)
         // if black needs to move down(dz is negative) or across (dy is positive)
         const dy = this.getSlope(a.getY(), b.getY());
@@ -319,6 +324,7 @@ export default class Board {
             }
         }
     }
+
     spaceOnBoard(a: Position): boolean {
         if (a.getX() < 1 || a.getX() > 5) {
             return false;
@@ -363,8 +369,8 @@ export default class Board {
         return 0;
     }
 
-    getAllPossibleMovesPiece(movePiece: Piece): string[] {
-        const possibleMoves: string[] = [];
+    getAllPossibleMovesPiece(movePiece: Piece): Position[] {
+        const possibleMoves: Position[] = [];
         // TODO iterate through all spaces on board
         for (let i = 1; i < 6; i++) {
             for (let j = 1; j < 6; j++) {
@@ -372,9 +378,7 @@ export default class Board {
                     // create a position with the three iterators
                     const space: Position = new Position(i, j, k);
                     if (this.moveIsLegal(movePiece, space)) {
-                        let legal: string;
-                        legal = i.toString() + j.toString() + k.toString();
-                        possibleMoves.push(legal);
+                        possibleMoves.push(space);
                     }
                 }
             }
@@ -382,8 +386,8 @@ export default class Board {
         return possibleMoves;
     }
 
-    getAllPossibleMovesSpace(a: Position): string[] {
-        const possibleMoves: string[] = [];
+    getAllPossibleMovesPosition(a: Position): Position[] {
+        const possibleMoves: Position[] = [];
         if (!this.pieceLocatedAtBool(a)) {
             return possibleMoves;
         }
@@ -395,9 +399,7 @@ export default class Board {
                     // create a position with the three iterators
                     const space: Position = new Position(i, j, k);
                     if (this.moveIsLegal(movePiece, space)) {
-                        let legal: string;
-                        legal = i.toString() + j.toString() + k.toString();
-                        possibleMoves.push(legal);
+                        possibleMoves.push(space);
                     }
                 }
             }

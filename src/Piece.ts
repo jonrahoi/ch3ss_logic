@@ -79,17 +79,25 @@ export abstract class Piece {
 
     getPostionString(): string {
         const loc: string = "";
-        loc.concat(this.position.getX().toString());
-        loc.concat(this.position.getY().toString());
-        loc.concat(this.position.getZ().toString());
-        return loc;
+        // loc.concat(this.position.getX().toString());
+        // loc.concat(this.position.getY().toString());
+        // loc.concat(this.position.getZ().toString());
+        // return loc;
+        return this.position.getX().toString() + this.position.getY().toString() + this.position.getZ().toString();
     }
 
-    getColor(): string {
+    getColor(): Color {
         if (this.color.localeCompare("White")) {
             return "White";
         }
         return "Black";
+    }
+
+    isWhite(): boolean {
+        if (this.color.localeCompare("White")) {
+            return true;
+        }
+        return false;
     }
 
     getName() {
