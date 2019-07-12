@@ -1,9 +1,12 @@
 import Board from "./Board";
+import { Position } from "./Piece";
 export declare class Game {
     moveCount: number;
     moveHistory: string[];
     board: Board;
     newGame(): void;
+    getPositionOfWhitePiecesArray(): string[];
+    getPositionOfBlackPiecesArray(): string[];
     move(a: string, b: string): boolean;
     gameIsDrawn(): boolean;
     getPositionFromString(a: string): Position;

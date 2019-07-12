@@ -1,6 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var Board_1 = require("./Board");
+var Piece_1 = require("./Piece");
 var Game = (function () {
     function Game() {
         this.moveCount = 0;
@@ -10,6 +11,12 @@ var Game = (function () {
     Game.prototype.newGame = function () {
         this.board = new Board_1["default"]();
         this.moveHistory = [];
+    };
+    Game.prototype.getPositionOfWhitePiecesArray = function () {
+        return this.board.getWhitePieceLocations();
+    };
+    Game.prototype.getPositionOfBlackPiecesArray = function () {
+        return this.board.getBlackPieceLocations();
     };
     Game.prototype.move = function (a, b) {
         if (!this.validSpaceFromString(a) && !this.validSpaceFromString(b)) {
@@ -29,7 +36,7 @@ var Game = (function () {
         return this.board.gameIsDrawn();
     };
     Game.prototype.getPositionFromString = function (a) {
-        return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
+        return new Piece_1.Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
     };
     Game.prototype.getWhitePieceLocations = function () {
         return this.board.getWhitePieceLocations();

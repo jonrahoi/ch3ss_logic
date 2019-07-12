@@ -21,7 +21,10 @@ var Knight = (function (_super) {
     }
     Knight.prototype.canMoveTo = function (position) {
         var distance = this.position.distanceFrom(position);
-        var distances = [distance.x, distance.y, distance.z];
+        var distances;
+        distances.push(distance.x);
+        distances.push(distance.y);
+        distances.push(distance.z);
         var sum;
         var countOnes = 0;
         for (var i = 0; i < 3; i++) {
