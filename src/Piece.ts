@@ -1,14 +1,3 @@
-// export enum PieceType {
-//     Pawn,
-//     Knight,
-//     Rook,
-//     Bishop,
-//     Queen,
-//     Unicorn,
-//     King
-// }
-
-
 export type Color = "Black" | "White"
 
 export class Position {
@@ -17,11 +6,11 @@ export class Position {
         private y: number,
         private z: number
     ) { }
-    distanceFrom(position: Position): {z: number, x: number, y: number} {
+    distanceFrom(position: Position): {x: number, y: number, z: number} {
         return {
-            z: Math.abs(position.z - this.z),
             x: Math.abs(position.x  - this.x),
-            y: Math.abs(position.y = this.y)
+            y: Math.abs(position.y - this.y),
+            z: Math.abs(position.z - this.z)
         }
     }
     getX(): number {
@@ -33,7 +22,6 @@ export class Position {
     getZ(): number {
         return this.z;
     }
-
     setX(x: number) {
         this.x = x;
     }
@@ -43,34 +31,26 @@ export class Position {
     setZ(z: number) {
         this.z = z;
     }
-    move() {}
+    getPostionString(): string {
+        return this.getX().toString() + this.getY().toString() + this.getZ().toString();
+    }
 }
 
-
-// export class Piece {
-//     isWhite: boolean
-//     type: PieceType
-//     constructor(type: PieceType, white: boolean = false) {
-//         this.isWhite = white
-//         this.type = type
-//     }
-//     validMoves(cb: any, position: any): number[] {
-//         return [1, 2, 3]
-//     }
-// }
-
 export abstract class Piece {
-    protected position: Position
+    protected position: Position;
+    protected color: string;
     constructor(
-        private readonly color: Color,
+        // private readonly color: Color,
+        color: string,
         x: number,
         y: number,
         z: number
     ) {
-        this.position = new Position(z, x, y)
+        this.color = color;
+        this.position = new Position(x, y, z)
     }
     moveTo(position: Position) {
-        this.position = position
+        this.position = position;
     }
 
     getPosition(): Position {
@@ -83,42 +63,36 @@ export abstract class Piece {
         // loc.concat(this.position.getY().toString());
         // loc.concat(this.position.getZ().toString());
         // return loc;
-        return this.position.getX().toString() + this.position.getY().toString() + this.position.getZ().toString();
+        return this.position.getPostionString();
     }
 
-    getColor(): Color {
-        if (this.color.localeCompare("White")) {
+    getColor(): string {
+        if (this.color.localeCompare("White") == 0) {
             return "White";
         }
         return "Black";
     }
 
     isWhite(): boolean {
-        if (this.color.localeCompare("White")) {
+        if (this.color.localeCompare("White") == 0) {
             return true;
         }
         return false;
     }
-
-    getName() {
-        return (this as any).constructor.name;
-    }
-
     abstract canMoveTo(position: Position): boolean
 
     isAtPosition(position: Position): boolean {
-        position.getX
-        if (position.getX == this.position.getX &&
-            position.getY == this.position.getY &&
-            position.getZ == this.position.getZ) {
+        if (position == undefined) {
+            return false;
+        }
+        if (position.getX() == this.position.getX() &&
+            position.getY() == this.position.getY() &&
+            position.getZ() == this.position.getZ()) {
                 return true;
         }
         return false;
     }
-
-    isBlockingMove(a: Position, b: Position): boolean {
-        // TODO
-        return false;
-
+    sameColor(b: Piece): boolean {
+        return (this.color.localeCompare(b.getColor()) == 0);
     }
 }

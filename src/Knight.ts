@@ -3,29 +3,19 @@ import { Piece, Position, Color } from "./Piece"
 export class Knight extends Piece {
     canMoveTo(position: Position) {
         const distance = this.position.distanceFrom(position)
-        let distances: number[];
+        const distances: number[] = [];
         distances.push(distance.x);
         distances.push(distance.y);
         distances.push(distance.z);
         // some combination of 0,1,2
-        // sum of the abs of the distances should be 3
-        // one is zero
-        // none are 3
-        let sum: number;
-        let countOnes = 0;
-        for (let i = 0; i < 3; i++) {
-            sum += distances[i];
-            if (distances[i] > 3) {
-                return false;
-            }
-            if (distances[i] == 1) {
-                countOnes++;
-                if (countOnes > 1) {
-                    return false;
-                }
-            }
+        if ((distance.x + distance.y + distance.z) != 3) {
+            return false;
         }
-        if (sum > 3) {
+        if (distance.x > 2 || distance.y > 2 || distance.z > 2) {
+            return false;
+        }
+        // tests if distance is 1,1,1
+        if (distance.x == distance.y) {
             return false;
         }
         return true;

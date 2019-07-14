@@ -1,6 +1,8 @@
 // game contains a board (with pieces)
 import Board from "./Board"
 import { Piece, Position, Color } from "./Piece"
+import King from "./Board"
+
 
 // game writes to JSON file for history of moves
 
@@ -11,6 +13,7 @@ export class Game {
     moveCount: number = 0;
     moveHistory: Position[] = [];
     board: Board = new Board();
+    previousMoveCreatedCheck: boolean = false;
 
     // Create a new game
     newGame() {
@@ -59,20 +62,30 @@ export class Game {
     }
 
     move(a: Position, b: Position): boolean {
-        if (!this.validSpace(a) && !this.validSpace(b)) {
+        if (!this.validSpace(a) || !this.validSpace(b)) {
             return false;
         }
+        console.log("inside Game.move, both valid spaces");
+        if (this.playerInCheck() && !(this.board.getPieceLocatedAt(a) instanceof King)) {
+            return false;
+        }
+        console.log("inside Game.move, player isn't in check");
         const moveExecutedBool = this.board.executeMove(a, b);
         if (moveExecutedBool) {
+            console.log("successfully moved piece " + this.board.getPieceLocatedAt(b).getColor() + " from: " + a.getPostionString() + " to " + b.getPostionString())
             this.moveHistory.push(a);
             this.moveHistory.push(b);
-            this.board.incrementMoveCount;
+            this.board.incrementMoveCount();
         }
         return moveExecutedBool;
     }
 
     gameIsDrawn(): boolean {
         return this.board.gameIsDrawn();
+    }
+
+    setPreviousMoveCreatedCheck(b: boolean) {
+        this.previousMoveCreatedCheck = b;
     }
 
     getPositionFromString(a: string): Position {
@@ -88,14 +101,17 @@ export class Game {
     }
 
     playerInCheck(): boolean {
+        if (this.moveHistory.length == 0) {
+            return false;
+        }
         const lastMove = this.moveHistory[this.moveHistory.length - 1];
-        return this.board.kingInCheckNow(lastMove);
+        return this.board.kingInCheckFromPosition(lastMove);
     }
 
     playerCheckmated(): boolean {
         // get location of king
         let color = "Black";
-        if (this.getWhoseTurnItIs().localeCompare("Black")) {
+        if (this.getWhoseTurnItIs().localeCompare("Black") == 0) {
             color = "White";
         }
         const locationKing = this.board.getLocationOfKingGivenColor(color);
@@ -122,6 +138,11 @@ export class Game {
         return possibleMoves;
     }
 
+    getPossibleMovesForPiece(piece: Piece): Position[] {
+        const pieceB = piece;
+        return this.board.getAllPossibleMovesPiece(pieceB);
+    }
+
     getWhitePiecesTaken(): Piece[] {
         return this.board.getWhitePiecesTaken();
     }
@@ -134,7 +155,7 @@ export class Game {
         // go through moves array and move the board each space
         this.moveHistory = JSON.parse("moveHistory");
         for (let i = 0; i < this.moveHistory.length; i += 2) {
-            this.board.executeMoveNoCheck(this.moveHistory[i], this.moveHistory[i + 1]);
+            this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
             this.moveCount++;
         }
     }
@@ -148,7 +169,7 @@ export class Game {
         this.moveHistory = JSON.parse("moveHistory");
         this.newGame();
         for (let i = 0; i < this.moveHistory.length; i += 2) {
-            this.board.executeMoveNoCheck(this.moveHistory[i], this.moveHistory[i + 1]);
+            this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
         }
     }
 
@@ -158,5 +179,10 @@ export class Game {
 
     validSpace(a: Position): boolean {
         return this.board.spaceOnBoard(a);
+    }
+
+
+    moveIsLegalDebug(a: Piece, b: Position) {
+        return this.board.moveIsLegal(a, b);
     }
 }
