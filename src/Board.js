@@ -98,21 +98,37 @@ var Board = /** @class */ (function () {
             return false;
         }
         console.log("inside board.executeMove, right color, move legal");
-        // const whoseTurn = movePiece.getColor();
+        var whoseTurn = movePiece.getColor();
         // // get current location of king
         // const whoseTurnKingPosition = this.getLocationOfKingGivenColor(whoseTurn);
-        // // is the King in check?, if you're king is in check then you have to move the king
+        // console.log("current team's king position: " + whoseTurnKingPosition.getPostionString());
+        // is the King in check?, if your king is in check then you have to move the king
         // if (this.playersKingInCheckAtSpace(whoseTurn, whoseTurnKingPosition) && this.getLocationOfKingGivenColor(whoseTurn) != a) {
         //     return false;
         // }
-        // // is King moving into check?
-        // if (this.playersKingInCheckAtSpace(whoseTurn, b)) {
-        //     return false;
-        // }
-        // // is there a piece at space B?, delete piece if there
-        // if (this.pieceLocatedAtBool(b)) {
-        //     this.deletePieceAtPosition(b);
-        // }
+        // Queening of pawn
+        if (movePiece instanceof Pawn_1.Pawn) {
+            if (movePiece.isWhite() && movePiece.getPosition().getY() == 5 && movePiece.getPosition().getZ() >= 4) {
+                this.deletePieceAtPosition(a);
+                var newQueen = new Queen_1.Queen(whoseTurn, a.getX(), a.getY(), a.getZ());
+                this.pieces.push(newQueen);
+            }
+            else if (!movePiece.isWhite() && movePiece.getPosition().getY() == 1 && movePiece.getPosition().getZ() <= 2) {
+                this.deletePieceAtPosition(a);
+                var newQueen = new Queen_1.Queen(whoseTurn, a.getX(), a.getY(), a.getZ());
+                this.pieces.push(newQueen);
+            }
+        }
+        // is King moving into check?
+        if (movePiece instanceof King_1.King && this.playersKingInCheckAtSpace(whoseTurn, b)) {
+            console.log("inside board.execute players king in check returning move not executed");
+            return false;
+        }
+        // is there a piece at space B?, delete piece if there
+        if (this.pieceLocatedAtBool(b)) {
+            this.deletePieceAtPosition(b);
+            console.log("inside board.executeMove deleting piece at " + b.getPostionString());
+        }
         // // move piece
         movePiece.moveTo(b);
         return true; // move executed successfully
@@ -153,6 +169,7 @@ var Board = /** @class */ (function () {
         return true;
     };
     Board.prototype.executeMoveNoLegalCheck = function (a, b) {
+        // TODO incorporate Queening
         // is there a piece at space B?, delete piece if there
         if (this.pieceLocatedAtBool(b)) {
             this.deletePieceAtPosition(b);
@@ -172,11 +189,14 @@ var Board = /** @class */ (function () {
     Board.prototype.kingInCheckFromPosition = function (pos) {
         // find opposite color
         var color = "Black";
+        if (!this.pieceLocatedAtBool(pos)) {
+            return false;
+        }
         var piece = this.getPieceLocatedAt(pos);
         if (piece.getColor().localeCompare("Black") == 0) {
             color = "White";
         }
-        if (piece.canMoveTo(this.getLocationOfKingGivenColor(color))) {
+        if (this.moveIsLegal(piece, this.getLocationOfKingGivenColor(color))) {
             return true;
         }
         return false;
@@ -208,6 +228,13 @@ var Board = /** @class */ (function () {
             whoseTurn = "Black";
         }
         return whoseTurn;
+    };
+    Board.prototype.getPlayerOpponentColor = function () {
+        var opponent = "White";
+        if (this.moves % 2 == 0) {
+            opponent = "Black";
+        }
+        return opponent;
     };
     // getWhitePieceLocations(): string[] {
     //     const locations: string[] = [];
@@ -268,13 +295,16 @@ var Board = /** @class */ (function () {
         return false;
     };
     Board.prototype.deletePieceAtPosition = function (b) {
+        var newPieces = [];
         for (var i = 0; i < this.pieces.length; i++) {
-            if (!this.pieces[i].isAtPosition(b)) {
+            if (this.pieces[i].isAtPosition(b)) {
                 this.piecesTaken.push(this.pieces[i]);
-                delete this.pieces[i];
-                return;
+            }
+            else {
+                newPieces.push(this.pieces[i]);
             }
         }
+        this.pieces = newPieces;
     };
     Board.prototype.playersKingInCheckAtSpace = function (whoseTurn, positionKing) {
         for (var i = 0; i < this.pieces.length; i++) {
@@ -392,6 +422,15 @@ var Board = /** @class */ (function () {
             }
         }
         return possibleMoves;
+    };
+    Board.prototype.playerCheckmated = function (a) {
+        // get location of king
+        var kingColor = this.getPieceLocatedAt(a).getOppositeColor();
+        var locationKing = this.getLocationOfKingGivenColor(kingColor);
+        if (this.getAllPossibleMovesPosition(locationKing).length < 1) {
+            return true;
+        }
+        return false;
     };
     return Board;
 }());

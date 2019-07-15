@@ -14,6 +14,9 @@ export class Game {
     moveHistory: Position[] = [];
     board: Board = new Board();
     previousMoveCreatedCheck: boolean = false;
+    thereIsCheck = false;
+    checkMate = false;
+    stalemate = false;
 
     // Create a new game
     newGame() {
@@ -52,6 +55,9 @@ export class Game {
     // display possible moves
    */
 
+    getCheck(): boolean {
+        return this.thereIsCheck;
+    }
 
     getPositionOfWhitePiecesArray(): Piece[] {
             return this.board.getWhitePieces();
@@ -62,20 +68,36 @@ export class Game {
     }
 
     move(a: Position, b: Position): boolean {
-        if (!this.validSpace(a) || !this.validSpace(b)) {
-            return false;
-        }
+        // validate positions are on board
+        if (!this.validSpace(a) || !this.validSpace(b)) { return false; }
         console.log("inside Game.move, both valid spaces");
-        if (this.playerInCheck() && !(this.board.getPieceLocatedAt(a) instanceof King)) {
-            return false;
-        }
+        // validate that if there is a check from last move then opponent is trying to move the king
+        if (this.thereIsCheck && !(this.board.getPieceLocatedAt(a) instanceof King)) { return false; }
         console.log("inside Game.move, player isn't in check");
         const moveExecutedBool = this.board.executeMove(a, b);
         if (moveExecutedBool) {
-            console.log("successfully moved piece " + this.board.getPieceLocatedAt(b).getColor() + " from: " + a.getPostionString() + " to " + b.getPostionString())
+            console.log("successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
             this.moveHistory.push(a);
             this.moveHistory.push(b);
             this.board.incrementMoveCount();
+            // check if king is in check
+            // if opponent king in check set bool
+            if (this.board.kingInCheckFromPosition(b)) {
+                this.thereIsCheck = true;
+                console.log("inside game.ts there is check");
+                // check if there is checkmate
+                if (this.board.playerCheckmated(b)) {
+                    this.checkMate = true;
+                    console.log("inside game.ts there is checkmate");
+                }
+            }
+            else {
+                this.thereIsCheck = false;
+                // TO DO check if create stalemate
+                if (this.board.gameIsDrawn()) {
+                    this.stalemate = true;
+                }
+            }
         }
         return moveExecutedBool;
     }
@@ -100,27 +122,6 @@ export class Game {
         return this.board.getBlackPieces();
     }
 
-    playerInCheck(): boolean {
-        if (this.moveHistory.length == 0) {
-            return false;
-        }
-        const lastMove = this.moveHistory[this.moveHistory.length - 1];
-        return this.board.kingInCheckFromPosition(lastMove);
-    }
-
-    playerCheckmated(): boolean {
-        // get location of king
-        let color = "Black";
-        if (this.getWhoseTurnItIs().localeCompare("Black") == 0) {
-            color = "White";
-        }
-        const locationKing = this.board.getLocationOfKingGivenColor(color);
-        if (this.board.getAllPossibleMovesPosition(locationKing).length < 1) {
-            return true;
-        }
-        return false;
-    }
-
     getWhoseTurnItIs(): string {
         if (this.moveCount % 2 == 0) {
             return "White";
@@ -138,15 +139,18 @@ export class Game {
         return possibleMoves;
     }
 
+    // possibly TODO remove, used for testing
     getPossibleMovesForPiece(piece: Piece): Position[] {
         const pieceB = piece;
         return this.board.getAllPossibleMovesPiece(pieceB);
     }
 
+    // possibly TODO change to list of strings
     getWhitePiecesTaken(): Piece[] {
         return this.board.getWhitePiecesTaken();
     }
 
+    // TODO change to list of strings
     getBlackPiecesTaken(): Piece[] {
         return  this.board.getBlackPiecesTaken();
     }
@@ -181,8 +185,8 @@ export class Game {
         return this.board.spaceOnBoard(a);
     }
 
-
-    moveIsLegalDebug(a: Piece, b: Position) {
-        return this.board.moveIsLegal(a, b);
+    getKingPiece(): Piece {
+        const pos = this.board.getLocationOfKingGivenColor(this.board.getWhoseTurn());
+        return this.board.getPieceLocatedAt(pos);
     }
 }

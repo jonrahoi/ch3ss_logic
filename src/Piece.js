@@ -64,6 +64,12 @@ var Piece = /** @class */ (function () {
         }
         return "Black";
     };
+    Piece.prototype.getOppositeColor = function () {
+        if (this.color.localeCompare("Black") == 0) {
+            return "White";
+        }
+        return "Black";
+    };
     Piece.prototype.isWhite = function () {
         if (this.color.localeCompare("White") == 0) {
             return true;

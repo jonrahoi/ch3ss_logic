@@ -73,13 +73,19 @@ export abstract class Piece {
         return "Black";
     }
 
+    getOppositeColor(): string {
+        if (this.color.localeCompare("Black") == 0) {
+            return "White";
+        }
+        return "Black";
+    }
+
     isWhite(): boolean {
         if (this.color.localeCompare("White") == 0) {
             return true;
         }
         return false;
     }
-    abstract canMoveTo(position: Position): boolean
 
     isAtPosition(position: Position): boolean {
         if (position == undefined) {
@@ -95,4 +101,5 @@ export abstract class Piece {
     sameColor(b: Piece): boolean {
         return (this.color.localeCompare(b.getColor()) == 0);
     }
+    abstract canMoveTo(position: Position): boolean
 }

@@ -105,21 +105,37 @@ export default class Board {
         }
         console.log("inside board.executeMove, right color, move legal")
         const whoseTurn = movePiece.getColor();
-        // get current location of king
-        const whoseTurnKingPosition = this.getLocationOfKingGivenColor(whoseTurn);
-        console.log("current team's king position: " + whoseTurnKingPosition.getPostionString());
+        // // get current location of king
+        // const whoseTurnKingPosition = this.getLocationOfKingGivenColor(whoseTurn);
+        // console.log("current team's king position: " + whoseTurnKingPosition.getPostionString());
         // is the King in check?, if your king is in check then you have to move the king
-        if (this.playersKingInCheckAtSpace(whoseTurn, whoseTurnKingPosition) && this.getLocationOfKingGivenColor(whoseTurn) != a) {
-            return false;
-        }
-        // // is King moving into check?
-        // if (this.playersKingInCheckAtSpace(whoseTurn, b)) {
+        // if (this.playersKingInCheckAtSpace(whoseTurn, whoseTurnKingPosition) && this.getLocationOfKingGivenColor(whoseTurn) != a) {
         //     return false;
         // }
-        // // is there a piece at space B?, delete piece if there
-        // if (this.pieceLocatedAtBool(b)) {
-        //     this.deletePieceAtPosition(b);
-        // }
+
+        // Queening of pawn
+        if (movePiece instanceof Pawn) {
+            if (movePiece.isWhite() && movePiece.getPosition().getY() == 5 && movePiece.getPosition().getZ() >= 4) {
+                this.deletePieceAtPosition(a);
+                const newQueen = new Queen(whoseTurn, a.getX(), a.getY(), a.getZ());
+                this.pieces.push(newQueen);
+            }
+            else if (!movePiece.isWhite() && movePiece.getPosition().getY() == 1 && movePiece.getPosition().getZ() <= 2) {
+                this.deletePieceAtPosition(a);
+                const newQueen = new Queen(whoseTurn, a.getX(), a.getY(), a.getZ());
+                this.pieces.push(newQueen);
+            }
+        }
+        // is King moving into check?
+        if (movePiece instanceof King && this.playersKingInCheckAtSpace(whoseTurn, b)) {
+            console.log("inside board.execute players king in check returning move not executed")
+            return false;
+        }
+        // is there a piece at space B?, delete piece if there
+        if (this.pieceLocatedAtBool(b)) {
+            this.deletePieceAtPosition(b);
+            console.log("inside board.executeMove deleting piece at " + b.getPostionString());
+        }
         // // move piece
         movePiece.moveTo(b);
         return true; // move executed successfully
@@ -164,6 +180,7 @@ export default class Board {
     }
 
     executeMoveNoLegalCheck(a: Position, b: Position) {
+        // TODO incorporate Queening
         // is there a piece at space B?, delete piece if there
         if (this.pieceLocatedAtBool(b)) {
             this.deletePieceAtPosition(b);
@@ -187,11 +204,14 @@ export default class Board {
     kingInCheckFromPosition(pos: Position): boolean {
         // find opposite color
         let color: Color = "Black";
+        if (!this.pieceLocatedAtBool(pos)) {
+            return false;
+        }
         const piece = this.getPieceLocatedAt(pos);
         if (piece.getColor().localeCompare("Black") == 0) {
             color = "White";
         }
-        if (piece.canMoveTo(this.getLocationOfKingGivenColor(color))) {
+        if (this.moveIsLegal(piece, this.getLocationOfKingGivenColor(color))) {
             return true;
         }
         return false;
@@ -226,6 +246,14 @@ export default class Board {
             whoseTurn = "Black";
         }
         return whoseTurn;
+    }
+
+    getPlayerOpponentColor(): string {
+        let opponent = "White";
+        if (this.moves % 2 == 0) {
+            opponent = "Black";
+        }
+        return opponent;
     }
 
     // getWhitePieceLocations(): string[] {
@@ -293,13 +321,16 @@ export default class Board {
     }
 
     deletePieceAtPosition(b: Position) {
+        let newPieces: Piece[] = [];
         for (let i = 0; i < this.pieces.length; i++) {
-            if (!this.pieces[i].isAtPosition(b)) {
+            if (this.pieces[i].isAtPosition(b)) {
                 this.piecesTaken.push(this.pieces[i]);
-                delete this.pieces[i];
-                return;
+            }
+            else {
+                newPieces.push(this.pieces[i]);
             }
         }
+        this.pieces = newPieces;
     }
 
     playersKingInCheckAtSpace(whoseTurn: string, positionKing: Position): boolean {
@@ -425,5 +456,15 @@ export default class Board {
             }
         }
         return possibleMoves;
+    }
+
+    playerCheckmated(a: Position): boolean {
+        // get location of king
+        const kingColor = this.getPieceLocatedAt(a).getOppositeColor();
+        const locationKing = this.getLocationOfKingGivenColor(kingColor);
+        if (this.getAllPossibleMovesPosition(locationKing).length < 1) {
+            return true;
+        }
+        return false;
     }
 }
