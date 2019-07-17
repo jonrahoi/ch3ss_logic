@@ -34,6 +34,12 @@ export class Position {
     getPostionString(): string {
         return this.getX().toString() + this.getY().toString() + this.getZ().toString();
     }
+    samePosition(a: Position): boolean {
+        if (a.getX() == this.x && a.getY() == this.getY() && a.getZ() == this.getZ()){
+            return true;
+        }
+        return false;
+    }
 }
 
 export abstract class Piece {
@@ -85,6 +91,10 @@ export abstract class Piece {
             return true;
         }
         return false;
+    }
+
+    isColor(color: string): boolean {
+        return this.color.localeCompare(color) == 0;
     }
 
     isAtPosition(position: Position): boolean {

@@ -3,13 +3,11 @@ exports.__esModule = true;
 // game contains a board (with pieces)
 var Board_1 = require("./Board");
 var Piece_1 = require("./Piece");
-var Board_2 = require("./Board");
 // game writes to JSON file for history of moves
 var Game = /** @class */ (function () {
     function Game() {
         // id?
         // name?
-        this.moveCount = 0;
         this.moveHistory = [];
         this.board = new Board_1["default"]();
         this.previousMoveCreatedCheck = false;
@@ -53,14 +51,11 @@ var Game = /** @class */ (function () {
         let moveArray = game.getAllPossibleMovesSpace(a);
         // display possible moves
        */
+    Game.prototype.setPieces = function (pieces) {
+        this.board.setPieces(pieces);
+    };
     Game.prototype.getCheck = function () {
         return this.thereIsCheck;
-    };
-    Game.prototype.getPositionOfWhitePiecesArray = function () {
-        return this.board.getWhitePieces();
-    };
-    Game.prototype.getPositionOfBlackPiecesArray = function () {
-        return this.board.getBlackPieces();
     };
     Game.prototype.move = function (a, b) {
         // validate positions are on board
@@ -68,19 +63,21 @@ var Game = /** @class */ (function () {
             return false;
         }
         console.log("inside Game.move, both valid spaces");
-        // validate that if there is a check from last move then opponent is trying to move the king
-        if (this.thereIsCheck && !(this.board.getPieceLocatedAt(a) instanceof Board_2["default"])) {
-            return false;
-        }
-        console.log("inside Game.move, player isn't in check");
+        // // validate that if there is a check from last move then opponent is trying to move the king or is trying to move to the last space
+        // // 
+        // if (this.thereIsCheck && (!(this.board.getPieceLocatedAt(a) instanceof King))) {
+        //     // there is check but the king is not moving 
+        //     return false
+        // }
+        // if ( b != this.moveHistory[this.moveHistory.length - 1]) {
+        //      return false;
+        // }
         var moveExecutedBool = this.board.executeMove(a, b);
         if (moveExecutedBool) {
-            console.log("successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString());
+            console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString());
             this.moveHistory.push(a);
             this.moveHistory.push(b);
-            this.board.incrementMoveCount();
-            // check if king is in check
-            // if opponent king in check set bool
+            // check if king is in check, if opponent king in check set bool
             if (this.board.kingInCheckFromPosition(b)) {
                 this.thereIsCheck = true;
                 console.log("inside game.ts there is check");
@@ -109,17 +106,11 @@ var Game = /** @class */ (function () {
     Game.prototype.getPositionFromString = function (a) {
         return new Piece_1.Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
     };
-    Game.prototype.getWhitePieces = function () {
-        return this.board.getWhitePieces();
-    };
-    Game.prototype.getBlackPieces = function () {
-        return this.board.getBlackPieces();
+    Game.prototype.getPiecesByColor = function (color) {
+        return this.board.getPiecesByColor(color);
     };
     Game.prototype.getWhoseTurnItIs = function () {
-        if (this.moveCount % 2 == 0) {
-            return "White";
-        }
-        return "Black";
+        return this.board.getWhoseTurn();
     };
     Game.prototype.getPossibleMovesForPieceAtSpace = function (posA) {
         var possibleMoves;
@@ -135,20 +126,16 @@ var Game = /** @class */ (function () {
         return this.board.getAllPossibleMovesPiece(pieceB);
     };
     // possibly TODO change to list of strings
-    Game.prototype.getWhitePiecesTaken = function () {
-        return this.board.getWhitePiecesTaken();
-    };
-    // TODO change to list of strings
-    Game.prototype.getBlackPiecesTaken = function () {
-        return this.board.getBlackPiecesTaken();
+    Game.prototype.getPiecesTakenByColor = function (color) {
+        return this.board.getPiecesTakenByColor(color);
     };
     Game.prototype.loadGame = function () {
         // go through moves array and move the board each space
         this.moveHistory = JSON.parse("moveHistory");
-        for (var i = 0; i < this.moveHistory.length; i += 2) {
-            this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
-            this.moveCount++;
-        }
+        // for (let i = 0; i < this.moveHistory.length; i += 2) {
+        //     this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
+        //     this.board.moveCount++;
+        // }
     };
     Game.prototype.saveGame = function () {
         JSON.stringify(this.moveHistory);
@@ -170,6 +157,12 @@ var Game = /** @class */ (function () {
     Game.prototype.getKingPiece = function () {
         var pos = this.board.getLocationOfKingGivenColor(this.board.getWhoseTurn());
         return this.board.getPieceLocatedAt(pos);
+    };
+    Game.prototype.getPieceLocatedAt = function (a) {
+        return this.board.getPieceLocatedAt(a);
+    };
+    Game.prototype.pieceLocatedAtBool = function (a) {
+        return this.board.pieceLocatedAtBool(a);
     };
     return Game;
 }());

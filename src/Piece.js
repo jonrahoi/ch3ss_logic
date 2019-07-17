@@ -34,6 +34,12 @@ var Position = /** @class */ (function () {
     Position.prototype.getPostionString = function () {
         return this.getX().toString() + this.getY().toString() + this.getZ().toString();
     };
+    Position.prototype.samePosition = function (a) {
+        if (a.getX() == this.x && a.getY() == this.getY() && a.getZ() == this.getZ()) {
+            return true;
+        }
+        return false;
+    };
     return Position;
 }());
 exports.Position = Position;
@@ -75,6 +81,9 @@ var Piece = /** @class */ (function () {
             return true;
         }
         return false;
+    };
+    Piece.prototype.isColor = function (color) {
+        return this.color.localeCompare(color) == 0;
     };
     Piece.prototype.isAtPosition = function (position) {
         if (position == undefined) {

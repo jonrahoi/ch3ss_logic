@@ -10,7 +10,6 @@ import King from "./Board"
 export class Game {
     // id?
     // name?
-    moveCount: number = 0;
     moveHistory: Position[] = [];
     board: Board = new Board();
     previousMoveCreatedCheck: boolean = false;
@@ -55,33 +54,32 @@ export class Game {
     // display possible moves
    */
 
+   setPieces(pieces: Piece[]) {
+       this.board.setPieces(pieces);
+   }
     getCheck(): boolean {
         return this.thereIsCheck;
-    }
-
-    getPositionOfWhitePiecesArray(): Piece[] {
-            return this.board.getWhitePieces();
-    }
-
-    getPositionOfBlackPiecesArray(): Piece[] {
-        return this.board.getBlackPieces();
     }
 
     move(a: Position, b: Position): boolean {
         // validate positions are on board
         if (!this.validSpace(a) || !this.validSpace(b)) { return false; }
         console.log("inside Game.move, both valid spaces");
-        // validate that if there is a check from last move then opponent is trying to move the king
-        if (this.thereIsCheck && !(this.board.getPieceLocatedAt(a) instanceof King)) { return false; }
-        console.log("inside Game.move, player isn't in check");
+        // // validate that if there is a check from last move then opponent is trying to move the king or is trying to move to the last space
+        // // 
+        // if (this.thereIsCheck && (!(this.board.getPieceLocatedAt(a) instanceof King))) {
+        //     // there is check but the king is not moving 
+        //     return false
+        // }
+        // if ( b != this.moveHistory[this.moveHistory.length - 1]) {
+        //      return false;
+        // }
         const moveExecutedBool = this.board.executeMove(a, b);
         if (moveExecutedBool) {
-            console.log("successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
+            console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
             this.moveHistory.push(a);
             this.moveHistory.push(b);
-            this.board.incrementMoveCount();
-            // check if king is in check
-            // if opponent king in check set bool
+            // check if king is in check, if opponent king in check set bool
             if (this.board.kingInCheckFromPosition(b)) {
                 this.thereIsCheck = true;
                 console.log("inside game.ts there is check");
@@ -114,19 +112,12 @@ export class Game {
         return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
     }
 
-    getWhitePieces(): Piece[] {
-         return this.board.getWhitePieces();
-    }
-
-    getBlackPieces(): Piece[] {
-        return this.board.getBlackPieces();
+    getPiecesByColor(color:string): Piece[] {
+         return this.board.getPiecesByColor(color);
     }
 
     getWhoseTurnItIs(): string {
-        if (this.moveCount % 2 == 0) {
-            return "White";
-        }
-        return "Black";
+        return this.board.getWhoseTurn();
     }
 
     getPossibleMovesForPieceAtSpace(posA: Position): Position[] {
@@ -146,22 +137,17 @@ export class Game {
     }
 
     // possibly TODO change to list of strings
-    getWhitePiecesTaken(): Piece[] {
-        return this.board.getWhitePiecesTaken();
-    }
-
-    // TODO change to list of strings
-    getBlackPiecesTaken(): Piece[] {
-        return  this.board.getBlackPiecesTaken();
+    getPiecesTakenByColor(color: string): Piece[] {
+        return this.board.getPiecesTakenByColor(color);
     }
 
     loadGame() {
         // go through moves array and move the board each space
         this.moveHistory = JSON.parse("moveHistory");
-        for (let i = 0; i < this.moveHistory.length; i += 2) {
-            this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
-            this.moveCount++;
-        }
+        // for (let i = 0; i < this.moveHistory.length; i += 2) {
+        //     this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
+        //     this.board.moveCount++;
+        // }
     }
 
     saveGame() {
@@ -188,5 +174,13 @@ export class Game {
     getKingPiece(): Piece {
         const pos = this.board.getLocationOfKingGivenColor(this.board.getWhoseTurn());
         return this.board.getPieceLocatedAt(pos);
+    }
+
+    getPieceLocatedAt(a: Position): Piece {
+        return this.board.getPieceLocatedAt(a);
+    }
+
+    pieceLocatedAtBool(a: Position): boolean {
+        return this.board.pieceLocatedAtBool(a);
     }
 }
