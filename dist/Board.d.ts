@@ -3,6 +3,10 @@ export default class Board {
     private pieces;
     private moveCount;
     private piecesTaken;
+    private sizeOfBoardX;
+    private sizeOfBoardY;
+    private sizeOfBoardZ;
+    private boardCoordinateMinimum;
     private static setupBoard;
     setPieces(newPieces: Piece[]): void;
     incrementMoveCount(): void;
@@ -35,4 +39,5 @@ export default class Board {
     checkCanBeBlocked(positionKing: Position, positionAttacker: Position, kingColor: string): boolean;
     getMoveCount(): number;
     kingInCheck(colorOfKingToCheckIfInCheck: string): boolean;
+    dummyMethodToDebugPublish(): void;
 }

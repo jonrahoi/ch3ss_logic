@@ -6,6 +6,7 @@ import { Unicorn } from "./Unicorn"
 import { Pawn } from "./Pawn"
 import { Queen } from "./Queen"
 import { Piece, Position, Color } from "./Piece"
+import { threadId } from "worker_threads";
 
 // game contains a board (with pieces)
 // game contains history of moves
@@ -15,6 +16,10 @@ export default class Board {
     private pieces = Board.setupBoard()
     private moveCount = 0;
     private piecesTaken: Piece[] = [];
+    private sizeOfBoardX = 5;
+    private sizeOfBoardY = 5;
+    private sizeOfBoardZ = 5;
+    private boardCoordinateMinimum = 1;
 
     private static setupBoard() {
         return [
@@ -224,7 +229,11 @@ export default class Board {
 
     checkForQueening(movePiece: Piece, b: Position): boolean {
         // moving to position
-       if (movePiece.isColor("White") && b.getY() == 5 && b.getZ() >= 4 || !movePiece.isColor("Black") && b.getY() == 1 && b.getZ() <= 2) {
+        if (!(movePiece instanceof Pawn)) {
+            return false;
+        }
+       if (movePiece.isColor("White") && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
+        movePiece.isColor("Black") && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
            return true;
        }
     }
@@ -324,7 +333,7 @@ export default class Board {
     }
 
     deletePieceAtPosition(b: Position) {
-        let newPieces: Piece[] = [];
+        const newPieces: Piece[] = [];
         for (let i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].isAtPosition(b)) {
                 this.piecesTaken.push(this.pieces[i]);
@@ -373,26 +382,25 @@ export default class Board {
     }
 
     spaceOnBoard(a: Position): boolean {
-        if (a.getX() < 1 || a.getX() > 5) {
+        if (a.getX() < this.boardCoordinateMinimum || a.getX() > this.sizeOfBoardX) {
             return false;
         }
-        if (a.getY() < 1 || a.getY() > 5) {
+        if (a.getY() < this.boardCoordinateMinimum || a.getY() > this.sizeOfBoardY) {
             return false;
         }
-        if (a.getZ() < 1 || a.getZ() > 5) {
+        if (a.getZ() < this.boardCoordinateMinimum || a.getZ() > this.sizeOfBoardZ) {
             return false;
         }
         return true;
     }
 
     pieceInWay(a: Position, b: Position): boolean {
-        // let x = a.getX;
         // iterate through all the places between position a and position b
         const dx = this.getSlope(a.getX(), b.getX());
         const dy = this.getSlope(a.getY(), b.getY());
         const dz = this.getSlope(a.getZ(), b.getZ());
         // console.log("slopes: " + dx, dy, dz)
-        let c = new Position(a.getX(), a.getY(), a.getZ());
+        const c = new Position(a.getX(), a.getY(), a.getZ());
         c.setX(c.getX() + dx);
         c.setY(c.getY() + dy);
         c.setZ(c.getZ() + dz);
@@ -423,9 +431,9 @@ export default class Board {
     getPossibleMovesPiece(piece: Piece): Position[] {
         const possibleMoves: Position[] = [];
         // iterate through all spaces on board
-        for (let x = 1; x < 6; x++) {
-            for (let y = 1; y < 6; y++) {
-                for (let z = 1; z < 6; z++) {
+        for (let x = 1; x <= this.sizeOfBoardX; x++) {
+            for (let y = 1; y <= this.sizeOfBoardY; y++) {
+                for (let z = 1; z <= this.sizeOfBoardZ; z++) {
                     // create a position with the three iterators
                     const possibleSpace: Position = new Position(x, y, z);
                     // if (piece instanceof King) {

@@ -8,7 +8,7 @@ var Rook_1 = require("../Rook");
 var Unicorn_1 = require("../Unicorn");
 var Pawn_1 = require("../Pawn");
 var Queen_1 = require("../Queen");
-var numberOfMovesToSimulate = 500;
+var numberOfMovesToSimulate = 10;
 var testCorneredKing = [
     new King_1.King("White", 1, 1, 1),
     new Pawn_1.Pawn("Black", 1, 3, 1),
@@ -63,17 +63,9 @@ function simulateGame(maxMoves) {
             moveFound = true;
             moveLookCounter++;
         }
-        if (!moveFound) {
-            endOfGame = true;
-            break;
-        }
         console.log("trying move piece: " + getPieceNotation(piece), " at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         var moveSuccessful = game.move(piece.getPosition(), moveSpace);
         console.log("move successful: " + moveSuccessful + ", " + game.board.getMoveCount() + " move count, ", "piece: " + getPieceNotation(piece), " at " + piece.getPostionString());
-        if (!moveSuccessful) {
-            endOfGame = true;
-            break;
-        }
         dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "board state after " + game.board.getMoveCount() + " moves:");
         moveIterationCount++;
         console.log("move count: " + moveIterationCount);

@@ -25,6 +25,9 @@ var Game = (function () {
     Game.prototype.getMoveHistory = function () {
         return this.moveHistory;
     };
+    Game.prototype.getPieces = function () {
+        return this.board.getPieces();
+    };
     Game.prototype.move = function (a, b) {
         if (!this.validSpace(a) || !this.validSpace(b)) {
             return false;

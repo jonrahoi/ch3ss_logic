@@ -10,7 +10,7 @@ import { Pawn } from "../Pawn"
 import { Queen } from "../Queen"
 import Board from "../Board";
 
-const numberOfMovesToSimulate = 500;
+const numberOfMovesToSimulate = 10;
 
 const testCorneredKing = [
     new King("White", 1, 1, 1),
@@ -91,18 +91,17 @@ function simulateGame(maxMoves: number) {
             //     break;
             // }
         }
-
-        if (!moveFound) {
-            endOfGame = true;
-            break;
-        }
+        // if (!moveFound) {
+        //     endOfGame = true;
+        //     break;
+        // }
         console.log("trying move piece: " + getPieceNotation(piece), " at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         const moveSuccessful = game.move(piece.getPosition(), moveSpace);
         console.log("move successful: " + moveSuccessful + ", " + game.board.getMoveCount() + " move count, ", "piece: " + getPieceNotation(piece), " at " + piece.getPostionString());
-        if (!moveSuccessful) {
-            endOfGame = true;
-            break;
-        }
+        // if (!moveSuccessful) {
+        //     endOfGame = true;
+        //     break;
+        // }
         dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "board state after " + game.board.getMoveCount() + " moves:");
         moveIterationCount++;
         console.log("move count: " + moveIterationCount);

@@ -13,6 +13,7 @@ export declare class Game {
     getCheck(): boolean;
     getGameID(): number;
     getMoveHistory(): Position[];
+    getPieces(): Piece[];
     move(a: Position, b: Position): boolean;
     gameIsDrawn(): boolean;
     setPreviousMoveCreatedCheck(b: boolean): void;

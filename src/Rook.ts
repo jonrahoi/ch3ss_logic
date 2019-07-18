@@ -7,7 +7,7 @@ export class Rook extends Piece {
         if (distance.y == distance.x && distance.x == distance.z) {
             return false; // all 0, also all same
         }
-        // not all same, test if two are 0
+        // not all same, test if two are
         else if (distance.y == 0 && distance.x == 0 ) {
             return true; // move only along Z
         }

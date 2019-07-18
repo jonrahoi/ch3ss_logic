@@ -34,7 +34,7 @@ function getInputFromUser(message) {
     var readlineSync = require("readline-sync");
     return readlineSync.question(message);
 }
-var game = new Game_1.Game(1);
+var game = new Game_1.Game(50);
 consoleGame();
 function consoleGame() {
     console.log("Welcome to 3D chess on the console.");

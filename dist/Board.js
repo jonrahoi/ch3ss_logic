@@ -13,6 +13,10 @@ var Board = (function () {
         this.pieces = Board.setupBoard();
         this.moveCount = 0;
         this.piecesTaken = [];
+        this.sizeOfBoardX = 5;
+        this.sizeOfBoardY = 5;
+        this.sizeOfBoardZ = 5;
+        this.boardCoordinateMinimum = 1;
     }
     Board.setupBoard = function () {
         return [
@@ -162,7 +166,11 @@ var Board = (function () {
         return true;
     };
     Board.prototype.checkForQueening = function (movePiece, b) {
-        if (movePiece.isColor("White") && b.getY() == 5 && b.getZ() >= 4 || !movePiece.isColor("Black") && b.getY() == 1 && b.getZ() <= 2) {
+        if (!(movePiece instanceof Pawn_1.Pawn)) {
+            return false;
+        }
+        if (movePiece.isColor("White") && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
+            movePiece.isColor("Black") && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
             return true;
         }
     };
@@ -290,13 +298,13 @@ var Board = (function () {
         }
     };
     Board.prototype.spaceOnBoard = function (a) {
-        if (a.getX() < 1 || a.getX() > 5) {
+        if (a.getX() < this.boardCoordinateMinimum || a.getX() > this.sizeOfBoardX) {
             return false;
         }
-        if (a.getY() < 1 || a.getY() > 5) {
+        if (a.getY() < this.boardCoordinateMinimum || a.getY() > this.sizeOfBoardY) {
             return false;
         }
-        if (a.getZ() < 1 || a.getZ() > 5) {
+        if (a.getZ() < this.boardCoordinateMinimum || a.getZ() > this.sizeOfBoardZ) {
             return false;
         }
         return true;
@@ -330,9 +338,9 @@ var Board = (function () {
     };
     Board.prototype.getPossibleMovesPiece = function (piece) {
         var possibleMoves = [];
-        for (var x = 1; x < 6; x++) {
-            for (var y = 1; y < 6; y++) {
-                for (var z = 1; z < 6; z++) {
+        for (var x = 1; x <= this.sizeOfBoardX; x++) {
+            for (var y = 1; y <= this.sizeOfBoardY; y++) {
+                for (var z = 1; z <= this.sizeOfBoardZ; z++) {
                     var possibleSpace = new Piece_1.Position(x, y, z);
                     if (piece.canMoveTo(possibleSpace) && this.MoveExecutable(piece, possibleSpace)) {
                         possibleMoves.push(possibleSpace);
@@ -399,6 +407,9 @@ var Board = (function () {
             }
         }
         return false;
+    };
+    Board.prototype.dummyMethodToDebugPublish = function () {
+        return;
     };
     return Board;
 }());
