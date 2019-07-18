@@ -1,8 +1,6 @@
 // game contains a board (with pieces)
 import Board from "./Board"
 import { Piece, Position, Color } from "./Piece"
-import King from "./Board"
-
 
 export class Game {
     moveHistory: Position[] = [];
@@ -69,9 +67,9 @@ export class Game {
         if (!this.validSpace(a) || !this.validSpace(b)) { return false; }
         console.log("inside Game.move, both valid spaces");
         // // validate that if there is a check from last move then opponent is trying to move the king or is trying to move to the last space
-        // // 
+        // //
         // if (this.thereIsCheck && (!(this.board.getPieceLocatedAt(a) instanceof King))) {
-        //     // there is check but the king is not moving 
+        //     // there is check but the king is not moving
         //     return false
         // }
         // if ( b != this.moveHistory[this.moveHistory.length - 1]) {
