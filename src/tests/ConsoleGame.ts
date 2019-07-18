@@ -1,4 +1,3 @@
-import { Game } from "../Game"
 import { Piece, Position, Color } from "../Piece"
 import { Knight } from "../Knight"
 import { King } from "../King"
@@ -8,6 +7,9 @@ import { Unicorn } from "../Unicorn"
 import { Pawn } from "../Pawn"
 import { Queen } from "../Queen"
 import Board from "../Board";
+
+import { Game } from "../Game"
+
 
 import * as readline from "readline";
 
@@ -47,13 +49,52 @@ function getInputFromUser(message: string): string {
 }
 
 const game = new Game();
-
-// game.setPieces(testCorneredKing);
-// game.setPreviousMoveCreatedCheck(true);
-
+game.newGame(1);
 consoleGame();
 
-export function consoleGame() {
+// printPossibleMovesForPiece(new Unicorn("White", 2, 1, 2));
+
+// let testPawn = new Pawn("White", 1, 2, 2);
+// let moveSpace = new Position(1, 2, 3);
+// testSpecificMove(testPawn, moveSpace);
+
+// test pawn at 245 to 235
+// let testPawn = new Pawn("Black", 2, 4, 5);
+// let moveSpace = new Position(2, 3, 5);
+// testSpecificMove(testPawn, moveSpace);
+
+
+
+// console.log("test piece can move to 122" + testPawn.canMoveTo(moveSpace));
+
+// dispalyBoardState(game.getWhitePieces(), game.getBlackPieces(), "initial board state:");
+
+
+// test cases
+// let blackQueen = new Queen("Black", 4, 5, 5);
+// let whitePawn = new Pawn("White", 1, 2, 2);
+
+// const testPiece1 = new Rook("White", 3, 3, 3);
+// console.log("initial: " + testPiece1.getPostionString());
+
+// let testPiece = new Knight("Black", 2, 5, 5);
+// printPossibleMovesForPiece(testPiece);
+
+// let pos = new Position(1, 2, 2);
+// console.log("white pawn can move to " + whitePawn.canMoveTo(pos));
+
+
+
+// pieces = game.getWhitePieces();
+// console.log("testing piece: " + getPieceNotation(pieces[0]));
+// testPiecePossibleMove(pieces[0]);
+
+
+// function testPiecePossibleMove(a: Piece, moveSpace: Postion) {
+//     console.log(game.moveIsLegalDebug(a, moveSpace));
+// }
+
+function consoleGame() {
     console.log("Welcome to 3D chess on the console.")
     let endOfGame = false;
     while (!endOfGame) {
@@ -93,46 +134,6 @@ export function consoleGame() {
 }
 
 
-// let testPawn = new Pawn("White", 1, 2, 2);
-// let moveSpace = new Position(1, 2, 3);
-//testSpecificMove(testPawn, moveSpace);
-
-// test pawn at 245 to 235
-// let testPawn = new Pawn("Black", 2, 4, 5);
-// let moveSpace = new Position(2, 3, 5);
-// testSpecificMove(testPawn, moveSpace);
-
-
-
-// console.log("test piece can move to 122" + testPawn.canMoveTo(moveSpace));
-
-//dispalyBoardState(game.getWhitePieces(), game.getBlackPieces(), "initial board state:");
-
-
-// test cases
-// let blackQueen = new Queen("Black", 4, 5, 5);
-// let whitePawn = new Pawn("White", 1, 2, 2);
-
-// const testPiece1 = new Rook("White", 3, 3, 3);
-// console.log("initial: " + testPiece1.getPostionString());
-
-// let testPiece = new Knight("Black", 2, 5, 5);
-// printPossibleMovesForPiece(testPiece);
-
-// let pos = new Position(1, 2, 2);
-// console.log("white pawn can move to " + whitePawn.canMoveTo(pos));
-
-
-
-// pieces = game.getWhitePieces();
-// console.log("testing piece: " + getPieceNotation(pieces[0]));
-// testPiecePossibleMove(pieces[0]);
-
-
-// function testPiecePossibleMove(a: Piece, moveSpace: Postion) {
-//     console.log(game.moveIsLegalDebug(a, moveSpace));
-// }
-
 function printPossibleMovesForPiece(p: Piece) {
     console.log("after call: " + p.getPostionString());
     let possibleMoves: Position[] = [];
@@ -151,7 +152,7 @@ function testSpecificMove(a: Piece, b: Position) {
     dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "board state after move: " + a.getPostionString() + " to " + b.getPostionString());
 }
 
-export function dispalyBoardState(whitePieces: Piece[], blackPieces: Piece[], message: string) {
+function dispalyBoardState(whitePieces: Piece[], blackPieces: Piece[], message: string) {
     console.log(whitePieces.length + " white pieces");
     console.log(blackPieces.length + " black pieces");
     console.log(message);
@@ -190,7 +191,7 @@ export function dispalyBoardState(whitePieces: Piece[], blackPieces: Piece[], me
     }
 }
 
-export function getPieceNotation(piece: Piece): string {
+function getPieceNotation(piece: Piece): string {
     if (piece.isWhite()) {
         if (piece instanceof Pawn) {
             return "W_Pwn";
@@ -240,7 +241,7 @@ export function getPieceNotation(piece: Piece): string {
 
 
 // validates proper space
-export function validSpaceFromString(str: string): boolean {
+function validSpaceFromString(str: string): boolean {
     if (str.length != 3) {
         return false
     }

@@ -119,11 +119,61 @@ var Board = /** @class */ (function () {
         return true; // move executed successfully
         // castling, en passant not available in RUAMSCHACH
     };
+    Board.prototype.MoveExecutable = function (movePiece, b) {
+        // console.log("inside board.MoveExecutable")
+        if (!movePiece.isColor(this.getWhoseTurn())) {
+            // console.log("inside board.MoveExecutable, wrong color, move not executed")
+            return false;
+        }
+        if (!this.moveIsLegal(movePiece, b)) {
+            // console.log("inside board.MoveExecutable, move is not legal")
+            return false;
+        }
+        // console.log("inside board.MoveExecutable, right color, move legal")
+        // is King moving into check?
+        if (movePiece instanceof King_1.King && this.kingInCheckAtSpace(movePiece.getOppositeColor(), b)) {
+            // console.log("inside board.MoveExecutable player's king in check, move not executed")
+            return false;
+        }
+        return true; // move executable
+    };
     /**
      * Checks if move is legal for a specific piece to go to space A given board state, independent of whose turn it is
      * @param movePiece piece to check for movement
      * @param b space to check move to
      */
+    Board.prototype.moveIsLegalDebug = function (movePiece, b) {
+        // check if move shape correct
+        if (!movePiece.canMoveTo(b)) {
+            // console.log("inside moveIsLegal, move shape incorrect")
+            return false;
+        }
+        // check if piece at b and if same color
+        if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).sameColor(movePiece)) {
+            console.log("inside moveIsLegal, move space has piece of same color");
+            return false;
+        }
+        // if a knight no need to check if pawn or piece in way
+        if (movePiece instanceof Knight_1.Knight) {
+            console.log("inside moveIsLegal");
+            return true;
+        }
+        // if pawn moving in right direction, no need to check piece in way (only one space)
+        if (movePiece instanceof Pawn_1.Pawn) {
+            if (!this.pawnMoveDirectionCorrect(movePiece.getColor(), movePiece.getPosition(), b)) {
+                console.log("inside moveIsLegal, pawn incorrect direction");
+                return false;
+            }
+            return true;
+        }
+        // console.log("2: inside moveIsLegal in board.ts: checking for piece located at: " + movePiece.getPostionString());
+        if (this.pieceInWay(movePiece.getPosition(), b)) {
+            console.log("inside moveIsLegal, piece is in way");
+            return false;
+        }
+        console.log("inside moveIsLegal, returning move legal");
+        return true;
+    };
     Board.prototype.moveIsLegal = function (movePiece, b) {
         // check if move shape correct
         if (!movePiece.canMoveTo(b)) {
@@ -148,12 +198,12 @@ var Board = /** @class */ (function () {
             }
             return true;
         }
-        // console.log("2:    inside moveIsLegal in board.ts: checking for piece located at: " + movePiece.getPostionString());
+        // console.log("2: inside moveIsLegal in board.ts: checking for piece located at: " + movePiece.getPostionString());
         if (this.pieceInWay(movePiece.getPosition(), b)) {
             // console.log("inside moveIsLegal, piece is in way")
             return false;
         }
-        // console.log("inside moveIsLegal")
+        // console.log("inside moveIsLegal, returning move legal")
         return true;
     };
     Board.prototype.checkForQueening = function (movePiece, b) {
@@ -198,7 +248,7 @@ var Board = /** @class */ (function () {
         var whoseTurn = this.getWhoseTurn();
         for (var i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].isColor(whoseTurn)) {
-                if (this.getAllPossibleMovesPiece(this.pieces[i]).length > 0) {
+                if (this.getPossibleMovesPiece(this.pieces[i]).length > 0) {
                     return false;
                 }
             }
@@ -331,31 +381,32 @@ var Board = /** @class */ (function () {
         return 0;
     };
     /**
-     * @param pieceToMove Gets all possible move for specific piece
+     * @param piece Gets all possible move for specific piece
      */
-    Board.prototype.getAllPossibleMovesPiece = function (pieceToMove) {
+    Board.prototype.getPossibleMovesPiece = function (piece) {
         var possibleMoves = [];
         // iterate through all spaces on board
         for (var x = 1; x < 6; x++) {
             for (var y = 1; y < 6; y++) {
                 for (var z = 1; z < 6; z++) {
-                    var piece = pieceToMove;
                     // create a position with the three iterators
-                    var space = new Piece_1.Position(x, y, z);
-                    var pieceToSend = piece;
-                    if (piece instanceof King_1.King) {
-                        if (this.moveIsLegal(pieceToSend, space) && !this.kingInCheckAtSpace(piece.getOppositeColor(), space)) {
-                            possibleMoves.push(space);
-                        }
-                    }
-                    else if (this.moveIsLegal(pieceToSend, space)) {
-                        possibleMoves.push(space);
+                    var possibleSpace = new Piece_1.Position(x, y, z);
+                    // if (piece instanceof King) {
+                    //     if (this.moveIsLegal(piece, possibleSpace) && !this.kingInCheckAtSpace(piece.getOppositeColor(), possibleSpace)) {
+                    //         possibleMoves.push(possibleSpace);
+                    //     }
+                    // }
+                    // else if (piece.canMoveTo(possibleSpace) && this.moveIsLegalDebug(piece, possibleSpace)) {
+                    //     possibleMoves.push(possibleSpace);
+                    // }
+                    if (piece.canMoveTo(possibleSpace) && this.MoveExecutable(piece, possibleSpace)) {
+                        possibleMoves.push(possibleSpace);
                     }
                     // console.log("after testing if move legal: " + piece.getPostionString());
                 }
             }
         }
-        // console.log("inside board.ts after getAllPossibleMovesPiece, position: " + pieceToMove.getPostionString());
+        // console.log("inside board.ts after getPossibleMovesPiece, position: " + pieceToMove.getPostionString());
         return possibleMoves;
     };
     Board.prototype.getAllPossibleMovesPosition = function (a) {
@@ -365,7 +416,7 @@ var Board = /** @class */ (function () {
         }
         var movePiece = this.getPieceLocatedAt(a);
         // iterate through all spaces on board
-        return this.getAllPossibleMovesPiece(movePiece);
+        return this.getPossibleMovesPiece(movePiece);
     };
     /**
      * Checks if king can't move and if no piece can move in between attacking piece and king and no piece can attack attacking piece

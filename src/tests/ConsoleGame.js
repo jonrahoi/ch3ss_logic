@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-var Game_1 = require("../Game");
 var Knight_1 = require("../Knight");
 var King_1 = require("../King");
 var Bishop_1 = require("../Bishop");
@@ -8,6 +7,7 @@ var Rook_1 = require("../Rook");
 var Unicorn_1 = require("../Unicorn");
 var Pawn_1 = require("../Pawn");
 var Queen_1 = require("../Queen");
+var Game_1 = require("../Game");
 var testCorneredKing = [
     new King_1.King("White", 1, 1, 1),
     new Pawn_1.Pawn("Black", 1, 3, 1),
@@ -40,12 +40,33 @@ function getInputFromUser(message) {
     return readlineSync.question(message);
 }
 var game = new Game_1.Game();
-game.setPieces(testCorneredKing);
-// game.setPreviousMoveCreatedCheck(true);
-// console.log("you entered: " + getInputFromUser("enter something "));
+game.newGame(1);
 consoleGame();
-// simulateGame(1000);
-// testSpecificMove(111, 121);
+// printPossibleMovesForPiece(new Unicorn("White", 2, 1, 2));
+// let testPawn = new Pawn("White", 1, 2, 2);
+// let moveSpace = new Position(1, 2, 3);
+// testSpecificMove(testPawn, moveSpace);
+// test pawn at 245 to 235
+// let testPawn = new Pawn("Black", 2, 4, 5);
+// let moveSpace = new Position(2, 3, 5);
+// testSpecificMove(testPawn, moveSpace);
+// console.log("test piece can move to 122" + testPawn.canMoveTo(moveSpace));
+// dispalyBoardState(game.getWhitePieces(), game.getBlackPieces(), "initial board state:");
+// test cases
+// let blackQueen = new Queen("Black", 4, 5, 5);
+// let whitePawn = new Pawn("White", 1, 2, 2);
+// const testPiece1 = new Rook("White", 3, 3, 3);
+// console.log("initial: " + testPiece1.getPostionString());
+// let testPiece = new Knight("Black", 2, 5, 5);
+// printPossibleMovesForPiece(testPiece);
+// let pos = new Position(1, 2, 2);
+// console.log("white pawn can move to " + whitePawn.canMoveTo(pos));
+// pieces = game.getWhitePieces();
+// console.log("testing piece: " + getPieceNotation(pieces[0]));
+// testPiecePossibleMove(pieces[0]);
+// function testPiecePossibleMove(a: Piece, moveSpace: Postion) {
+//     console.log(game.moveIsLegalDebug(a, moveSpace));
+// }
 function consoleGame() {
     console.log("Welcome to 3D chess on the console.");
     var endOfGame = false;
@@ -84,34 +105,6 @@ function consoleGame() {
         }
     }
 }
-// let blackPieces = game.getBlackPieces();
-// let whitePieces = game.getWhitePieces();
-// displayPieces("black pieces: ", blackPieces);
-// displayPieces("white pieces: ", blackPieces);
-// let testPawn = new Pawn("White", 1, 2, 2);
-// let moveSpace = new Position(1, 2, 3);
-//testSpecificMove(testPawn, moveSpace);
-// test pawn at 245 to 235
-// let testPawn = new Pawn("Black", 2, 4, 5);
-// let moveSpace = new Position(2, 3, 5);
-// testSpecificMove(testPawn, moveSpace);
-// console.log("test piece can move to 122" + testPawn.canMoveTo(moveSpace));
-//dispalyBoardState(game.getWhitePieces(), game.getBlackPieces(), "initial board state:");
-// TODO debug queen
-// let blackQueen = new Queen("Black", 4, 5, 5);
-// let whitePawn = new Pawn("White", 1, 2, 2);
-// const testPiece1 = new Rook("White", 3, 3, 3);
-// console.log("initial: " + testPiece1.getPostionString());
-// let testPiece = new Knight("Black", 2, 5, 5);
-// printPossibleMovesForPiece(testPiece);
-// let pos = new Position(1, 2, 2);
-// console.log("white pawn can move to " + whitePawn.canMoveTo(pos));
-// pieces = game.getWhitePieces();
-// console.log("testing piece: " + getPieceNotation(pieces[0]));
-// testPiecePossibleMove(pieces[0]);
-// function testPiecePossibleMove(a: Piece, moveSpace: Postion) {
-//     console.log(game.moveIsLegalDebug(a, moveSpace));
-// }
 function printPossibleMovesForPiece(p) {
     console.log("after call: " + p.getPostionString());
     var possibleMoves = [];
@@ -164,60 +157,6 @@ function dispalyBoardState(whitePieces, blackPieces, message) {
             console.log(row);
         }
         console.log();
-    }
-}
-function simulateGame(maxMoves) {
-    var endOfGame = false;
-    var pieces = [];
-    var piece;
-    var moveSpace;
-    var iterationCount = 0;
-    dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "initial board state:");
-    while (!endOfGame && iterationCount < maxMoves) {
-        pieces = game.getPiecesByColor(game.getWhoseTurnItIs());
-        var moveFound = false;
-        var moveLookCounter = 0;
-        while (!moveFound || moveLookCounter < 100) {
-            //if (!game.thereIsCheck) {
-            var randomPieceNum = Math.floor(Math.random() * pieces.length);
-            // console.log("random number: " + randomPieceNum);
-            // console.log("random piece "  + getPieceNotation(pieces[randomPieceNum]) + " located at: " + pieces[randomPieceNum].getPostionString());
-            piece = pieces[randomPieceNum];
-            // }
-            //else {
-            // find a move that stops the check
-            // 
-            //}
-            var possibleMoves = game.getPossibleMovesForPiece(piece);
-            // console.log("number of moves from position: " + piece.getPostionString() + ": " + possibleMoves.length);
-            if (possibleMoves.length == 0) {
-                moveLookCounter++;
-                continue; // try with different piece
-            }
-            moveSpace = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-            moveFound = true;
-            moveLookCounter++;
-        }
-        // if (!moveFound) {
-        //     endOfGame = true;
-        //     break;
-        // }
-        var moveSuccessful = game.move(piece.getPosition(), moveSpace);
-        console.log("move successful: " + moveSuccessful + " " + game.board.getMoveCount() + " " + piece.getPostionString() + " to " + moveSpace.getPostionString());
-        if (!moveSuccessful) {
-            continue;
-        }
-        dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "board state after " + game.board.getMoveCount() + " moves:");
-        iterationCount++;
-        console.log("iteration count: " + iterationCount);
-        if (game.checkMate == true) {
-            console.log("CHECKMATE!");
-            endOfGame = true;
-        }
-        else if (game.stalemate == true) {
-            console.log("STALEMATE, DRAW!");
-            endOfGame = true;
-        }
     }
 }
 function getPieceNotation(piece) {

@@ -4,27 +4,22 @@ import { Piece, Position, Color } from "./Piece"
 import King from "./Board"
 
 
-// game writes to JSON file for history of moves
-
-
 export class Game {
-    // id?
-    // name?
     moveHistory: Position[] = [];
-    board: Board = new Board();
+    board: Board;
     previousMoveCreatedCheck: boolean = false;
     thereIsCheck = false;
     checkMate = false;
     stalemate = false;
+    gameID = 0;
 
     // Create a new game
-    newGame() {
+    newGame(gameID: number) {
+        this.gameID = gameID;
         this.board = new Board();
         this.moveHistory = [];
     }
 /*
-    let game = TwoPlayerGame();
-
     // for moving:
     // get strings a and b from textboxes
     let moveSuccessful = game.move(a, b);
@@ -59,6 +54,14 @@ export class Game {
    }
     getCheck(): boolean {
         return this.thereIsCheck;
+    }
+
+    getGameID(): number {
+        return this.gameID;
+    }
+
+    getMoveHistory(): Position[] {
+        return this.moveHistory;
     }
 
     move(a: Position, b: Position): boolean {
@@ -133,7 +136,7 @@ export class Game {
     // possibly TODO remove, used for testing
     getPossibleMovesForPiece(piece: Piece): Position[] {
         const pieceB = piece;
-        return this.board.getAllPossibleMovesPiece(pieceB);
+        return this.board.getPossibleMovesPiece(pieceB);
     }
 
     // possibly TODO change to list of strings
@@ -157,7 +160,7 @@ export class Game {
     goBackOneMove() {
         JSON.stringify(this.moveHistory);
         this.moveHistory = JSON.parse("moveHistory");
-        this.newGame();
+        this.newGame(1);
         for (let i = 0; i < this.moveHistory.length; i += 2) {
             this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
         }

@@ -22,16 +22,17 @@ var Rook = /** @class */ (function (_super) {
     Rook.prototype.canMoveTo = function (position) {
         // if change along one direction like a rook
         var distance = this.position.distanceFrom(position);
-        if (distance.y < 1 && distance.x < 1 && distance.z < 1) {
-            return false; // same postion
+        if (distance.y == distance.x && distance.x == distance.z) {
+            return false; // all 0, also all same
         }
-        else if (distance.y < 1 && distance.x < 1) {
+        // not all same, test if two are 0
+        else if (distance.y == 0 && distance.x == 0) {
             return true; // move only along Z
         }
-        else if (distance.x < 1 && distance.z < 1) {
+        else if (distance.x == 0 && distance.z == 0) {
             return true; // move only along Y
         }
-        else if (distance.y < 1 && distance.z < 1) {
+        else if (distance.y == 0 && distance.z == 0) {
             return true; // move only along X
         }
         return false;

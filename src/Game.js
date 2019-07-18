@@ -3,26 +3,22 @@ exports.__esModule = true;
 // game contains a board (with pieces)
 var Board_1 = require("./Board");
 var Piece_1 = require("./Piece");
-// game writes to JSON file for history of moves
 var Game = /** @class */ (function () {
     function Game() {
-        // id?
-        // name?
         this.moveHistory = [];
-        this.board = new Board_1["default"]();
         this.previousMoveCreatedCheck = false;
         this.thereIsCheck = false;
         this.checkMate = false;
         this.stalemate = false;
+        this.gameID = 0;
     }
     // Create a new game
-    Game.prototype.newGame = function () {
+    Game.prototype.newGame = function (gameID) {
+        this.gameID = gameID;
         this.board = new Board_1["default"]();
         this.moveHistory = [];
     };
     /*
-        let game = TwoPlayerGame();
-    
         // for moving:
         // get strings a and b from textboxes
         let moveSuccessful = game.move(a, b);
@@ -56,6 +52,12 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.getCheck = function () {
         return this.thereIsCheck;
+    };
+    Game.prototype.getGameID = function () {
+        return this.gameID;
+    };
+    Game.prototype.getMoveHistory = function () {
+        return this.moveHistory;
     };
     Game.prototype.move = function (a, b) {
         // validate positions are on board
@@ -123,7 +125,7 @@ var Game = /** @class */ (function () {
     // possibly TODO remove, used for testing
     Game.prototype.getPossibleMovesForPiece = function (piece) {
         var pieceB = piece;
-        return this.board.getAllPossibleMovesPiece(pieceB);
+        return this.board.getPossibleMovesPiece(pieceB);
     };
     // possibly TODO change to list of strings
     Game.prototype.getPiecesTakenByColor = function (color) {
@@ -143,7 +145,7 @@ var Game = /** @class */ (function () {
     Game.prototype.goBackOneMove = function () {
         JSON.stringify(this.moveHistory);
         this.moveHistory = JSON.parse("moveHistory");
-        this.newGame();
+        this.newGame(1);
         for (var i = 0; i < this.moveHistory.length; i += 2) {
             this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
         }
