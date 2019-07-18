@@ -51,9 +51,9 @@ export class Game {
     // display possible moves
    */
 
-   setPieces(pieces: Piece[]) {
+    setPieces(pieces: Piece[]) {
        this.board.setPieces(pieces);
-   }
+    }
     getCheck(): boolean {
         return this.thereIsCheck;
     }
@@ -64,6 +64,10 @@ export class Game {
 
     getMoveHistory(): Position[] {
         return this.moveHistory;
+    }
+
+    getPieces(): Piece[] {
+        return this.board.getPieces();
     }
 
     move(a: Position, b: Position): boolean {
