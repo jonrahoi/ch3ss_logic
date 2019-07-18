@@ -1,6 +1,6 @@
 {
   "name": "@rahoi/ch3ss_logic",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "logic for 3d chess",
   "main": "dist/Game.js",
   "scripts": {
