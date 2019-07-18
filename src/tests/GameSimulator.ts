@@ -155,7 +155,7 @@ function simulateGame(maxMoves: number) {
         }
     }
     function getPieceNotation(piece: Piece): string {
-        if (piece.isWhite()) {
+        if (piece.isColor("White")) {
             if (piece instanceof Pawn) {
                 return "W_Pwn";
             }

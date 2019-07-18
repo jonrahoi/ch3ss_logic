@@ -86,13 +86,6 @@ export abstract class Piece {
         return "Black";
     }
 
-    isWhite(): boolean {
-        if (this.color.localeCompare("White") == 0) {
-            return true;
-        }
-        return false;
-    }
-
     isColor(color: string): boolean {
         return this.color.localeCompare(color) == 0;
     }

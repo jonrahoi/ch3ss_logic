@@ -192,7 +192,7 @@ function dispalyBoardState(whitePieces: Piece[], blackPieces: Piece[], message: 
 }
 
 function getPieceNotation(piece: Piece): string {
-    if (piece.isWhite()) {
+    if (piece.isColor("White")) {
         if (piece instanceof Pawn) {
             return "W_Pwn";
         }
