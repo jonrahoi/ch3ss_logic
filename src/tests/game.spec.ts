@@ -1,4 +1,4 @@
-import * as Lab from "@hapi/lab";
+import  * as Lab from "@hapi/lab";
 import { Game } from "../Game"
 const { expect } = require("@hapi/code");
 const lab = Lab.script();
@@ -17,7 +17,7 @@ describe("experiment", () => {
 
     it("creates game", () => {
         const g = new Game()
-        expect(g.moveCount).to.equal(0)
+        //expect(g.moveCount).to.equal(0)
         expect(g.moveHistory.length).to.equal(0)
     })
 
