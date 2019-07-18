@@ -21,16 +21,16 @@ var Rook = (function (_super) {
     }
     Rook.prototype.canMoveTo = function (position) {
         var distance = this.position.distanceFrom(position);
-        if (distance.y < 1 && distance.x < 1 && distance.z < 1) {
+        if (distance.y == distance.x && distance.x == distance.z) {
             return false;
         }
-        else if (distance.y < 1 && distance.x < 1) {
+        else if (distance.y == 0 && distance.x == 0) {
             return true;
         }
-        else if (distance.x < 1 && distance.z < 1) {
+        else if (distance.x == 0 && distance.z == 0) {
             return true;
         }
-        else if (distance.y < 1 && distance.z < 1) {
+        else if (distance.y == 0 && distance.z == 0) {
             return true;
         }
         return false;

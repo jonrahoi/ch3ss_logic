@@ -17,11 +17,6 @@ var testCorneredKing = [
     new Pawn_1.Pawn("Black", 1, 3, 2),
     new Pawn_1.Pawn("Black", 2, 2, 2),
     new Pawn_1.Pawn("Black", 3, 2, 2),
-    // new Queen("Black", 1, 1, 3),
-    // new Queen("Black", 2, 1, 3),
-    // new Queen("Black", 3, 1, 3),
-    // new Queen("Black", 4, 1, 3),
-    // new Queen("Black", 5, 1, 3),
     new Queen_1.Queen("Black", 4, 2, 1),
     new Queen_1.Queen("Black", 4, 2, 2),
     new King_1.King("Black", 4, 1, 1)
@@ -38,8 +33,6 @@ var testCorneredKingImmediateStalemate = [
 ];
 var game = new Game_1.Game();
 game.newGame(1);
-// game.setPieces(testCorneredKing);
-// game.setPreviousMoveCreatedCheck(true);
 simulateGame(numberOfMovesToSimulate);
 function simulateGame(maxMoves) {
     var endOfGame = false;
@@ -53,23 +46,15 @@ function simulateGame(maxMoves) {
         var moveFound = false;
         var moveLookCounter = 0;
         while (!moveFound && moveLookCounter < 1000) {
-            //if (!game.thereIsCheck) {
             var randomPieceNum = Math.floor(Math.random() * pieces.length);
-            // console.log("random number: " + randomPieceNum);
             console.log("random piece " + getPieceNotation(pieces[randomPieceNum]) + " located at: " + pieces[randomPieceNum].getPostionString());
             piece = pieces[randomPieceNum];
-            // }
-            //else {
-            // find a move that stops the check
-            // 
-            //}
             var possibleMoves = game.getPossibleMovesForPiece(piece);
             console.log("number of moves from position: " + piece.getPostionString() + ": " + possibleMoves.length);
             if (possibleMoves.length == 0) {
                 moveLookCounter++;
-                continue; // try with different piece
+                continue;
             }
-            // list possible moves
             console.log("possible moves: ");
             for (var i = 0; i < possibleMoves.length; i++) {
                 console.log(possibleMoves[i].getPostionString());
@@ -78,9 +63,6 @@ function simulateGame(maxMoves) {
             moveSpace = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
             moveFound = true;
             moveLookCounter++;
-            // if (moveLookCounter > 1000) {
-            //     break;
-            // }
         }
         if (!moveFound) {
             endOfGame = true;
@@ -111,7 +93,6 @@ function simulateGame(maxMoves) {
         console.log(message);
         var boardArray;
         boardArray = [];
-        // console.log(boardArray[0][0][0]);
         for (var i = 0; i < 5; i++) {
             boardArray[i] = [];
             for (var j = 0; j < 5; j++) {
@@ -144,7 +125,7 @@ function simulateGame(maxMoves) {
         }
     }
     function getPieceNotation(piece) {
-        if (piece.isWhite()) {
+        if (piece.isColor("White")) {
             if (piece instanceof Pawn_1.Pawn) {
                 return "W_Pwn";
             }
@@ -166,7 +147,7 @@ function simulateGame(maxMoves) {
             if (piece instanceof King_1.King) {
                 return "W_Kng";
             }
-        } // else black
+        }
         if (piece instanceof Pawn_1.Pawn) {
             return "B_Pwn";
         }
@@ -190,3 +171,4 @@ function simulateGame(maxMoves) {
         }
     }
 }
+//# sourceMappingURL=GameSimulator.js.map

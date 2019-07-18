@@ -8,9 +8,9 @@ var Position = (function () {
     }
     Position.prototype.distanceFrom = function (position) {
         return {
-            z: Math.abs(position.z - this.z),
             x: Math.abs(position.x - this.x),
-            y: Math.abs(position.y = this.y)
+            y: Math.abs(position.y - this.y),
+            z: Math.abs(position.z - this.z)
         };
     };
     Position.prototype.getX = function () {
@@ -31,14 +31,22 @@ var Position = (function () {
     Position.prototype.setZ = function (z) {
         this.z = z;
     };
-    Position.prototype.move = function () { };
+    Position.prototype.getPostionString = function () {
+        return this.getX().toString() + this.getY().toString() + this.getZ().toString();
+    };
+    Position.prototype.samePosition = function (a) {
+        if (a.getX() == this.x && a.getY() == this.getY() && a.getZ() == this.getZ()) {
+            return true;
+        }
+        return false;
+    };
     return Position;
 }());
 exports.Position = Position;
 var Piece = (function () {
     function Piece(color, x, y, z) {
         this.color = color;
-        this.position = new Position(z, x, y);
+        this.position = new Position(x, y, z);
     }
     Piece.prototype.moveTo = function (position) {
         this.position = position;
@@ -48,31 +56,36 @@ var Piece = (function () {
     };
     Piece.prototype.getPostionString = function () {
         var loc = "";
-        loc.concat(this.position.getX().toString());
-        loc.concat(this.position.getY().toString());
-        loc.concat(this.position.getZ().toString());
-        return loc;
+        return this.position.getPostionString();
     };
     Piece.prototype.getColor = function () {
-        if (this.color.localeCompare("White")) {
+        if (this.color.localeCompare("White") == 0) {
             return "White";
         }
         return "Black";
     };
-    Piece.prototype.getName = function () {
-        return this.constructor.name;
+    Piece.prototype.getOppositeColor = function () {
+        if (this.color.localeCompare("Black") == 0) {
+            return "White";
+        }
+        return "Black";
+    };
+    Piece.prototype.isColor = function (color) {
+        return this.color.localeCompare(color) == 0;
     };
     Piece.prototype.isAtPosition = function (position) {
-        position.getX;
-        if (position.getX == this.position.getX &&
-            position.getY == this.position.getY &&
-            position.getZ == this.position.getZ) {
+        if (position == undefined) {
+            return false;
+        }
+        if (position.getX() == this.position.getX() &&
+            position.getY() == this.position.getY() &&
+            position.getZ() == this.position.getZ()) {
             return true;
         }
         return false;
     };
-    Piece.prototype.isBlockingMove = function (a, b) {
-        return false;
+    Piece.prototype.sameColor = function (b) {
+        return (this.color.localeCompare(b.getColor()) == 0);
     };
     return Piece;
 }());

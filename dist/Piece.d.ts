@@ -5,9 +5,9 @@ export declare class Position {
     private z;
     constructor(x: number, y: number, z: number);
     distanceFrom(position: Position): {
-        z: number;
         x: number;
         y: number;
+        z: number;
     };
     getX(): number;
     getY(): number;
@@ -15,18 +15,20 @@ export declare class Position {
     setX(x: number): void;
     setY(y: number): void;
     setZ(z: number): void;
-    move(): void;
+    getPostionString(): string;
+    samePosition(a: Position): boolean;
 }
 export declare abstract class Piece {
-    private readonly color;
     protected position: Position;
-    constructor(color: Color, x: number, y: number, z: number);
+    protected color: string;
+    constructor(color: string, x: number, y: number, z: number);
     moveTo(position: Position): void;
     getPosition(): Position;
     getPostionString(): string;
     getColor(): string;
-    getName(): any;
-    abstract canMoveTo(position: Position): boolean;
+    getOppositeColor(): string;
+    isColor(color: string): boolean;
     isAtPosition(position: Position): boolean;
-    isBlockingMove(a: Position, b: Position): boolean;
+    sameColor(b: Piece): boolean;
+    abstract canMoveTo(position: Position): boolean;
 }

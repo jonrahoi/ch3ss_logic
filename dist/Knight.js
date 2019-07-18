@@ -21,25 +21,17 @@ var Knight = (function (_super) {
     }
     Knight.prototype.canMoveTo = function (position) {
         var distance = this.position.distanceFrom(position);
-        var distances;
+        var distances = [];
         distances.push(distance.x);
         distances.push(distance.y);
         distances.push(distance.z);
-        var sum;
-        var countOnes = 0;
-        for (var i = 0; i < 3; i++) {
-            sum += distances[i];
-            if (distances[i] > 3) {
-                return false;
-            }
-            if (distances[i] == 1) {
-                countOnes++;
-                if (countOnes > 1) {
-                    return false;
-                }
-            }
+        if ((distance.x + distance.y + distance.z) != 3) {
+            return false;
         }
-        if (sum > 3) {
+        if (distance.x > 2 || distance.y > 2 || distance.z > 2) {
+            return false;
+        }
+        if (distance.x == distance.y) {
             return false;
         }
         return true;

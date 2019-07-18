@@ -17,13 +17,13 @@ describe("experiment", () => {
 
     it("creates game", () => {
         const g = new Game()
-        //expect(g.moveCount).to.equal(0)
+        // expect(g.moveCount).to.equal(0)
         expect(g.moveHistory.length).to.equal(0)
     })
 
 });
 
-describe("failure tests", () => {
+describe.skip("failure tests", () => {
     // this will fail
     it("will fail", () => {
         expect(true).to.equal(false)
