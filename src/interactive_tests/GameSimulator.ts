@@ -42,8 +42,7 @@ const testCorneredKingImmediateStalemate = [
     new King("Black", 4, 1, 1)
 ]
 
-const game = new Game();
-game.newGame(1);
+const game = new Game(1);
 
 // game.setPieces(testCorneredKing);
 // game.setPreviousMoveCreatedCheck(true);

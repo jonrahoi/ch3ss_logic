@@ -48,8 +48,7 @@ function getInputFromUser(message: string): string {
     return readlineSync.question(message);
 }
 
-const game = new Game();
-game.newGame(1);
+const game = new Game(1);
 consoleGame();
 
 // printPossibleMovesForPiece(new Unicorn("White", 2, 1, 2));

@@ -76,6 +76,12 @@ export default class Board {
     setPieces(newPieces: Piece[]) {
         this.pieces = newPieces;
     }
+    incrementMoveCount() {
+        this.moveCount++;
+    }
+    setMoveCount(movesCount: number) {
+        this.moveCount = movesCount;
+    }
     /**
      * Executes move if possible: checks if piece at pos A, if move is legal (separate method),
      * if pawn needs to be queened, if king moving into check, deletes piece at B if necessary
@@ -119,7 +125,6 @@ export default class Board {
         // // move piece
         movePiece.moveTo(b);
         console.log("inside board.executeMove, move executed")
-        this.moveCount++;
         return true; // move executed successfully
         // castling, en passant not available in RUAMSCHACH
     }
@@ -239,7 +244,6 @@ export default class Board {
         }
         // move piece
         this.getPieceLocatedAt(a).moveTo(b);
-        this.moveCount++;
     }
 
     kingInCheckFromPosition(pos: Position): boolean {
@@ -288,6 +292,13 @@ export default class Board {
         return pieces;
     }
 
+    getPieces(): Piece[] {
+        const pieces: Piece[] = [];
+        for (let i = 0; i < this.pieces.length; i++) {
+            pieces.push(this.pieces[i]);
+        }
+        return pieces;
+    }
     getPiecesTakenByColor(color: string): Piece[] {
         const piecesTakenArray: Piece[] = [];
         for (let i = 0; i < this.piecesTaken.length; i++) {
@@ -492,5 +503,18 @@ export default class Board {
 
     getMoveCount(): number {
         return this.moveCount;
+    }
+
+    kingInCheck(colorOfKingToCheckIfInCheck: string): boolean {
+        // color passed is whose just moved
+        const kingLocation = this.getLocationOfKingGivenColor(colorOfKingToCheckIfInCheck);
+        for (let i = 0; i < this.pieces.length; i++) {
+            if (!this.pieces[i].isColor(colorOfKingToCheckIfInCheck)) {
+                if (this.moveIsLegal(this.pieces[i], kingLocation)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

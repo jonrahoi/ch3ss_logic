@@ -3,19 +3,23 @@ import Board from "./Board"
 import { Piece, Position, Color } from "./Piece"
 
 export class Game {
-    moveHistory: Position[] = [];
+    moveHistory: Position[];
     board: Board;
-    previousMoveCreatedCheck: boolean = false;
-    thereIsCheck = false;
-    checkMate = false;
-    stalemate = false;
-    gameID = 0;
+    previousMoveCreatedCheck: boolean;
+    thereIsCheck: boolean;
+    checkMate: boolean;
+    stalemate: boolean;
+    gameID: number;
 
-    // Create a new game
-    newGame(gameID: number) {
+    constructor(gameID: number) {
         this.gameID = gameID;
         this.board = new Board();
         this.moveHistory = [];
+        this.previousMoveCreatedCheck = false;
+        this.thereIsCheck = false;
+        this.checkMate = false;
+        this.stalemate = false;
+        gameID = gameID;
     }
 /*
     // for moving:
@@ -66,18 +70,22 @@ export class Game {
         // validate positions are on board
         if (!this.validSpace(a) || !this.validSpace(b)) { return false; }
         console.log("inside Game.move, both valid spaces");
-        // // validate that if there is a check from last move then opponent is trying to move the king or is trying to move to the last space
-        // //
-        // if (this.thereIsCheck && (!(this.board.getPieceLocatedAt(a) instanceof King))) {
-        //     // there is check but the king is not moving
-        //     return false
-        // }
-        // if ( b != this.moveHistory[this.moveHistory.length - 1]) {
-        //      return false;
-        // }
+        let initialCheck = false;
+        let copyOfBoardState: Piece[] = [];
+        if (this.board.kingInCheck(this.board.getWhoseTurn())) {
+            copyOfBoardState = this.board.getPieces();
+            initialCheck = true;
+        }
+
         const moveExecutedBool = this.board.executeMove(a, b);
+        if (initialCheck && this.board.kingInCheck(this.board.getWhoseTurn())) {
+            this.board.setPieces(copyOfBoardState);
+            console.log("move not executed, king still in check")
+            return false;
+        }
         if (moveExecutedBool) {
             console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
+            this.board.incrementMoveCount();
             this.moveHistory.push(a);
             this.moveHistory.push(b);
             // check if king is in check, if opponent king in check set bool
@@ -158,10 +166,10 @@ export class Game {
     goBackOneMove() {
         JSON.stringify(this.moveHistory);
         this.moveHistory = JSON.parse("moveHistory");
-        this.newGame(1);
         for (let i = 0; i < this.moveHistory.length; i += 2) {
             this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
         }
+        //TODO, movecount, etc
     }
 
     goForwardOneMove() {
@@ -184,4 +192,5 @@ export class Game {
     pieceLocatedAtBool(a: Position): boolean {
         return this.board.pieceLocatedAtBool(a);
     }
+
 }

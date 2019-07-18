@@ -16,7 +16,7 @@ describe("experiment", () => {
     });
 
     it("creates game", () => {
-        const g = new Game()
+        const g = new Game(1);
         // expect(g.moveCount).to.equal(0)
         expect(g.moveHistory.length).to.equal(0)
     })

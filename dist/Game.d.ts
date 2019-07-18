@@ -8,7 +8,7 @@ export declare class Game {
     checkMate: boolean;
     stalemate: boolean;
     gameID: number;
-    newGame(gameID: number): void;
+    constructor(gameID: number);
     setPieces(pieces: Piece[]): void;
     getCheck(): boolean;
     getGameID(): number;

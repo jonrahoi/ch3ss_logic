@@ -5,6 +5,8 @@ export default class Board {
     private piecesTaken;
     private static setupBoard;
     setPieces(newPieces: Piece[]): void;
+    incrementMoveCount(): void;
+    setMoveCount(movesCount: number): void;
     executeMove(a: Position, b: Position): boolean;
     MoveExecutable(movePiece: Piece, b: Position): boolean;
     moveIsLegalDebug(movePiece: Piece, b: Position): boolean;
@@ -15,6 +17,7 @@ export default class Board {
     gameIsDrawn(): boolean;
     getWhoseTurn(): string;
     getPiecesByColor(color: string): Piece[];
+    getPieces(): Piece[];
     getPiecesTakenByColor(color: string): Piece[];
     pawnMoveDirectionCorrect(colorOfPawn: string, a: Position, b: Position): boolean;
     deletePieceAtPosition(b: Position): void;
@@ -31,4 +34,5 @@ export default class Board {
     getSpacesBetweenIncludingEnd(a: Position, b: Position): Position[];
     checkCanBeBlocked(positionKing: Position, positionAttacker: Position, kingColor: string): boolean;
     getMoveCount(): number;
+    kingInCheck(colorOfKingToCheckIfInCheck: string): boolean;
 }

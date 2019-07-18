@@ -15,7 +15,7 @@ describe("experiment", function () {
         expect(1 + 1).to.equal(2);
     });
     it("creates game", function () {
-        var g = new Game_1.Game();
+        var g = new Game_1.Game(1);
         expect(g.moveHistory.length).to.equal(0);
     });
 });

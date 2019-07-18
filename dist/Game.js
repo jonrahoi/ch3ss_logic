@@ -3,19 +3,16 @@ exports.__esModule = true;
 var Board_1 = require("./Board");
 var Piece_1 = require("./Piece");
 var Game = (function () {
-    function Game() {
+    function Game(gameID) {
+        this.gameID = gameID;
+        this.board = new Board_1["default"]();
         this.moveHistory = [];
         this.previousMoveCreatedCheck = false;
         this.thereIsCheck = false;
         this.checkMate = false;
         this.stalemate = false;
-        this.gameID = 0;
+        gameID = gameID;
     }
-    Game.prototype.newGame = function (gameID) {
-        this.gameID = gameID;
-        this.board = new Board_1["default"]();
-        this.moveHistory = [];
-    };
     Game.prototype.setPieces = function (pieces) {
         this.board.setPieces(pieces);
     };
@@ -33,9 +30,21 @@ var Game = (function () {
             return false;
         }
         console.log("inside Game.move, both valid spaces");
+        var initialCheck = false;
+        var copyOfBoardState = [];
+        if (this.board.kingInCheck(this.board.getWhoseTurn())) {
+            copyOfBoardState = this.board.getPieces();
+            initialCheck = true;
+        }
         var moveExecutedBool = this.board.executeMove(a, b);
+        if (initialCheck && this.board.kingInCheck(this.board.getWhoseTurn())) {
+            this.board.setPieces(copyOfBoardState);
+            console.log("move not executed, king still in check");
+            return false;
+        }
         if (moveExecutedBool) {
             console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString());
+            this.board.incrementMoveCount();
             this.moveHistory.push(a);
             this.moveHistory.push(b);
             if (this.board.kingInCheckFromPosition(b)) {
@@ -94,7 +103,6 @@ var Game = (function () {
     Game.prototype.goBackOneMove = function () {
         JSON.stringify(this.moveHistory);
         this.moveHistory = JSON.parse("moveHistory");
-        this.newGame(1);
         for (var i = 0; i < this.moveHistory.length; i += 2) {
             this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
         }

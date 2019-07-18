@@ -61,6 +61,12 @@ var Board = (function () {
     Board.prototype.setPieces = function (newPieces) {
         this.pieces = newPieces;
     };
+    Board.prototype.incrementMoveCount = function () {
+        this.moveCount++;
+    };
+    Board.prototype.setMoveCount = function (movesCount) {
+        this.moveCount = movesCount;
+    };
     Board.prototype.executeMove = function (a, b) {
         console.log("inside board.executeMove");
         if (!this.pieceLocatedAtBool(a)) {
@@ -94,7 +100,6 @@ var Board = (function () {
         }
         movePiece.moveTo(b);
         console.log("inside board.executeMove, move executed");
-        this.moveCount++;
         return true;
     };
     Board.prototype.MoveExecutable = function (movePiece, b) {
@@ -173,7 +178,6 @@ var Board = (function () {
             return;
         }
         this.getPieceLocatedAt(a).moveTo(b);
-        this.moveCount++;
     };
     Board.prototype.kingInCheckFromPosition = function (pos) {
         var color = "Black";
@@ -213,6 +217,13 @@ var Board = (function () {
             if (this.pieces[i].isColor(color)) {
                 pieces.push(this.pieces[i]);
             }
+        }
+        return pieces;
+    };
+    Board.prototype.getPieces = function () {
+        var pieces = [];
+        for (var i = 0; i < this.pieces.length; i++) {
+            pieces.push(this.pieces[i]);
         }
         return pieces;
     };
@@ -377,6 +388,17 @@ var Board = (function () {
     };
     Board.prototype.getMoveCount = function () {
         return this.moveCount;
+    };
+    Board.prototype.kingInCheck = function (colorOfKingToCheckIfInCheck) {
+        var kingLocation = this.getLocationOfKingGivenColor(colorOfKingToCheckIfInCheck);
+        for (var i = 0; i < this.pieces.length; i++) {
+            if (!this.pieces[i].isColor(colorOfKingToCheckIfInCheck)) {
+                if (this.moveIsLegal(this.pieces[i], kingLocation)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     };
     return Board;
 }());

@@ -31,8 +31,7 @@ var testCorneredKingImmediateStalemate = [
     new Pawn_1.Pawn("Black", 3, 2, 2),
     new King_1.King("Black", 4, 1, 1)
 ];
-var game = new Game_1.Game();
-game.newGame(1);
+var game = new Game_1.Game(1);
 simulateGame(numberOfMovesToSimulate);
 function simulateGame(maxMoves) {
     var endOfGame = false;
