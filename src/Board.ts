@@ -517,4 +517,8 @@ export default class Board {
         }
         return false;
     }
+
+    dummyMethodToDebugPublish() {
+        return;
+    }
 }
