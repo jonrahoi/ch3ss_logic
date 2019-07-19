@@ -20,4 +20,7 @@ export class Knight extends Piece {
         }
         return true;
     }
+    makeCopy(): Piece {
+        return new Knight(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    }
 }

@@ -32,6 +32,9 @@ var Pawn = (function (_super) {
         }
         return false;
     };
+    Pawn.prototype.makeCopy = function () {
+        return new Pawn(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    };
     return Pawn;
 }(Piece_1.Piece));
 exports.Pawn = Pawn;

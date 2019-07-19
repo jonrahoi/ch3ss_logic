@@ -39,4 +39,7 @@ export class Bishop extends Piece {
         }
         return false;
     }
+    makeCopy(): Piece {
+        return new Bishop(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    }
 }

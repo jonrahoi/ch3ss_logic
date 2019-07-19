@@ -31,4 +31,5 @@ export declare class Game {
     getKingPiece(): Piece;
     getPieceLocatedAt(a: Position): Piece;
     pieceLocatedAtBool(a: Position): boolean;
+    kingsPresentOnBoardDebug(): boolean;
 }

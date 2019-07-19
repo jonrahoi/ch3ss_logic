@@ -106,4 +106,6 @@ export abstract class Piece {
         return (this.color.localeCompare(b.getColor()) == 0);
     }
     abstract canMoveTo(position: Position): boolean
+
+    abstract makeCopy(): Piece
 }

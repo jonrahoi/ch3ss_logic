@@ -44,4 +44,7 @@ export class Queen extends Piece {
         }
         return false;
     }
+    makeCopy(): Piece {
+        return new Queen(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    }
 }

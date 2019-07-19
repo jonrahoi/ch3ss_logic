@@ -56,6 +56,9 @@ var Queen = (function (_super) {
         }
         return false;
     };
+    Queen.prototype.makeCopy = function () {
+        return new Queen(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    };
     return Queen;
 }(Piece_1.Piece));
 exports.Queen = Queen;

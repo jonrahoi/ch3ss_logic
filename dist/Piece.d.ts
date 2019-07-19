@@ -31,4 +31,5 @@ export declare abstract class Piece {
     isAtPosition(position: Position): boolean;
     sameColor(b: Piece): boolean;
     abstract canMoveTo(position: Position): boolean;
+    abstract makeCopy(): Piece;
 }

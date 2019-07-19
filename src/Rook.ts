@@ -19,4 +19,7 @@ export class Rook extends Piece {
         }
         return false;
     }
+    makeCopy(): Piece {
+        return new Rook(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    }
 }

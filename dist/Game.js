@@ -33,27 +33,30 @@ var Game = (function () {
             return false;
         }
         console.log("inside Game.move, both valid spaces");
-        var initialCheck = false;
+        var kingStartedInCheck = false;
         var copyOfBoardState = [];
+        copyOfBoardState = this.board.getPieces();
         if (this.board.kingInCheck(this.board.getWhoseTurn())) {
-            copyOfBoardState = this.board.getPieces();
-            initialCheck = true;
+            kingStartedInCheck = true;
         }
-        var moveExecutedBool = this.board.executeMove(a, b);
-        if (initialCheck && this.board.kingInCheck(this.board.getWhoseTurn())) {
+        var moveExecutedSuccessfully = this.board.executeMove(a, b);
+        if (!moveExecutedSuccessfully) {
+            return false;
+        }
+        if (kingStartedInCheck && this.board.kingInCheck(this.board.getWhoseTurn())) {
             this.board.setPieces(copyOfBoardState);
             console.log("move not executed, king still in check");
             return false;
         }
-        if (moveExecutedBool) {
+        if (moveExecutedSuccessfully) {
             console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString());
             this.board.incrementMoveCount();
             this.moveHistory.push(a);
             this.moveHistory.push(b);
-            if (this.board.kingInCheckFromPosition(b)) {
+            if (this.board.kingInCheck(this.board.getWhoseTurn())) {
                 this.thereIsCheck = true;
                 console.log("inside game.ts there is check");
-                if (this.board.playerCheckmated(b)) {
+                if (this.board.playerCheckmated(this.board.getWhoseTurn())) {
                     this.checkMate = true;
                     console.log("inside game.ts there is checkmate");
                 }
@@ -65,7 +68,7 @@ var Game = (function () {
                 }
             }
         }
-        return moveExecutedBool;
+        return true;
     };
     Game.prototype.gameIsDrawn = function () {
         return this.board.gameIsDrawn();
@@ -124,6 +127,9 @@ var Game = (function () {
     };
     Game.prototype.pieceLocatedAtBool = function (a) {
         return this.board.pieceLocatedAtBool(a);
+    };
+    Game.prototype.kingsPresentOnBoardDebug = function () {
+        return this.board.kingsPresentOnBoardDebug();
     };
     return Game;
 }());

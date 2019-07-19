@@ -50,6 +50,9 @@ var Bishop = (function (_super) {
         }
         return false;
     };
+    Bishop.prototype.makeCopy = function () {
+        return new Bishop(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    };
     return Bishop;
 }(Piece_1.Piece));
 exports.Bishop = Bishop;

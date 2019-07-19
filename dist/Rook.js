@@ -35,6 +35,9 @@ var Rook = (function (_super) {
         }
         return false;
     };
+    Rook.prototype.makeCopy = function () {
+        return new Rook(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    };
     return Rook;
 }(Piece_1.Piece));
 exports.Rook = Rook;

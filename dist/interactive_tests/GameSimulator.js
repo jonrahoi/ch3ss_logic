@@ -8,7 +8,7 @@ var Rook_1 = require("../Rook");
 var Unicorn_1 = require("../Unicorn");
 var Pawn_1 = require("../Pawn");
 var Queen_1 = require("../Queen");
-var numberOfMovesToSimulate = 10;
+var numberOfMovesToSimulate = 1000;
 var testCorneredKing = [
     new King_1.King("White", 1, 1, 1),
     new Pawn_1.Pawn("Black", 1, 3, 1),
@@ -32,6 +32,7 @@ var testCorneredKingImmediateStalemate = [
     new King_1.King("Black", 4, 1, 1)
 ];
 var game = new Game_1.Game(1);
+game.setPieces(testCorneredKing);
 simulateGame(numberOfMovesToSimulate);
 function simulateGame(maxMoves) {
     var endOfGame = false;
@@ -63,6 +64,11 @@ function simulateGame(maxMoves) {
             moveFound = true;
             moveLookCounter++;
         }
+        if (!game.kingsPresentOnBoardDebug()) {
+            console.log("King is missing!");
+            endOfGame = true;
+            break;
+        }
         console.log("trying move piece: " + getPieceNotation(piece), " at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         var moveSuccessful = game.move(piece.getPosition(), moveSpace);
         console.log("move successful: " + moveSuccessful + ", " + game.board.getMoveCount() + " move count, ", "piece: " + getPieceNotation(piece), " at " + piece.getPostionString());
@@ -72,10 +78,12 @@ function simulateGame(maxMoves) {
         if (game.checkMate == true) {
             console.log("CHECKMATE!");
             endOfGame = true;
+            break;
         }
         else if (game.stalemate == true) {
             console.log("STALEMATE, DRAW!");
             endOfGame = true;
+            break;
         }
     }
     function dispalyBoardState(whitePieces, blackPieces, message) {

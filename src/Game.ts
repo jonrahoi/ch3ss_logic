@@ -21,35 +21,6 @@ export class Game {
         this.stalemate = false;
         gameID = gameID;
     }
-/*
-    // for moving:
-    // get strings a and b from textboxes
-    let moveSuccessful = game.move(a, b);
-    if (!moveSuccessful) {
-
-    }
-      // logic should be:
-    // move A to B
-    // if player in check
-    // if player in checkmate say checkmate
-    // else is player in draw
-    // if player not in check is
-    if (game.playerInCheck) {
-        if (game.playerCheckmated) {
-            //message on screen player checkmated
-        }
-        else
-        //message on screen player in check
-    }
-    else if (game.GameIsDrawn()) {
-        //message game is drawn
-    }
-
-    // for getting possible moves
-    // get string from textbox space a
-    let moveArray = game.getAllPossibleMovesSpace(a);
-    // display possible moves
-   */
 
     setPieces(pieces: Piece[]) {
        this.board.setPieces(pieces);
@@ -74,30 +45,33 @@ export class Game {
         // validate positions are on board
         if (!this.validSpace(a) || !this.validSpace(b)) { return false; }
         console.log("inside Game.move, both valid spaces");
-        let initialCheck = false;
+        let kingStartedInCheck = false;
         let copyOfBoardState: Piece[] = [];
+        copyOfBoardState = this.board.getPieces();
         if (this.board.kingInCheck(this.board.getWhoseTurn())) {
-            copyOfBoardState = this.board.getPieces();
-            initialCheck = true;
+            kingStartedInCheck = true;
         }
-
-        const moveExecutedBool = this.board.executeMove(a, b);
-        if (initialCheck && this.board.kingInCheck(this.board.getWhoseTurn())) {
+        const moveExecutedSuccessfully = this.board.executeMove(a, b);
+        if (!moveExecutedSuccessfully) {
+            return false;
+        }
+        if (kingStartedInCheck && this.board.kingInCheck(this.board.getWhoseTurn())) {
             this.board.setPieces(copyOfBoardState);
             console.log("move not executed, king still in check")
             return false;
         }
-        if (moveExecutedBool) {
+        if (moveExecutedSuccessfully) {
             console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
             this.board.incrementMoveCount();
             this.moveHistory.push(a);
             this.moveHistory.push(b);
             // check if king is in check, if opponent king in check set bool
-            if (this.board.kingInCheckFromPosition(b)) {
+            if (this.board.kingInCheck(this.board.getWhoseTurn())) {
+            // if (this.board.kingInCheckFromPosition(b)) {
                 this.thereIsCheck = true;
                 console.log("inside game.ts there is check");
                 // check if there is checkmate
-                if (this.board.playerCheckmated(b)) {
+                if (this.board.playerCheckmated(this.board.getWhoseTurn())) {
                     this.checkMate = true;
                     console.log("inside game.ts there is checkmate");
                 }
@@ -110,7 +84,7 @@ export class Game {
                 }
             }
         }
-        return moveExecutedBool;
+        return true;
     }
 
     gameIsDrawn(): boolean {
@@ -195,6 +169,10 @@ export class Game {
 
     pieceLocatedAtBool(a: Position): boolean {
         return this.board.pieceLocatedAtBool(a);
+    }
+
+    kingsPresentOnBoardDebug(): boolean {
+        return this.board.kingsPresentOnBoardDebug();
     }
 
 }

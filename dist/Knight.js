@@ -36,6 +36,9 @@ var Knight = (function (_super) {
         }
         return true;
     };
+    Knight.prototype.makeCopy = function () {
+        return new Knight(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    };
     return Knight;
 }(Piece_1.Piece));
 exports.Knight = Knight;

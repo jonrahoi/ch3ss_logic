@@ -13,8 +13,8 @@ export default class Board {
     setMoveCount(movesCount: number): void;
     executeMove(a: Position, b: Position): boolean;
     MoveExecutable(movePiece: Piece, b: Position): boolean;
-    moveIsLegalDebug(movePiece: Piece, b: Position): boolean;
     moveIsLegal(movePiece: Piece, b: Position): boolean;
+    moveIsLegalIgnoreSpecificPiece(movePiece: Piece, b: Position, pieceToIgnore: Piece): boolean;
     checkForQueening(movePiece: Piece, b: Position): boolean;
     executeMoveNoLegalCheck(a: Position, b: Position): void;
     kingInCheckFromPosition(pos: Position): boolean;
@@ -31,13 +31,15 @@ export default class Board {
     getPieceLocatedAt(a: Position): Piece;
     spaceOnBoard(a: Position): boolean;
     pieceInWay(a: Position, b: Position): boolean;
+    pieceInWayEvenIgnoringPiece(a: Position, b: Position, pieceToIgnore: Piece): boolean;
+    pieceInWayIgnoreSpecificPiece(a: Position, b: Position): boolean;
     getSlope(a: number, b: number): number;
     getPossibleMovesPiece(piece: Piece): Position[];
     getAllPossibleMovesPosition(a: Position): Position[];
-    playerCheckmated(a: Position): boolean;
+    playerCheckmated(kingColor: string): boolean;
     getSpacesBetweenIncludingEnd(a: Position, b: Position): Position[];
-    checkCanBeBlocked(positionKing: Position, positionAttacker: Position, kingColor: string): boolean;
+    checkCanBeBlockedWithoutCreatingAnotherCheck(positionKing: Position, positionAttacker: Position, kingColor: string): boolean;
     getMoveCount(): number;
     kingInCheck(colorOfKingToCheckIfInCheck: string): boolean;
-    dummyMethodToDebugPublish(): void;
+    kingsPresentOnBoardDebug(): boolean;
 }

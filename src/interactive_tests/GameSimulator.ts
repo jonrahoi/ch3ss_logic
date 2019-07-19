@@ -10,7 +10,7 @@ import { Pawn } from "../Pawn"
 import { Queen } from "../Queen"
 import Board from "../Board";
 
-const numberOfMovesToSimulate = 10;
+const numberOfMovesToSimulate = 1000;
 
 const testCorneredKing = [
     new King("White", 1, 1, 1),
@@ -44,7 +44,7 @@ const testCorneredKingImmediateStalemate = [
 
 const game = new Game(1);
 
-// game.setPieces(testCorneredKing);
+game.setPieces(testCorneredKing);
 // game.setPreviousMoveCreatedCheck(true);
 
 simulateGame(numberOfMovesToSimulate);
@@ -95,6 +95,13 @@ function simulateGame(maxMoves: number) {
         //     endOfGame = true;
         //     break;
         // }
+
+        // TODO remove
+        if (!game.kingsPresentOnBoardDebug()) {
+            console.log("King is missing!");
+            endOfGame = true;
+            break;
+        }
         console.log("trying move piece: " + getPieceNotation(piece), " at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         const moveSuccessful = game.move(piece.getPosition(), moveSpace);
         console.log("move successful: " + moveSuccessful + ", " + game.board.getMoveCount() + " move count, ", "piece: " + getPieceNotation(piece), " at " + piece.getPostionString());
@@ -108,10 +115,12 @@ function simulateGame(maxMoves: number) {
         if (game.checkMate == true) {
             console.log("CHECKMATE!");
             endOfGame = true;
+            break;
         }
         else if (game.stalemate == true) {
             console.log("STALEMATE, DRAW!");
             endOfGame = true;
+            break;
         }
     }
     function dispalyBoardState(whitePieces: Piece[], blackPieces: Piece[], message: string) {

@@ -23,6 +23,9 @@ var King = (function (_super) {
         var distance = this.position.distanceFrom(position);
         return distance.y < 2 && distance.x < 2 && distance.z < 2;
     };
+    King.prototype.makeCopy = function () {
+        return new King(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    };
     return King;
 }(Piece_1.Piece));
 exports.King = King;

@@ -89,8 +89,9 @@ var Board = (function () {
         console.log("inside board.executeMove, right color, move legal");
         if (movePiece instanceof Pawn_1.Pawn && this.checkForQueening(movePiece, b)) {
             this.deletePieceAtPosition(a);
-            var newQueen = new Queen_1.Queen(movePiece.getColor(), b.getX(), b.getY(), b.getZ());
+            var newQueen = new Queen_1.Queen(movePiece.getColor(), a.getX(), a.getY(), a.getZ());
             this.pieces.push(newQueen);
+            newQueen.moveTo(b);
             console.log("inside board.executeMove, pawn queened, move executed");
             return true;
         }
@@ -118,32 +119,6 @@ var Board = (function () {
         }
         return true;
     };
-    Board.prototype.moveIsLegalDebug = function (movePiece, b) {
-        if (!movePiece.canMoveTo(b)) {
-            return false;
-        }
-        if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).sameColor(movePiece)) {
-            console.log("inside moveIsLegal, move space has piece of same color");
-            return false;
-        }
-        if (movePiece instanceof Knight_1.Knight) {
-            console.log("inside moveIsLegal");
-            return true;
-        }
-        if (movePiece instanceof Pawn_1.Pawn) {
-            if (!this.pawnMoveDirectionCorrect(movePiece.getColor(), movePiece.getPosition(), b)) {
-                console.log("inside moveIsLegal, pawn incorrect direction");
-                return false;
-            }
-            return true;
-        }
-        if (this.pieceInWay(movePiece.getPosition(), b)) {
-            console.log("inside moveIsLegal, piece is in way");
-            return false;
-        }
-        console.log("inside moveIsLegal, returning move legal");
-        return true;
-    };
     Board.prototype.moveIsLegal = function (movePiece, b) {
         if (!movePiece.canMoveTo(b)) {
             return false;
@@ -161,6 +136,27 @@ var Board = (function () {
             return true;
         }
         if (this.pieceInWay(movePiece.getPosition(), b)) {
+            return false;
+        }
+        return true;
+    };
+    Board.prototype.moveIsLegalIgnoreSpecificPiece = function (movePiece, b, pieceToIgnore) {
+        if (!movePiece.canMoveTo(b)) {
+            return false;
+        }
+        if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).sameColor(movePiece)) {
+            return false;
+        }
+        if (movePiece instanceof Knight_1.Knight) {
+            return true;
+        }
+        if (movePiece instanceof Pawn_1.Pawn) {
+            if (!this.pawnMoveDirectionCorrect(movePiece.getColor(), movePiece.getPosition(), b)) {
+                return false;
+            }
+            return true;
+        }
+        if (this.pieceInWayEvenIgnoringPiece(movePiece.getPosition(), b, pieceToIgnore)) {
             return false;
         }
         return true;
@@ -188,6 +184,8 @@ var Board = (function () {
         this.getPieceLocatedAt(a).moveTo(b);
     };
     Board.prototype.kingInCheckFromPosition = function (pos) {
+        console.log("hello, inside board.kingInCheckFromPosition");
+        console.log("inside board.kingInCheckFromPosition " + pos.getPostionString());
         var color = "Black";
         if (!this.pieceLocatedAtBool(pos)) {
             return false;
@@ -231,7 +229,7 @@ var Board = (function () {
     Board.prototype.getPieces = function () {
         var pieces = [];
         for (var i = 0; i < this.pieces.length; i++) {
-            pieces.push(this.pieces[i]);
+            pieces.push(this.pieces[i].makeCopy());
         }
         return pieces;
     };
@@ -239,7 +237,7 @@ var Board = (function () {
         var piecesTakenArray = [];
         for (var i = 0; i < this.piecesTaken.length; i++) {
             if (!(this.pieces[i].isColor(color))) {
-                piecesTakenArray.push(this.pieces[i]);
+                piecesTakenArray.push(this.pieces[i].makeCopy());
             }
         }
         return piecesTakenArray;
@@ -268,6 +266,7 @@ var Board = (function () {
         this.pieces = newPieces;
     };
     Board.prototype.kingInCheckAtSpace = function (opponentColor, positionKing) {
+        console.log("inside board.kingInCheckAtSpace, position: " + positionKing.getPostionString());
         for (var i = 0; i < this.pieces.length; i++) {
             if ((this.pieces[i].isColor(opponentColor)) && this.moveIsLegal(this.pieces[i], positionKing)) {
                 return true;
@@ -327,6 +326,45 @@ var Board = (function () {
         }
         return false;
     };
+    Board.prototype.pieceInWayEvenIgnoringPiece = function (a, b, pieceToIgnore) {
+        var dx = this.getSlope(a.getX(), b.getX());
+        var dy = this.getSlope(a.getY(), b.getY());
+        var dz = this.getSlope(a.getZ(), b.getZ());
+        var c = new Piece_1.Position(a.getX(), a.getY(), a.getZ());
+        c.setX(c.getX() + dx);
+        c.setY(c.getY() + dy);
+        c.setZ(c.getZ() + dz);
+        while (!c.samePosition(b) && this.spaceOnBoard(c)) {
+            if (c.samePosition(pieceToIgnore.getPosition())) {
+                continue;
+            }
+            if (this.pieceLocatedAtBool(c)) {
+                return true;
+            }
+            c.setX(c.getX() + dx);
+            c.setY(c.getY() + dy);
+            c.setZ(c.getZ() + dz);
+        }
+        return false;
+    };
+    Board.prototype.pieceInWayIgnoreSpecificPiece = function (a, b) {
+        var dx = this.getSlope(a.getX(), b.getX());
+        var dy = this.getSlope(a.getY(), b.getY());
+        var dz = this.getSlope(a.getZ(), b.getZ());
+        var c = new Piece_1.Position(a.getX(), a.getY(), a.getZ());
+        c.setX(c.getX() + dx);
+        c.setY(c.getY() + dy);
+        c.setZ(c.getZ() + dz);
+        while (!c.samePosition(b) && this.spaceOnBoard(c)) {
+            if (this.pieceLocatedAtBool(c)) {
+                return true;
+            }
+            c.setX(c.getX() + dx);
+            c.setY(c.getY() + dy);
+            c.setZ(c.getZ() + dz);
+        }
+        return false;
+    };
     Board.prototype.getSlope = function (a, b) {
         if (a < b) {
             return 1;
@@ -358,13 +396,24 @@ var Board = (function () {
         var movePiece = this.getPieceLocatedAt(a);
         return this.getPossibleMovesPiece(movePiece);
     };
-    Board.prototype.playerCheckmated = function (a) {
-        var kingColor = this.getPieceLocatedAt(a).getOppositeColor();
+    Board.prototype.playerCheckmated = function (kingColor) {
         var locationKing = this.getLocationOfKingGivenColor(kingColor);
         if (!(this.getAllPossibleMovesPosition(locationKing).length == 0)) {
             return false;
         }
-        return !this.checkCanBeBlocked(locationKing, a, kingColor);
+        var piecesThatCanAttackKing = [];
+        for (var i = 0; i < this.pieces.length; i++) {
+            if (!this.pieces[i].isColor(kingColor) && this.moveIsLegal(this.pieces[i], locationKing)) {
+                piecesThatCanAttackKing.push(this.pieces[i]);
+            }
+        }
+        if (piecesThatCanAttackKing.length > 1) {
+            return true;
+        }
+        else if (piecesThatCanAttackKing.length == 1) {
+            return !this.checkCanBeBlockedWithoutCreatingAnotherCheck(locationKing, piecesThatCanAttackKing[1].getPosition(), kingColor);
+        }
+        return false;
     };
     Board.prototype.getSpacesBetweenIncludingEnd = function (a, b) {
         var dx = this.getSlope(a.getX(), b.getX());
@@ -381,14 +430,17 @@ var Board = (function () {
         inBetweenSpaces.push(c);
         return inBetweenSpaces;
     };
-    Board.prototype.checkCanBeBlocked = function (positionKing, positionAttacker, kingColor) {
-        var spaces = this.getSpacesBetweenIncludingEnd(positionKing, positionAttacker);
+    Board.prototype.checkCanBeBlockedWithoutCreatingAnotherCheck = function (positionKing, positionAttacker, kingColor) {
+        var spacesThatWouldBlockCheck = this.getSpacesBetweenIncludingEnd(positionKing, positionAttacker);
         for (var i = 0; i < this.pieces.length; i++) {
-            if (!this.pieces[i].isColor(kingColor)) {
-                for (var j = 0; j < spaces.length; j++) {
-                    if (this.moveIsLegal(this.pieces[i], spaces[j])) {
-                        return true;
+            for (var j = 0; j < spacesThatWouldBlockCheck.length; j++) {
+                if (this.pieces[i].isColor(kingColor) && this.moveIsLegal(this.pieces[i], spacesThatWouldBlockCheck[j])) {
+                    for (var k = 0; k < this.pieces.length; k++) {
+                        if (i != k && this.moveIsLegalIgnoreSpecificPiece(this.pieces[k], positionKing, this.pieces[i])) {
+                            return false;
+                        }
                     }
+                    return true;
                 }
             }
         }
@@ -408,8 +460,14 @@ var Board = (function () {
         }
         return false;
     };
-    Board.prototype.dummyMethodToDebugPublish = function () {
-        return;
+    Board.prototype.kingsPresentOnBoardDebug = function () {
+        var count = 0;
+        for (var i = 0; i < this.pieces.length; i++) {
+            if (this.pieces[i] instanceof King_1.King) {
+                count++;
+            }
+        }
+        return (count == 2);
     };
     return Board;
 }());
