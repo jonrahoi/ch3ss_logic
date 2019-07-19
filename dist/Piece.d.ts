@@ -17,6 +17,7 @@ export declare class Position {
     setZ(z: number): void;
     getPostionString(): string;
     samePosition(a: Position): boolean;
+    getCopy(): Position;
 }
 export declare abstract class Piece {
     protected position: Position;

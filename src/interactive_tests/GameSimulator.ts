@@ -10,7 +10,7 @@ import { Pawn } from "../Pawn"
 import { Queen } from "../Queen"
 import Board from "../Board";
 
-const numberOfMovesToSimulate = 1000;
+const numberOfMovesToSimulate = 100;
 
 const testCorneredKing = [
     new King("White", 1, 1, 1),

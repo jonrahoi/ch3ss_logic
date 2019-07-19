@@ -103,7 +103,7 @@ var Game = (function () {
     };
     Game.prototype.getPossibleMovesForPiece = function (piece) {
         var pieceB = piece;
-        return this.board.getPossibleMovesPiece(pieceB);
+        return this.board.getAllPossibleMovesPosition(pieceB.getPosition());
     };
     Game.prototype.getPiecesTaken = function (color) {
         return this.board.getPiecesTaken();

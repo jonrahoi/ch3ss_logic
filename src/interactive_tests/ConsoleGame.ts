@@ -49,8 +49,8 @@ function getInputFromUser(message: string): string {
 }
 
 const game = new Game(1);
-game.setPieces(testCorneredKing);
-game.setCheck(true);
+// game.setPieces(testCorneredKing);
+// game.setCheck(true);
 console.log(game.getCheckMate());
 let possibleMoves = game.getPossibleMovesForPieceAtSpace(new Position(1, 1, 1));
 for (let i = 0; i < possibleMoves.length; i++) {

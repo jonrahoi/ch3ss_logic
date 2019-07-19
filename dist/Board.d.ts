@@ -34,7 +34,6 @@ export default class Board {
     pieceInWayEvenIgnoringPiece(a: Position, b: Position, pieceToIgnore: Piece): boolean;
     pieceInWayIgnoreSpecificPiece(a: Position, b: Position): boolean;
     getSlope(a: number, b: number): number;
-    getPossibleMovesPiece(piece: Piece): Position[];
     getAllPossibleMovesPosition(a: Position): Position[];
     playerCheckmated(kingColor: string): boolean;
     getSpacesBetweenIncludingEnd(a: Position, b: Position): Position[];

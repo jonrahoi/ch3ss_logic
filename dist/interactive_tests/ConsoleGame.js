@@ -41,8 +41,6 @@ function getInputFromUser(message) {
     return readlineSync.question(message);
 }
 var game = new Game_1.Game(1);
-game.setPieces(testCorneredKing);
-game.setCheck(true);
 console.log(game.getCheckMate());
 var possibleMoves = game.getPossibleMovesForPieceAtSpace(new Piece_1.Position(1, 1, 1));
 for (var i = 0; i < possibleMoves.length; i++) {

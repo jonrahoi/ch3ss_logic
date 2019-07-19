@@ -24,23 +24,14 @@ var Bishop = (function (_super) {
         if (distance.y == 0 && distance.x == 0 && distance.z == 0) {
             return false;
         }
-        if (distance.z == 0) {
-            if (distance.y == distance.x) {
-                return true;
-            }
-            return false;
+        if (distance.z == 0 && distance.y == distance.x) {
+            return true;
         }
-        if (distance.y == 0) {
-            if (distance.z == distance.x) {
-                return true;
-            }
-            return false;
+        if (distance.x == 0 && distance.y == distance.z) {
+            return true;
         }
-        if (distance.x == 0) {
-            if (distance.y == distance.z) {
-                return true;
-            }
-            return false;
+        if (distance.y == 0 && distance.x == distance.z) {
+            return true;
         }
         return false;
     };

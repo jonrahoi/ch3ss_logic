@@ -40,6 +40,9 @@ var Position = (function () {
         }
         return false;
     };
+    Position.prototype.getCopy = function () {
+        return new Position(this.getX(), this.getY(), this.getZ());
+    };
     return Position;
 }());
 exports.Position = Position;
@@ -52,7 +55,7 @@ var Piece = (function () {
         this.position = position;
     };
     Piece.prototype.getPosition = function () {
-        return this.position;
+        return this.position.getCopy();
     };
     Piece.prototype.getPostionString = function () {
         var loc = "";

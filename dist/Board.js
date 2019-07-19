@@ -203,7 +203,7 @@ var Board = (function () {
         var whoseTurn = this.getWhoseTurn();
         for (var i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].isColor(whoseTurn)) {
-                if (this.getPossibleMovesPiece(this.pieces[i]).length > 0) {
+                if (this.getAllPossibleMovesPosition(this.pieces[i].getPosition()).length > 0) {
                     return false;
                 }
             }
@@ -371,32 +371,28 @@ var Board = (function () {
         }
         return 0;
     };
-    Board.prototype.getPossibleMovesPiece = function (piece) {
-        var possibleMoves = [];
-        for (var x = 1; x <= this.sizeOfBoardX; x++) {
-            for (var y = 1; y <= this.sizeOfBoardY; y++) {
-                for (var z = 1; z <= this.sizeOfBoardZ; z++) {
-                    var possibleSpace = new Piece_1.Position(x, y, z);
-                    if (piece instanceof King_1.King) {
-                        if (piece.canMoveTo(possibleSpace) && !this.kingInCheckAtSpace(piece.getOppositeColor(), possibleSpace)) {
-                            possibleMoves.push(possibleSpace);
-                        }
-                    }
-                    else if (piece.canMoveTo(possibleSpace) && this.MoveExecutable(piece, possibleSpace)) {
-                        possibleMoves.push(possibleSpace);
-                    }
-                }
-            }
-        }
-        return possibleMoves;
-    };
     Board.prototype.getAllPossibleMovesPosition = function (a) {
         var possibleMoves = [];
         if (!this.pieceLocatedAtBool(a)) {
             return possibleMoves;
         }
         var movePiece = this.getPieceLocatedAt(a);
-        return this.getPossibleMovesPiece(movePiece);
+        for (var x = 1; x <= this.sizeOfBoardX; x++) {
+            for (var y = 1; y <= this.sizeOfBoardY; y++) {
+                for (var z = 1; z <= this.sizeOfBoardZ; z++) {
+                    var possibleSpace = new Piece_1.Position(x, y, z);
+                    if (movePiece instanceof King_1.King) {
+                        if (movePiece.canMoveTo(possibleSpace) && !this.kingInCheckAtSpace(movePiece.getOppositeColor(), possibleSpace)) {
+                            possibleMoves.push(possibleSpace);
+                        }
+                    }
+                    else if (movePiece.canMoveTo(possibleSpace) && this.MoveExecutable(movePiece, possibleSpace)) {
+                        possibleMoves.push(possibleSpace);
+                    }
+                }
+            }
+        }
+        return possibleMoves;
     };
     Board.prototype.playerCheckmated = function (kingColor) {
         var locationKing = this.getLocationOfKingGivenColor(kingColor);

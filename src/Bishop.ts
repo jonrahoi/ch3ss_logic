@@ -8,23 +8,15 @@ export class Bishop extends Piece {
         }
         // two out of three distance has to be greater than 0
         // those two non-zero numbers have to be equal
-        if (distance.z == 0) {
-            if (distance.y == distance.x) {
-                return true;
-            }
-            return false;
+        // Bishop moves are basically diagonal moves in two dimensions
+        if (distance.z == 0 && distance.y == distance.x) {
+            return true;
         }
-        if (distance.y == 0) {
-            if (distance.z == distance.x) {
-                return true;
-            }
-            return false;
+        if (distance.x == 0 && distance.y == distance.z) {
+            return true;
         }
-        if (distance.x == 0) {
-            if (distance.y == distance.z) {
-                return true;
-            }
-            return false;
+        if (distance.y == 0 && distance.x == distance.z) {
+            return true;
         }
         return false;
     }

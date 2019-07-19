@@ -5,41 +5,31 @@ export class Queen extends Piece {
     canMoveTo(position: Position) {
         // Rook like move
         const distance = this.position.distanceFrom(position)
-        if (distance.y < 1 && distance.x < 1 && distance.z < 1) {
+        if (distance.y == 0 && distance.x == 0 && distance.z == 0) {
             return false; // same postion
         }
-        else if (distance.y < 1 && distance.x < 1 ) {
+        else if (distance.y == 0 && distance.x == 0 ) {
             return true; // move only along Z
         }
-        else if (distance.x < 1 && distance.z < 1) {
+        else if (distance.x == 0 && distance.z == 0) {
             return true; // move only along Y
         }
-        else if (distance.y < 1 && distance.z < 1) {
+        else if (distance.y == 0 && distance.z == 0) {
             return true; // move only along X
         }
 
         // Bishop moves are basically diagonal moves in two dimensions
-        else if (distance.z < 1) {
-            if (distance.y == distance.x) {
-                return true;
-            }
-            return false;
+        if (distance.z == 0 && distance.y == distance.x) {
+            return true;
         }
-        else if (distance.y < 1) {
-            if (distance.z == distance.x) {
-                return true;
-            }
-            return false;
+        if (distance.x == 0 && distance.y == distance.z) {
+            return true;
         }
-        else if (distance.x < 1) {
-            if (distance.y == distance.z) {
-                return true;
-            }
-            return false;
+        if (distance.y == 0 && distance.x == distance.z) {
+            return true;
         }
-
         // unicorn moves
-        else if (distance.z == distance.y && distance.y == distance.x) {
+        if (distance.z == distance.y && distance.y == distance.x) {
             return true;
         }
         return false;

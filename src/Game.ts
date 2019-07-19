@@ -129,7 +129,7 @@ export class Game {
     // TODO remove, used for testing
     getPossibleMovesForPiece(piece: Piece): Position[] {
         const pieceB = piece;
-        return this.board.getPossibleMovesPiece(pieceB);
+        return this.board.getAllPossibleMovesPosition(pieceB.getPosition());
     }
 
     // possibly TODO change to list of strings

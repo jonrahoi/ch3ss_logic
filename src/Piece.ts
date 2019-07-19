@@ -5,7 +5,8 @@ export class Position {
         private x: number,
         private y: number,
         private z: number
-    ) { }
+    ) { //this.
+     }
     distanceFrom(position: Position): {x: number, y: number, z: number} {
         return {
             x: Math.abs(position.x  - this.x),
@@ -40,11 +41,15 @@ export class Position {
         }
         return false;
     }
+    getCopy(): Position {
+        return new Position(this.getX(), this.getY(), this.getZ());
+    }
 }
 
 export abstract class Piece {
     protected position: Position;
     protected color: string;
+
     constructor(
         // private readonly color: Color,
         color: string,
@@ -60,15 +65,12 @@ export abstract class Piece {
     }
 
     getPosition(): Position {
-        return this.position;
+        // return new Position(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+        return this.position.getCopy();
     }
 
     getPostionString(): string {
         const loc: string = "";
-        // loc.concat(this.position.getX().toString());
-        // loc.concat(this.position.getY().toString());
-        // loc.concat(this.position.getZ().toString());
-        // return loc;
         return this.position.getPostionString();
     }
 

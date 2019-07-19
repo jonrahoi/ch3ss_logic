@@ -270,7 +270,7 @@ export default class Board {
         const whoseTurn = this.getWhoseTurn();
         for (let i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].isColor(whoseTurn)) {
-                if (this.getPossibleMovesPiece(this.pieces[i]).length > 0) {
+                if (this.getAllPossibleMovesPosition(this.pieces[i].getPosition()).length > 0) {
                     return false;
                 }
             }
@@ -470,23 +470,27 @@ export default class Board {
     /**
      * @param piece Gets all possible move for specific piece
      */
-    getPossibleMovesPiece(piece: Piece): Position[] {
+    getAllPossibleMovesPosition(a: Position): Position[] {
         const possibleMoves: Position[] = [];
+        if (!this.pieceLocatedAtBool(a)) {
+            return possibleMoves;
+        }
+        const movePiece = this.getPieceLocatedAt(a);
         // iterate through all spaces on board
         for (let x = 1; x <= this.sizeOfBoardX; x++) {
             for (let y = 1; y <= this.sizeOfBoardY; y++) {
                 for (let z = 1; z <= this.sizeOfBoardZ; z++) {
                     // create a position with the three iterators
                     const possibleSpace: Position = new Position(x, y, z);
-                    if (piece instanceof King) {
-                        if (piece.canMoveTo(possibleSpace) && !this.kingInCheckAtSpace(piece.getOppositeColor(), possibleSpace)) {
+                    if (movePiece instanceof King) {
+                        if (movePiece.canMoveTo(possibleSpace) && !this.kingInCheckAtSpace(movePiece.getOppositeColor(), possibleSpace)) {
                             possibleMoves.push(possibleSpace);
                         }
                     }
                     // else if (piece.canMoveTo(possibleSpace) && this.moveIsLegalDebug(piece, possibleSpace)) {
                     //     possibleMoves.push(possibleSpace);
                     // }
-                    else if (piece.canMoveTo(possibleSpace) && this.MoveExecutable(piece, possibleSpace)) {
+                    else if (movePiece.canMoveTo(possibleSpace) && this.MoveExecutable(movePiece, possibleSpace)) {
                         possibleMoves.push(possibleSpace);
                     }
                     // console.log("after testing if move legal: " + piece.getPostionString());
@@ -497,15 +501,6 @@ export default class Board {
         return possibleMoves;
     }
 
-    getAllPossibleMovesPosition(a: Position): Position[] {
-        const possibleMoves: Position[] = [];
-        if (!this.pieceLocatedAtBool(a)) {
-            return possibleMoves;
-        }
-        const movePiece = this.getPieceLocatedAt(a);
-        // iterate through all spaces on board
-        return this.getPossibleMovesPiece(movePiece);
-    }
     /**
      * Checks if king can't move and if no piece can move in between attacking piece and king and no piece can attack attacking piece
      * @param a Position of piece that initiated check (needed to check if opponent can take or block piece)
