@@ -221,7 +221,7 @@ var Board = (function () {
         var pieces = [];
         for (var i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].isColor(color)) {
-                pieces.push(this.pieces[i]);
+                pieces.push(this.pieces[i].makeCopy());
             }
         }
         return pieces;
@@ -233,14 +233,12 @@ var Board = (function () {
         }
         return pieces;
     };
-    Board.prototype.getPiecesTakenByColor = function (color) {
-        var piecesTakenArray = [];
+    Board.prototype.getPiecesTaken = function () {
+        var pieces = [];
         for (var i = 0; i < this.piecesTaken.length; i++) {
-            if (!(this.pieces[i].isColor(color))) {
-                piecesTakenArray.push(this.pieces[i].makeCopy());
-            }
+            pieces.push(this.piecesTaken[i].makeCopy());
         }
-        return piecesTakenArray;
+        return pieces;
     };
     Board.prototype.pawnMoveDirectionCorrect = function (colorOfPawn, a, b) {
         var dy = this.getSlope(a.getY(), b.getY());
@@ -266,7 +264,6 @@ var Board = (function () {
         this.pieces = newPieces;
     };
     Board.prototype.kingInCheckAtSpace = function (opponentColor, positionKing) {
-        console.log("inside board.kingInCheckAtSpace, position: " + positionKing.getPostionString());
         for (var i = 0; i < this.pieces.length; i++) {
             if ((this.pieces[i].isColor(opponentColor)) && this.moveIsLegal(this.pieces[i], positionKing)) {
                 return true;
@@ -277,7 +274,7 @@ var Board = (function () {
     Board.prototype.getLocationOfKingGivenColor = function (color) {
         for (var i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i] instanceof King_1.King && this.pieces[i].isColor(color)) {
-                return this.pieces[i].getPosition();
+                return new Piece_1.Position(this.pieces[i].getPosition().getX(), this.pieces[i].getPosition().getY(), this.pieces[i].getPosition().getZ());
             }
         }
     };
@@ -380,7 +377,12 @@ var Board = (function () {
             for (var y = 1; y <= this.sizeOfBoardY; y++) {
                 for (var z = 1; z <= this.sizeOfBoardZ; z++) {
                     var possibleSpace = new Piece_1.Position(x, y, z);
-                    if (piece.canMoveTo(possibleSpace) && this.MoveExecutable(piece, possibleSpace)) {
+                    if (piece instanceof King_1.King) {
+                        if (piece.canMoveTo(possibleSpace) && !this.kingInCheckAtSpace(piece.getOppositeColor(), possibleSpace)) {
+                            possibleMoves.push(possibleSpace);
+                        }
+                    }
+                    else if (piece.canMoveTo(possibleSpace) && this.MoveExecutable(piece, possibleSpace)) {
                         possibleMoves.push(possibleSpace);
                     }
                 }

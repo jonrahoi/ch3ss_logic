@@ -3,23 +3,21 @@ import Board from "./Board"
 import { Piece, Position, Color } from "./Piece"
 
 export class Game {
-    moveHistory: Position[];
-    board: Board;
-    previousMoveCreatedCheck: boolean;
-    thereIsCheck: boolean;
-    checkMate: boolean;
-    stalemate: boolean;
-    gameID: number;
+    private moveHistory: Position[];
+    private board: Board;
+    private thereIsCheck: boolean;
+    private checkMate: boolean;
+    private stalemate: boolean;
+    private gameID: number;
 
     constructor(gameID: number) {
         this.gameID = gameID;
         this.board = new Board();
         this.moveHistory = [];
-        this.previousMoveCreatedCheck = false;
         this.thereIsCheck = false;
         this.checkMate = false;
         this.stalemate = false;
-        gameID = gameID;
+        this.gameID = gameID;
     }
 
     setPieces(pieces: Piece[]) {
@@ -28,9 +26,20 @@ export class Game {
     getCheck(): boolean {
         return this.thereIsCheck;
     }
+    setCheck(a: boolean) {
+        this.thereIsCheck = a;
+    }
+
+    getCheckMate(): boolean {
+        return this.checkMate;
+    }
 
     getGameID(): number {
         return this.gameID;
+    }
+
+    getStaleMate(): boolean {
+        return this.stalemate;
     }
 
     getMoveHistory(): Position[] {
@@ -39,6 +48,10 @@ export class Game {
 
     getPieces(): Piece[] {
         return this.board.getPieces();
+    }
+
+    getMoveCount(): number {
+        return this.board.getMoveCount();
     }
 
     move(a: Position, b: Position): boolean {
@@ -91,10 +104,6 @@ export class Game {
         return this.board.gameIsDrawn();
     }
 
-    setPreviousMoveCreatedCheck(b: boolean) {
-        this.previousMoveCreatedCheck = b;
-    }
-
     getPositionFromString(a: string): Position {
         return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
     }
@@ -117,15 +126,15 @@ export class Game {
         return possibleMoves;
     }
 
-    // possibly TODO remove, used for testing
+    // TODO remove, used for testing
     getPossibleMovesForPiece(piece: Piece): Position[] {
         const pieceB = piece;
         return this.board.getPossibleMovesPiece(pieceB);
     }
 
     // possibly TODO change to list of strings
-    getPiecesTakenByColor(color: string): Piece[] {
-        return this.board.getPiecesTakenByColor(color);
+    getPiecesTaken(color: string): Piece[] {
+        return this.board.getPiecesTaken();
     }
 
     loadGame() {
@@ -156,15 +165,6 @@ export class Game {
 
     validSpace(a: Position): boolean {
         return this.board.spaceOnBoard(a);
-    }
-
-    getKingPiece(): Piece {
-        const pos = this.board.getLocationOfKingGivenColor(this.board.getWhoseTurn());
-        return this.board.getPieceLocatedAt(pos);
-    }
-
-    getPieceLocatedAt(a: Position): Piece {
-        return this.board.getPieceLocatedAt(a);
     }
 
     pieceLocatedAtBool(a: Position): boolean {

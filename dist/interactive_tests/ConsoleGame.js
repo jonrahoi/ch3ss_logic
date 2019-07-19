@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+var Piece_1 = require("../Piece");
 var Knight_1 = require("../Knight");
 var King_1 = require("../King");
 var Bishop_1 = require("../Bishop");
@@ -16,6 +17,11 @@ var testCorneredKing = [
     new Pawn_1.Pawn("Black", 1, 3, 2),
     new Pawn_1.Pawn("Black", 2, 2, 2),
     new Pawn_1.Pawn("Black", 3, 2, 2),
+    new Queen_1.Queen("Black", 1, 1, 3),
+    new Queen_1.Queen("Black", 2, 1, 3),
+    new Queen_1.Queen("Black", 3, 1, 3),
+    new Queen_1.Queen("Black", 4, 1, 3),
+    new Queen_1.Queen("Black", 5, 1, 3),
     new Queen_1.Queen("Black", 4, 2, 1),
     new Queen_1.Queen("Black", 4, 2, 2),
     new King_1.King("Black", 4, 1, 1)
@@ -34,13 +40,20 @@ function getInputFromUser(message) {
     var readlineSync = require("readline-sync");
     return readlineSync.question(message);
 }
-var game = new Game_1.Game(50);
+var game = new Game_1.Game(1);
+game.setPieces(testCorneredKing);
+game.setCheck(true);
+console.log(game.getCheckMate());
+var possibleMoves = game.getPossibleMovesForPieceAtSpace(new Piece_1.Position(1, 1, 1));
+for (var i = 0; i < possibleMoves.length; i++) {
+    console.log(possibleMoves[i].getPostionString());
+}
 consoleGame();
 function consoleGame() {
     console.log("Welcome to 3D chess on the console.");
     var endOfGame = false;
     while (!endOfGame) {
-        dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "Here is the board after " + game.board.getMoveCount() + " moves");
+        dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "Here is the board after " + game.getMoveCount() + " moves");
         console.log(game.getWhoseTurnItIs() + "'s turn.");
         var a = getInputFromUser("enter your start space: ");
         var b = getInputFromUser("enter your end space: ");
@@ -59,14 +72,14 @@ function consoleGame() {
         }
         var moveSuccessful = game.move(posA, posB);
         if (moveSuccessful) {
-            if (game.checkMate == true) {
+            if (game.getCheckMate()) {
                 console.log("CHECKMATE!");
                 endOfGame = true;
             }
-            else if (game.thereIsCheck) {
+            else if (game.getCheck()) {
                 console.log("Check!");
             }
-            else if (game.stalemate == true) {
+            else if (game.getStaleMate() == true) {
                 console.log("STALEMATE, DRAW!");
                 endOfGame = true;
             }

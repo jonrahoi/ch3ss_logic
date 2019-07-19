@@ -71,16 +71,16 @@ function simulateGame(maxMoves) {
         }
         console.log("trying move piece: " + getPieceNotation(piece), " at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         var moveSuccessful = game.move(piece.getPosition(), moveSpace);
-        console.log("move successful: " + moveSuccessful + ", " + game.board.getMoveCount() + " move count, ", "piece: " + getPieceNotation(piece), " at " + piece.getPostionString());
-        dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "board state after " + game.board.getMoveCount() + " moves:");
+        console.log("move successful: " + moveSuccessful + ", " + game.getMoveCount() + " move count, ", "piece: " + getPieceNotation(piece), " at " + piece.getPostionString());
+        dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "board state after " + game.getMoveCount() + " moves:");
         moveIterationCount++;
         console.log("move count: " + moveIterationCount);
-        if (game.checkMate == true) {
+        if (game.getCheckMate()) {
             console.log("CHECKMATE!");
             endOfGame = true;
             break;
         }
-        else if (game.stalemate == true) {
+        else if (game.getStaleMate()) {
             console.log("STALEMATE, DRAW!");
             endOfGame = true;
             break;

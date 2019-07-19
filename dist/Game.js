@@ -7,11 +7,10 @@ var Game = (function () {
         this.gameID = gameID;
         this.board = new Board_1["default"]();
         this.moveHistory = [];
-        this.previousMoveCreatedCheck = false;
         this.thereIsCheck = false;
         this.checkMate = false;
         this.stalemate = false;
-        gameID = gameID;
+        this.gameID = gameID;
     }
     Game.prototype.setPieces = function (pieces) {
         this.board.setPieces(pieces);
@@ -19,14 +18,26 @@ var Game = (function () {
     Game.prototype.getCheck = function () {
         return this.thereIsCheck;
     };
+    Game.prototype.setCheck = function (a) {
+        this.thereIsCheck = a;
+    };
+    Game.prototype.getCheckMate = function () {
+        return this.checkMate;
+    };
     Game.prototype.getGameID = function () {
         return this.gameID;
+    };
+    Game.prototype.getStaleMate = function () {
+        return this.stalemate;
     };
     Game.prototype.getMoveHistory = function () {
         return this.moveHistory;
     };
     Game.prototype.getPieces = function () {
         return this.board.getPieces();
+    };
+    Game.prototype.getMoveCount = function () {
+        return this.board.getMoveCount();
     };
     Game.prototype.move = function (a, b) {
         if (!this.validSpace(a) || !this.validSpace(b)) {
@@ -73,9 +84,6 @@ var Game = (function () {
     Game.prototype.gameIsDrawn = function () {
         return this.board.gameIsDrawn();
     };
-    Game.prototype.setPreviousMoveCreatedCheck = function (b) {
-        this.previousMoveCreatedCheck = b;
-    };
     Game.prototype.getPositionFromString = function (a) {
         return new Piece_1.Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
     };
@@ -97,8 +105,8 @@ var Game = (function () {
         var pieceB = piece;
         return this.board.getPossibleMovesPiece(pieceB);
     };
-    Game.prototype.getPiecesTakenByColor = function (color) {
-        return this.board.getPiecesTakenByColor(color);
+    Game.prototype.getPiecesTaken = function (color) {
+        return this.board.getPiecesTaken();
     };
     Game.prototype.loadGame = function () {
         this.moveHistory = JSON.parse("moveHistory");
@@ -117,13 +125,6 @@ var Game = (function () {
     };
     Game.prototype.validSpace = function (a) {
         return this.board.spaceOnBoard(a);
-    };
-    Game.prototype.getKingPiece = function () {
-        var pos = this.board.getLocationOfKingGivenColor(this.board.getWhoseTurn());
-        return this.board.getPieceLocatedAt(pos);
-    };
-    Game.prototype.getPieceLocatedAt = function (a) {
-        return this.board.getPieceLocatedAt(a);
     };
     Game.prototype.pieceLocatedAtBool = function (a) {
         return this.board.pieceLocatedAtBool(a);

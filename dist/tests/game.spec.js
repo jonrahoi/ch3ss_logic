@@ -16,7 +16,7 @@ describe("experiment", function () {
     });
     it("creates game", function () {
         var g = new Game_1.Game(1);
-        expect(g.moveHistory.length).to.equal(0);
+        expect(g.getMoveHistory().length).to.equal(0);
     });
 });
 describe.skip("failure tests", function () {

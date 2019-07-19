@@ -22,13 +22,13 @@ export default class Board {
     getWhoseTurn(): string;
     getPiecesByColor(color: string): Piece[];
     getPieces(): Piece[];
-    getPiecesTakenByColor(color: string): Piece[];
+    getPiecesTaken(): Piece[];
     pawnMoveDirectionCorrect(colorOfPawn: string, a: Position, b: Position): boolean;
     deletePieceAtPosition(b: Position): void;
     kingInCheckAtSpace(opponentColor: string, positionKing: Position): boolean;
     getLocationOfKingGivenColor(color: string): Position;
     pieceLocatedAtBool(a: Position): boolean;
-    getPieceLocatedAt(a: Position): Piece;
+    private getPieceLocatedAt;
     spaceOnBoard(a: Position): boolean;
     pieceInWay(a: Position, b: Position): boolean;
     pieceInWayEvenIgnoringPiece(a: Position, b: Position, pieceToIgnore: Piece): boolean;

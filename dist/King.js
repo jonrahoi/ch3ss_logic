@@ -21,6 +21,9 @@ var King = (function (_super) {
     }
     King.prototype.canMoveTo = function (position) {
         var distance = this.position.distanceFrom(position);
+        if (distance.y == 0 && distance.x == 0 && distance.z == 0) {
+            return false;
+        }
         return distance.y < 2 && distance.x < 2 && distance.z < 2;
     };
     King.prototype.makeCopy = function () {

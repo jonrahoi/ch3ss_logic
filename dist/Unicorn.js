@@ -29,6 +29,9 @@ var Unicorn = (function (_super) {
         }
         return false;
     };
+    Unicorn.prototype.makeCopy = function () {
+        return new Unicorn(this.getColor(), this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+    };
     return Unicorn;
 }(Piece_1.Piece));
 exports.Unicorn = Unicorn;
