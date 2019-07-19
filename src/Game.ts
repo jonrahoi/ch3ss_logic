@@ -175,4 +175,16 @@ export class Game {
         return this.board.kingsPresentOnBoardDebug();
     }
 
+    isValidSpaceFromString(str: string): boolean {
+        if (str.length != 3) {
+            return false
+        }
+        for (let i = 0; i < 3; i++) {
+            if (str.charAt(i) < "1" || str.charAt(i) > "5") {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

@@ -231,6 +231,7 @@ export default class Board {
        }
     }
 
+    // for loading
     executeMoveNoLegalCheck(a: Position, b: Position) {
         // is there a piece at space B?, delete piece if there
         if (this.pieceLocatedAtBool(b)) {
