@@ -31,4 +31,5 @@ export declare class Game {
     validSpace(a: Position): boolean;
     pieceLocatedAtBool(a: Position): boolean;
     kingsPresentOnBoardDebug(): boolean;
+    isValidSpaceFromString(str: string): boolean;
 }

@@ -5,7 +5,7 @@ import { Rook } from "./Rook"
 import { Unicorn } from "./Unicorn"
 import { Pawn } from "./Pawn"
 import { Queen } from "./Queen"
-import { Piece, Position, Color } from "./Piece"
+import { Piece, Position} from "./Piece"
 import { threadId } from "worker_threads";
 
 // game contains a board (with pieces)
@@ -253,7 +253,7 @@ export default class Board {
         // find opposite color
         console.log("hello, inside board.kingInCheckFromPosition");
         console.log("inside board.kingInCheckFromPosition " + pos.getPostionString());
-        let color: Color = "Black";
+        let color = "Black";
         if (!this.pieceLocatedAtBool(pos)) {
             return false;
         }

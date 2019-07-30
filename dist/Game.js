@@ -132,6 +132,17 @@ var Game = (function () {
     Game.prototype.kingsPresentOnBoardDebug = function () {
         return this.board.kingsPresentOnBoardDebug();
     };
+    Game.prototype.isValidSpaceFromString = function (str) {
+        if (str.length != 3) {
+            return false;
+        }
+        for (var i = 0; i < 3; i++) {
+            if (str.charAt(i) < "1" || str.charAt(i) > "5") {
+                return false;
+            }
+        }
+        return true;
+    };
     return Game;
 }());
 exports.Game = Game;

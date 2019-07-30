@@ -53,6 +53,23 @@ function consoleGame() {
     while (!endOfGame) {
         dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "Here is the board after " + game.getMoveCount() + " moves");
         console.log(game.getWhoseTurnItIs() + "'s turn.");
+        var menu = getInputFromUser("enter 1 to enter a move, 2 to get available moves: ");
+        console.log("you entered: " + menu);
+        if (menu.localeCompare("2")) {
+            var space = getInputFromUser("enter your start space: ");
+            if (validSpaceFromString(space)) {
+                var spaces = game.getPossibleMovesForPieceAtSpace(game.getPositionFromString(space));
+                console.log("available spaces");
+                for (var i = 0; i < spaces.length; i++) {
+                    console.log(spaces[i].getPostionString());
+                }
+                continue;
+            }
+            else {
+                console.log("invalid space");
+                continue;
+            }
+        }
         var a = getInputFromUser("enter your start space: ");
         var b = getInputFromUser("enter your end space: ");
         var posA = void 0, posB = void 0;
