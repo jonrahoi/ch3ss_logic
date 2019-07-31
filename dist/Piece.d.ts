@@ -1,4 +1,3 @@
-export declare type Color = "Black" | "White";
 export declare class Position {
     private x;
     private y;

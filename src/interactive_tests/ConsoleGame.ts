@@ -1,4 +1,4 @@
-import { Piece, Position, Color } from "../Piece"
+import { Piece, Position, } from "../Piece"
 import { Knight } from "../Knight"
 import { King } from "../King"
 import { Bishop } from "../Bishop"
@@ -108,9 +108,9 @@ function consoleGame() {
     while (!endOfGame) {
         dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "Here is the board after " + game.getMoveCount() + " moves");
         console.log(game.getWhoseTurnItIs() + "'s turn.");
-        const menu = getInputFromUser("enter 1 to enter a move, 2 to get available moves: ");
+        const menu = +getInputFromUser("enter 1 to enter a move, 2 to get available moves: ");
         console.log("you entered: " + menu);
-        if (menu.localeCompare("2")) {
+        if (menu == 2) {
             const space = getInputFromUser("enter your start space: ");
             if (validSpaceFromString(space)) {
                 const spaces = game.getPossibleMovesForPieceAtSpace(game.getPositionFromString(space));

@@ -1,4 +1,4 @@
-export type Color = "Black" | "White"
+// export type Color = "Black" | "White"
 
 export class Position {
     constructor(
@@ -36,7 +36,7 @@ export class Position {
         return this.getX().toString() + this.getY().toString() + this.getZ().toString();
     }
     samePosition(a: Position): boolean {
-        if (a.getX() == this.x && a.getY() == this.getY() && a.getZ() == this.getZ()){
+        if (a.getX() == this.x && a.getY() == this.getY() && a.getZ() == this.getZ()) {
             return true;
         }
         return false;

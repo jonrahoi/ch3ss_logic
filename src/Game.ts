@@ -1,6 +1,6 @@
 // game contains a board (with pieces)
 import Board from "./Board"
-import { Piece, Position, Color } from "./Piece"
+import { Piece, Position } from "./Piece"
 
 export class Game {
     private moveHistory: Position[];
@@ -43,7 +43,11 @@ export class Game {
     }
 
     getMoveHistory(): Position[] {
-        return this.moveHistory;
+        const moves: Position[] = [];
+        for (let i = 0; i < this.moveHistory.length; i++) {
+            moves.push(this.moveHistory[i]);
+        }
+        return moves;
     }
 
     getPieces(): Piece[] {
@@ -118,7 +122,7 @@ export class Game {
 
     getPossibleMovesForPieceAtSpace(posA: Position): Position[] {
 
-        let possibleMoves: Position[];
+        let possibleMoves: Position[] = [];
             if (!this.board.pieceLocatedAtBool(posA)) {
             return possibleMoves;
         }

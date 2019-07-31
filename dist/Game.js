@@ -31,7 +31,11 @@ var Game = (function () {
         return this.stalemate;
     };
     Game.prototype.getMoveHistory = function () {
-        return this.moveHistory;
+        var moves = [];
+        for (var i = 0; i < this.moveHistory.length; i++) {
+            moves.push(this.moveHistory[i]);
+        }
+        return moves;
     };
     Game.prototype.getPieces = function () {
         return this.board.getPieces();
