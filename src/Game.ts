@@ -122,15 +122,12 @@ export class Game {
 
     getPossibleMovesForPieceAtSpace(posA: Position): Position[] {
 
-        let possibleMoves: Position[] = [new Position(0, 0, 0)];
+        let possibleMoves: Position[] = [];
         if (!this.board.pieceLocatedAtBool(posA)) {
             return possibleMoves;
         }
         possibleMoves = this.board.getAllPossibleMovesPosition(posA);
-        if (possibleMoves.length > 0) {
-            return possibleMoves;
-        }
-        return [new Position(0, 0, 0)];
+        return possibleMoves;
     }
 
     // TODO remove, used for testing

@@ -473,7 +473,6 @@ export default class Board {
      */
     getAllPossibleMovesPosition(a: Position): Position[] {
         const possibleMoves: Position[] = [];
-
         
         if (!this.pieceLocatedAtBool(a)) {
             return possibleMoves;

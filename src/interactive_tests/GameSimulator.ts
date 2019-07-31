@@ -97,11 +97,11 @@ function simulateGame(maxMoves: number) {
         // }
 
         // TODO remove
-        if (!game.kingsPresentOnBoardDebug()) {
-            console.log("King is missing!");
-            endOfGame = true;
-            break;
-        }
+        // if (!game.kingsPresentOnBoardDebug()) {
+        //     console.log("King is missing!");
+        //     endOfGame = true;
+        //     break;
+        // }
         console.log("trying move piece: " + getPieceNotation(piece), " at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         const moveSuccessful = game.move(piece.getPosition(), moveSpace);
         console.log("move successful: " + moveSuccessful + ", " + game.getMoveCount() + " move count, ", "piece: " + getPieceNotation(piece), " at " + piece.getPostionString());
