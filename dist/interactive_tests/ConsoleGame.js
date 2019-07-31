@@ -54,7 +54,7 @@ function consoleGame() {
         console.log("move history: ");
         var moveHistory = game.getMoveHistory();
         for (var i = 0; i < moveHistory.length; i++) {
-            console.log(moveHistory[i]);
+            console.log(moveHistory[i].getPostionString());
         }
         dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "Here is the board after " + game.getMoveCount() + " moves");
         console.log(game.getWhoseTurnItIs() + "'s turn.");

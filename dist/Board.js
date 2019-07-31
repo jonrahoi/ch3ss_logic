@@ -382,11 +382,11 @@ var Board = (function () {
                 for (var z = 1; z <= this.sizeOfBoardZ; z++) {
                     var possibleSpace = new Piece_1.Position(x, y, z);
                     if (movePiece instanceof King_1.King) {
-                        if (movePiece.canMoveTo(possibleSpace) && !this.kingInCheckAtSpace(movePiece.getOppositeColor(), possibleSpace)) {
+                        if (this.moveIsLegal(movePiece, possibleSpace) && !this.kingInCheckAtSpace(movePiece.getOppositeColor(), possibleSpace)) {
                             possibleMoves.push(possibleSpace);
                         }
                     }
-                    else if (movePiece.canMoveTo(possibleSpace) && this.MoveExecutable(movePiece, possibleSpace)) {
+                    else if (this.moveIsLegal(movePiece, possibleSpace)) {
                         possibleMoves.push(possibleSpace);
                     }
                 }

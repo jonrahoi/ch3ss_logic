@@ -7,7 +7,6 @@ exports.Board = Board_1["default"];
 var Piece_1 = require("./Piece");
 exports.Piece = Piece_1.Piece;
 exports.Position = Piece_1.Position;
-exports.Color = Piece_1.Color;
 var Knight_1 = require("./Knight");
 exports.Knight = Knight_1.Knight;
 var King_1 = require("./King");

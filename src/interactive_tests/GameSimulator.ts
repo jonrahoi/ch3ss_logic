@@ -1,6 +1,6 @@
 import { Game } from "../Game"
 // import { dispalyBoardState } from "./ConsoleGame"
-import { Piece, Position, Color } from "../Piece"
+import { Piece, Position } from "../Piece"
 import { Knight } from "../Knight"
 import { King } from "../King"
 import { Bishop } from "../Bishop"

@@ -135,24 +135,24 @@ export default class Board {
         // castling, en passant not available in RUAMSCHACH
     }
 
-    MoveExecutable(movePiece: Piece, b: Position): boolean {
-        // console.log("inside board.MoveExecutable")
-        if (!movePiece.isColor(this.getWhoseTurn())) {
-            // console.log("inside board.MoveExecutable, wrong color, move not executed")
-            return false;
-        }
-        if (!this.moveIsLegal(movePiece, b)) {
-            // console.log("inside board.MoveExecutable, move is not legal")
-            return false;
-        }
-        // console.log("inside board.MoveExecutable, right color, move legal")
-        // is King moving into check?
-        if (movePiece instanceof King && this.kingInCheckAtSpace(movePiece.getOppositeColor(), b)) {
-            // console.log("inside board.MoveExecutable player's king in check, move not executed")
-            return false;
-        }
-        return true; // move executable
-    }
+    // MoveExecutable(movePiece: Piece, b: Position): boolean {
+    //     // console.log("inside board.MoveExecutable")
+    //     if (!movePiece.isColor(this.getWhoseTurn())) {
+    //         // console.log("inside board.MoveExecutable, wrong color, move not executed")
+    //         return false;
+    //     }
+    //     if (!this.moveIsLegal(movePiece, b)) {
+    //         // console.log("inside board.MoveExecutable, move is not legal")
+    //         return false;
+    //     }
+    //     // console.log("inside board.MoveExecutable, right color, move legal")
+    //     // is King moving into check?
+    //     if (movePiece instanceof King && this.kingInCheckAtSpace(movePiece.getOppositeColor(), b)) {
+    //         // console.log("inside board.MoveExecutable player's king in check, move not executed")
+    //         return false;
+    //     }
+    //     return true; // move executable
+    // }
 
     moveIsLegal(movePiece: Piece, b: Position): boolean {
         // check if move shape correct
@@ -473,10 +473,19 @@ export default class Board {
      */
     getAllPossibleMovesPosition(a: Position): Position[] {
         const possibleMoves: Position[] = [];
+
+        
         if (!this.pieceLocatedAtBool(a)) {
             return possibleMoves;
         }
+
         const movePiece = this.getPieceLocatedAt(a);
+
+        // TODO
+        if (this.kingInCheck && movePiece.getColor().localeCompare(this.getWhoseTurn())) {
+            // only get moves that block the check
+        }
+        
         // iterate through all spaces on board
         for (let x = 1; x <= this.sizeOfBoardX; x++) {
             for (let y = 1; y <= this.sizeOfBoardY; y++) {
@@ -484,14 +493,14 @@ export default class Board {
                     // create a position with the three iterators
                     const possibleSpace: Position = new Position(x, y, z);
                     if (movePiece instanceof King) {
-                        if (movePiece.canMoveTo(possibleSpace) && !this.kingInCheckAtSpace(movePiece.getOppositeColor(), possibleSpace)) {
+                        if (this.moveIsLegal(movePiece, possibleSpace) && !this.kingInCheckAtSpace(movePiece.getOppositeColor(), possibleSpace)) {
                             possibleMoves.push(possibleSpace);
                         }
                     }
                     // else if (piece.canMoveTo(possibleSpace) && this.moveIsLegalDebug(piece, possibleSpace)) {
                     //     possibleMoves.push(possibleSpace);
                     // }
-                    else if (movePiece.canMoveTo(possibleSpace) && this.MoveExecutable(movePiece, possibleSpace)) {
+                    else if (this.moveIsLegal(movePiece, possibleSpace)) {
                         possibleMoves.push(possibleSpace);
                     }
                     // console.log("after testing if move legal: " + piece.getPostionString());
@@ -581,15 +590,15 @@ export default class Board {
         return false;
     }
 
-    kingsPresentOnBoardDebug(): boolean {
-        let count = 0;
-        for (let i = 0; i < this.pieces.length; i++) {
-            if (this.pieces[i] instanceof King) {
-                count++;
-            }
-        }
-        return (count == 2);
-    }
+    // kingsPresentOnBoardDebug(): boolean {
+    //     let count = 0;
+    //     for (let i = 0; i < this.pieces.length; i++) {
+    //         if (this.pieces[i] instanceof King) {
+    //             count++;
+    //         }
+    //     }
+    //     return (count == 2);
+    // }
 
     // TODO insufficient material
 }

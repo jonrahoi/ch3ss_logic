@@ -1,7 +1,7 @@
 export declare class Position {
-    private x;
-    private y;
-    private z;
+    x: number;
+    y: number;
+    z: number;
     constructor(x: number, y: number, z: number);
     distanceFrom(position: Position): {
         x: number;

@@ -39,6 +39,7 @@
     "typescript": "^3.5.2"
   },
   "devDependencies": {
-    "@hapi/lab": "^19.1.0"
+    "@hapi/lab": "^19.1.0",
+    "lab": "^18.0.2"
   }
 }

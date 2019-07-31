@@ -1,4 +1,4 @@
-import { Piece, Position, Color } from "./Piece"
+import { Piece, Position } from "./Piece"
 
 
 export class Queen extends Piece {

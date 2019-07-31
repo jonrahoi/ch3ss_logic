@@ -122,12 +122,15 @@ export class Game {
 
     getPossibleMovesForPieceAtSpace(posA: Position): Position[] {
 
-        let possibleMoves: Position[] = [];
-            if (!this.board.pieceLocatedAtBool(posA)) {
+        let possibleMoves: Position[] = [new Position(0, 0, 0)];
+        if (!this.board.pieceLocatedAtBool(posA)) {
             return possibleMoves;
         }
         possibleMoves = this.board.getAllPossibleMovesPosition(posA);
-        return possibleMoves;
+        if (possibleMoves.length > 0) {
+            return possibleMoves;
+        }
+        return [new Position(0, 0, 0)];
     }
 
     // TODO remove, used for testing
@@ -175,9 +178,9 @@ export class Game {
         return this.board.pieceLocatedAtBool(a);
     }
 
-    kingsPresentOnBoardDebug(): boolean {
-        return this.board.kingsPresentOnBoardDebug();
-    }
+    // kingsPresentOnBoardDebug(): boolean {
+    //     return this.board.kingsPresentOnBoardDebug();
+    // }
 
     isValidSpaceFromString(str: string): boolean {
         if (str.length != 3) {
