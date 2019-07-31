@@ -7,10 +7,7 @@ import { Unicorn } from "../Unicorn"
 import { Pawn } from "../Pawn"
 import { Queen } from "../Queen"
 import Board from "../Board";
-
 import { Game } from "../Game"
-
-
 import * as readline from "readline";
 
 const testCorneredKing = [
@@ -52,7 +49,7 @@ const game = new Game(1);
 // game.setPieces(testCorneredKing);
 // game.setCheck(true);
 console.log(game.getCheckMate());
-let possibleMoves = game.getPossibleMovesForPieceAtSpace(new Position(1, 1, 1));
+const possibleMoves = game.getPossibleMovesForPieceAtSpace(new Position(1, 1, 1));
 for (let i = 0; i < possibleMoves.length; i++) {
     console.log(possibleMoves[i].getPostionString());
 }
@@ -106,13 +103,18 @@ function consoleGame() {
     console.log("Welcome to 3D chess on the console.")
     let endOfGame = false;
     while (!endOfGame) {
+        console.log("move history: ");
+        const moveHistory = game.getMoveHistory();
+        for (let i = 0; i < moveHistory.length; i++) {
+            console.log(moveHistory[i].getPostionString());
+        }
         dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "Here is the board after " + game.getMoveCount() + " moves");
         console.log(game.getWhoseTurnItIs() + "'s turn.");
         const menu = +getInputFromUser("enter 1 to enter a move, 2 to get available moves: ");
         console.log("you entered: " + menu);
         if (menu == 2) {
             const space = getInputFromUser("enter your start space: ");
-            if (validSpaceFromString(space)) {
+            if (game.isValidSpaceFromString(space)) {
                 const spaces = game.getPossibleMovesForPieceAtSpace(game.getPositionFromString(space));
                 console.log("available spaces");
                 for (let i = 0; i < spaces.length; i++) {

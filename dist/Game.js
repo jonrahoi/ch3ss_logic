@@ -98,7 +98,7 @@ var Game = (function () {
         return this.board.getWhoseTurn();
     };
     Game.prototype.getPossibleMovesForPieceAtSpace = function (posA) {
-        var possibleMoves;
+        var possibleMoves = [];
         if (!this.board.pieceLocatedAtBool(posA)) {
             return possibleMoves;
         }
