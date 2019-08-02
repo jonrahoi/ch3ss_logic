@@ -3,13 +3,14 @@ exports.__esModule = true;
 var Board_1 = require("./Board");
 var Piece_1 = require("./Piece");
 var DisplayBoard2D_1 = require("./DisplayBoard2D");
+var constants_1 = require("./constants");
 var Game = (function () {
     function Game(gameID) {
         this.minNumberOfPiecesBeforeDraw = 5;
         this.white = "White";
         this.black = "Black";
         this.gameID = gameID;
-        this.board = new Board_1["default"]("Raumschach", this.white, this.black);
+        this.board = new Board_1["default"](constants_1.RUAMSCHACH, this.white, this.black);
         this.moveHistory = [];
         this.gameID = gameID;
         this.moveCount = 0;
@@ -46,6 +47,7 @@ var Game = (function () {
                 return false;
             }
         }
+        return true;
     };
     Game.prototype.getStaleMate = function () {
         if (this.getCheck()) {
@@ -110,7 +112,7 @@ var Game = (function () {
                 for (var z = 1; z <= this.board.getSizeOfBoardZ(); z++) {
                     var b = new Piece_1.Position(x, y, z);
                     this.board.setPieces(this.getCopyOfPieces(copyOfBoardState));
-                    if (this.board.executeMove(playerMoving, a, b) && this.board.kingInCheck(playerMoving)) {
+                    if (this.board.executeMove(playerMoving, a, b) && !this.board.kingInCheck(playerMoving)) {
                         possibleMoves.push(b);
                     }
                 }

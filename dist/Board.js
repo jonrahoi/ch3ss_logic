@@ -6,13 +6,12 @@ var Pawn_1 = require("./Pawn");
 var Queen_1 = require("./Queen");
 var Piece_1 = require("./Piece");
 var BoardSetupArrays_1 = require("./BoardSetupArrays");
+var constants_1 = require("./constants");
 var Board = (function () {
     function Board(gameVersion, white, black) {
         this.pieces = [];
         this.piecesTaken = [];
-        this.gameVersion = "Raumschach";
-        if (gameVersion === "Raumschach") {
-            console.log("goodbye");
+        if (gameVersion === constants_1.RUAMSCHACH) {
             this.pieces = BoardSetupArrays_1.getRaumschachBoard(white, black);
             this.sizeOfBoardX = 5;
             this.sizeOfBoardY = 5;

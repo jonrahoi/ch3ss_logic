@@ -2,6 +2,8 @@
 import Board from "./Board"
 import { Piece, Position } from "./Piece"
 import { getBoardStateStringArraySliceByZ } from "./DisplayBoard2D"
+import { RUAMSCHACH } from "./constants"
+
 
 export class Game {
     private moveHistory: Position[];
@@ -14,7 +16,7 @@ export class Game {
 
     constructor(gameID: number) {
         this.gameID = gameID;
-        this.board = new Board("Raumschach", this.white, this.black);
+        this.board = new Board(RUAMSCHACH, this.white, this.black);
         this.moveHistory = [];
         this.gameID = gameID;
         this.moveCount = 0;
@@ -58,6 +60,7 @@ export class Game {
                 return false;
             }
         }
+        return true;
     }
     public getStaleMate(): boolean {
         if (this.getCheck()) {
@@ -113,6 +116,7 @@ export class Game {
     public getPossibleMovesForPieceAtSpace(a: Position): Position[] {
         const possibleMoves: Position[] = [];
         if (!this.board.pieceLocatedAtBool(a)) {
+            // console.log("inside game.possibleMoves, no piece located there")
             return possibleMoves;
         }
         const copyOfBoardState: Piece[] = this.board.getCopyOfPieces();
@@ -123,7 +127,7 @@ export class Game {
                     // create a position with the three iterators
                     const b: Position = new Position(x, y, z);
                     this.board.setPieces(this.getCopyOfPieces(copyOfBoardState));
-                    if (this.board.executeMove(playerMoving, a, b) && this.board.kingInCheck(playerMoving)) {
+                    if (this.board.executeMove(playerMoving, a, b) && !this.board.kingInCheck(playerMoving)) {
                         possibleMoves.push(b);
                     }
                 }

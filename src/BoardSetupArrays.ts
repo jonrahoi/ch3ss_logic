@@ -10,6 +10,7 @@ import { Queen } from "./Queen"
 
 /**** note the piece declaration is (x,y,z) instead of (z,x,y) so Ec5(5,3,5) in normal Raumschach notation becomes 3,5,5 for our purposes*/
 
+
 export function getRaumschachBoard(white: string, black: string): Piece[] {
     console.log("inside get board setup array.ts")
     return [

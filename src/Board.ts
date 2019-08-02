@@ -8,6 +8,7 @@ import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
 import { threadId } from "worker_threads";
 import { getRaumschachBoard } from "./BoardSetupArrays"
+import { RUAMSCHACH } from "./constants"
 
 /**
  * Class for 2 player 3D chess. Board knows the geometry of the board and the location of pieces
@@ -25,7 +26,7 @@ export default class Board {
     private sizeOfBoardZ: number; // number of spaces in z axis
     private boardCoordinateMinimum: number; // corner of board e.g. 1,1,1 or 0,0,0
 
-    private gameVersion = "Raumschach"
+    private gameVersion: string;
     // first player to make a move is white
     private white: string;
     private black: string;
@@ -35,8 +36,7 @@ export default class Board {
     private castling: boolean;  // not used for Ruamschach
 
     constructor(gameVersion: String, white: string, black: string) {
-        if (gameVersion === "Raumschach") {
-            console.log("goodbye")
+        if (gameVersion === RUAMSCHACH) {
             this.pieces = getRaumschachBoard(white, black);
             // these are the rules for Raumschach
             this.sizeOfBoardX = 5;
@@ -52,7 +52,7 @@ export default class Board {
         }
         // add other versions here
         // if (gameVersion.localeCompare("insert another version")) {
-            // size of board could be (8x8x8)
+        // size of board could be (8x8x8)
     }
     public getSizeOfBoardX() {
         return this.sizeOfBoardX;
