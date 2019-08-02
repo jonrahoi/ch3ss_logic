@@ -30,6 +30,6 @@ export declare class Game {
     saveGame(): void;
     goBackOneMove(): void;
     goForwardOneMove(): void;
-    private validSpace;
+    validSpace(a: Position): boolean;
     isValidSpaceFromString(str: string): boolean;
 }
