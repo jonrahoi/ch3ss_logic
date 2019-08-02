@@ -4,7 +4,9 @@ import { Piece, Position } from "./Piece"
 import { getBoardStateStringArraySliceByZ } from "./DisplayBoard2D"
 import { RUAMSCHACH } from "./constants"
 
-
+/**
+ * Class to be instantiated by user interface for two player game of 3D chess
+ */
 export class Game {
     private moveHistory: Position[];
     private board: Board;
@@ -13,7 +15,10 @@ export class Game {
     private minNumberOfPiecesBeforeDraw = 5; // less than 5 pieces causes draw
     private white = "White";
     private black = "Black";
-
+    /**
+     * constructor for class
+     * @param gameID unique game ID
+     */
     constructor(gameID: number) {
         this.gameID = gameID;
         this.board = new Board(RUAMSCHACH, this.white, this.black);
@@ -21,16 +26,20 @@ export class Game {
         this.gameID = gameID;
         this.moveCount = 0;
     }
-
+    /**
+     * Sets pieces for board, used for testing
+     * @param pieces array of Piece objects
+     */
     public setPieces(pieces: Piece[]) {
        this.board.setPieces(pieces);
     }
-
+    /**
+     * 
+     */
     public getBoardStateStringArray(): String[] {
         return getBoardStateStringArraySliceByZ(this.board.getCopyOfPieces(), this.board.getSizeOfBoardX(), 
             this.board.getSizeOfBoardY(), this.board.getSizeOfBoardZ(), this.board.getBoardCoordinateMinimum());
     }
-
     public printBoardStateToConsole() {
         const arr = getBoardStateStringArraySliceByZ(this.board.getCopyOfPieces(), this.board.getSizeOfBoardX(), 
             this.board.getSizeOfBoardY(), this.board.getSizeOfBoardZ(), this.board.getBoardCoordinateMinimum());
@@ -38,14 +47,12 @@ export class Game {
             console.log(arr[i]);
         }
     }
-
     public getWhoseTurnFromMoveCount(moveCount: number): string {
         if (moveCount % 2 == 0) {
             return this.white;
         }
         return this.black;
     }
-
     public getCheck(): boolean {
         const playerMoving = this.getWhoseTurnFromMoveCount(this.moveCount);
         return this.board.kingInCheck(playerMoving);
@@ -189,7 +196,7 @@ export class Game {
         // TODO
     }
 
-    private validSpace(a: Position): boolean {
+    public validSpace(a: Position): boolean {
         return this.board.spaceOnBoard(a);
     }
 
