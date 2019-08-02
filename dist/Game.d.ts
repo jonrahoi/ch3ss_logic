@@ -8,6 +8,8 @@ export declare class Game {
     private gameID;
     constructor(gameID: number);
     setPieces(pieces: Piece[]): void;
+    getBoardStateStringArray(): String[];
+    printBoardStateToConsole(): void;
     getCheck(): boolean;
     setCheck(a: boolean): void;
     getCheckMate(): boolean;
@@ -16,10 +18,10 @@ export declare class Game {
     getMoveHistory(): Position[];
     getPieces(): Piece[];
     getMoveCount(): number;
+    setMoveCount(a: number): void;
     move(a: Position, b: Position): boolean;
     gameIsDrawn(): boolean;
     getPositionFromString(a: string): Position;
-    getPiecesByColor(color: string): Piece[];
     getWhoseTurnItIs(): string;
     getPossibleMovesForPieceAtSpace(posA: Position): Position[];
     getPossibleMovesForPiece(piece: Piece): Position[];
@@ -28,8 +30,7 @@ export declare class Game {
     saveGame(): void;
     goBackOneMove(): void;
     goForwardOneMove(): void;
-    validSpace(a: Position): boolean;
+    private validSpace;
     pieceLocatedAtBool(a: Position): boolean;
-    kingsPresentOnBoardDebug(): boolean;
     isValidSpaceFromString(str: string): boolean;
 }

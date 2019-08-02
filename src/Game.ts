@@ -20,29 +20,42 @@ export class Game {
         this.gameID = gameID;
     }
 
-    setPieces(pieces: Piece[]) {
+    public setPieces(pieces: Piece[]) {
        this.board.setPieces(pieces);
     }
-    getCheck(): boolean {
-        return this.thereIsCheck;
-    }
-    setCheck(a: boolean) {
-        this.thereIsCheck = a;
+
+    public getBoardStateStringArray(): String[] {
+        return this.board.getBoardStateStringArray();
     }
 
-    getCheckMate(): boolean {
-        return this.checkMate;
+    public printBoardStateToConsole() {
+        const arr = this.board.getBoardStateStringArray();
+        for (let i = 0; i < arr.length; i++) {
+            console.log(arr[i]);
+        }
     }
 
-    getGameID(): number {
+    public getCheck(): boolean {
+        return this.board.getCheck();
+    }
+    // used for testing
+    public setCheck(a: boolean) {
+        this.setCheck(a);
+    }
+
+    public getCheckMate(): boolean {
+        return this.board.getCheckmate();
+    }
+
+    public getGameID(): number {
         return this.gameID;
     }
 
-    getStaleMate(): boolean {
-        return this.stalemate;
+    public getStaleMate(): boolean {
+        return this.board.getStalemate();
     }
 
-    getMoveHistory(): Position[] {
+    public getMoveHistory(): Position[] {
         const moves: Position[] = [];
         for (let i = 0; i < this.moveHistory.length; i++) {
             moves.push(this.moveHistory[i]);
@@ -50,77 +63,83 @@ export class Game {
         return moves;
     }
 
-    getPieces(): Piece[] {
+    public getPieces(): Piece[] {
         return this.board.getPieces();
     }
 
-    getMoveCount(): number {
+    public getMoveCount(): number {
         return this.board.getMoveCount();
     }
 
-    move(a: Position, b: Position): boolean {
+    // used for testing
+    public setMoveCount(a: number) {
+        this.board.setMoveCount(a);
+    }
+
+    public move(a: Position, b: Position): boolean {
         // validate positions are on board
         if (!this.validSpace(a) || !this.validSpace(b)) { return false; }
         console.log("inside Game.move, both valid spaces");
-        let kingStartedInCheck = false;
-        let copyOfBoardState: Piece[] = [];
-        copyOfBoardState = this.board.getPieces();
-        if (this.board.kingInCheck(this.board.getWhoseTurn())) {
-            kingStartedInCheck = true;
-        }
+        // let kingStartedInCheck = false;
+        // let copyOfBoardState: Piece[] = [];
+        // copyOfBoardState = this.board.getPieces();
+        // if (this.board.kingInCheck(this.board.getWhoseTurn())) {
+        //     kingStartedInCheck = true;
+        // }
         const moveExecutedSuccessfully = this.board.executeMove(a, b);
         if (!moveExecutedSuccessfully) {
             return false;
         }
-        if (kingStartedInCheck && this.board.kingInCheck(this.board.getWhoseTurn())) {
-            this.board.setPieces(copyOfBoardState);
-            console.log("move not executed, king still in check")
-            return false;
-        }
+        // if (kingStartedInCheck && this.board.kingInCheck(this.board.getWhoseTurn())) {
+        //     this.board.setPieces(copyOfBoardState);
+        //     console.log("move not executed, king still in check")
+        //     return false;
+        // }
         if (moveExecutedSuccessfully) {
             console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
             this.board.incrementMoveCount();
             this.moveHistory.push(a);
             this.moveHistory.push(b);
             // check if king is in check, if opponent king in check set bool
-            if (this.board.kingInCheck(this.board.getWhoseTurn())) {
-            // if (this.board.kingInCheckFromPosition(b)) {
-                this.thereIsCheck = true;
-                console.log("inside game.ts there is check");
-                // check if there is checkmate
-                if (this.board.playerCheckmated(this.board.getWhoseTurn())) {
-                    this.checkMate = true;
-                    console.log("inside game.ts there is checkmate");
-                }
-            }
-            else {
-                this.thereIsCheck = false;
-                // TO DO check if create stalemate
-                if (this.board.gameIsDrawn()) {
-                    this.stalemate = true;
-                }
-            }
+            // if (this.board.kingInCheck(this.board.getWhoseTurn())) {
+            // // if (this.board.kingInCheckFromPosition(b)) {
+            //     this.thereIsCheck = true;
+            //     console.log("inside game.ts there is check");
+            //     // check if there is checkmate
+            //     if (this.board.playerCheckmated(this.board.getWhoseTurn())) {
+            //         this.checkMate = true;
+            //         console.log("inside game.ts there is checkmate");
+            //     }
+            // }
+            // else {
+            //     this.thereIsCheck = false;
+            //     // TO DO check if create stalemate
+            //     if (this.board.gameIsDrawn()) {
+            //         this.stalemate = true;
+            //     }
+            // }
         }
         return true;
     }
 
-    gameIsDrawn(): boolean {
+    public gameIsDrawn(): boolean {
         return this.board.gameIsDrawn();
     }
 
-    getPositionFromString(a: string): Position {
-        return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
+    public getPositionFromString(a: string): Position {
+        if (this.isValidSpaceFromString(a)) {
+            return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
+        }
+        else {
+            return new Position(0, 0, 0);
+        }
     }
 
-    getPiecesByColor(color:string): Piece[] {
-         return this.board.getPiecesByColor(color);
-    }
-
-    getWhoseTurnItIs(): string {
+    public getWhoseTurnItIs(): string {
         return this.board.getWhoseTurn();
     }
 
-    getPossibleMovesForPieceAtSpace(posA: Position): Position[] {
+    public getPossibleMovesForPieceAtSpace(posA: Position): Position[] {
 
         let possibleMoves: Position[] = [];
         if (!this.board.pieceLocatedAtBool(posA)) {
@@ -131,7 +150,7 @@ export class Game {
     }
 
     // TODO remove, used for testing
-    getPossibleMovesForPiece(piece: Piece): Position[] {
+    public getPossibleMovesForPiece(piece: Piece): Position[] {
         const pieceB = piece;
         return this.board.getAllPossibleMovesPosition(pieceB.getPosition());
     }
@@ -157,21 +176,20 @@ export class Game {
     goBackOneMove() {
         JSON.stringify(this.moveHistory);
         this.moveHistory = JSON.parse("moveHistory");
-        for (let i = 0; i < this.moveHistory.length; i += 2) {
-            this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
+        for (let i = 0; i < this.moveHistory.length - 2; i += 2) {
+            this.board.executeMove(this.moveHistory[i], this.moveHistory[i + 1]);
         }
-        //TODO, movecount, etc
     }
 
     goForwardOneMove() {
         // TODO
     }
 
-    validSpace(a: Position): boolean {
+    private validSpace(a: Position): boolean {
         return this.board.spaceOnBoard(a);
     }
 
-    pieceLocatedAtBool(a: Position): boolean {
+    public pieceLocatedAtBool(a: Position): boolean {
         return this.board.pieceLocatedAtBool(a);
     }
 
@@ -179,7 +197,7 @@ export class Game {
     //     return this.board.kingsPresentOnBoardDebug();
     // }
 
-    isValidSpaceFromString(str: string): boolean {
+    public isValidSpaceFromString(str: string): boolean {
         if (str.length != 3) {
             return false
         }

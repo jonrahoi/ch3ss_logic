@@ -6,9 +6,7 @@ import { Rook } from "../Rook"
 import { Unicorn } from "../Unicorn"
 import { Pawn } from "../Pawn"
 import { Queen } from "../Queen"
-import Board from "../Board";
 import { Game } from "../Game"
-import * as readline from "readline";
 
 const testCorneredKing = [
     new King("White", 1, 1, 1),
@@ -25,7 +23,8 @@ const testCorneredKing = [
     new Queen("Black", 5, 1, 3),
     new Queen("Black", 4, 2, 1),
     new Queen("Black", 4, 2, 2),
-    new King("Black", 4, 1, 1)
+    new King("Black", 4, 1, 1),
+    new Queen("Black", 4, 1, 2)
 ]
 
 const testCorneredKingImmediateStalemate = [
@@ -48,56 +47,8 @@ function getInputFromUser(message: string): string {
 const game = new Game(1);
 // game.setPieces(testCorneredKing);
 // game.setCheck(true);
-console.log(game.getCheckMate());
-const possibleMoves = game.getPossibleMovesForPieceAtSpace(new Position(1, 1, 1));
-for (let i = 0; i < possibleMoves.length; i++) {
-    console.log(possibleMoves[i].getPostionString());
-}
 
 consoleGame();
-
-
-// printPossibleMovesForPiece(new Unicorn("White", 2, 1, 2));
-
-// let testPawn = new Pawn("White", 1, 2, 2);
-// let moveSpace = new Position(1, 2, 3);
-// testSpecificMove(testPawn, moveSpace);
-
-// test pawn at 245 to 235
-// let testPawn = new Pawn("Black", 2, 4, 5);
-// let moveSpace = new Position(2, 3, 5);
-// testSpecificMove(testPawn, moveSpace);
-
-
-
-// console.log("test piece can move to 122" + testPawn.canMoveTo(moveSpace));
-
-// dispalyBoardState(game.getWhitePieces(), game.getBlackPieces(), "initial board state:");
-
-
-// test cases
-// let blackQueen = new Queen("Black", 4, 5, 5);
-// let whitePawn = new Pawn("White", 1, 2, 2);
-
-// const testPiece1 = new Rook("White", 3, 3, 3);
-// console.log("initial: " + testPiece1.getPostionString());
-
-// let testPiece = new Knight("Black", 2, 5, 5);
-// printPossibleMovesForPiece(testPiece);
-
-// let pos = new Position(1, 2, 2);
-// console.log("white pawn can move to " + whitePawn.canMoveTo(pos));
-
-
-
-// pieces = game.getWhitePieces();
-// console.log("testing piece: " + getPieceNotation(pieces[0]));
-// testPiecePossibleMove(pieces[0]);
-
-
-// function testPiecePossibleMove(a: Piece, moveSpace: Postion) {
-//     console.log(game.moveIsLegalDebug(a, moveSpace));
-// }
 
 function consoleGame() {
     console.log("Welcome to 3D chess on the console.")
@@ -108,7 +59,7 @@ function consoleGame() {
         for (let i = 0; i < moveHistory.length; i++) {
             console.log(moveHistory[i].getPostionString());
         }
-        dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "Here is the board after " + game.getMoveCount() + " moves");
+        game.printBoardStateToConsole();
         console.log(game.getWhoseTurnItIs() + "'s turn.");
         const menu = +getInputFromUser("enter 1 to enter a move, 2 to get available moves: ");
         console.log("you entered: " + menu);
@@ -166,7 +117,7 @@ function printPossibleMovesForPiece(p: Piece) {
     let possibleMoves: Position[] = [];
     possibleMoves = game.getPossibleMovesForPiece(p);
     console.log("after call to get possible moves: " + p.getPostionString());
-    console.log("listing possible moves for: " + getPieceNotation(p) + " at location " + p.getPostionString());
+    console.log("listing possible moves for piece at location " + p.getPostionString());
     for (let i = 0; i < possibleMoves.length; i++) {
         console.log(possibleMoves[i].getPostionString());
     }
@@ -176,96 +127,8 @@ function testSpecificMove(a: Piece, b: Position) {
     console.log("Testing move:"  + " " + a.getPostionString() + " to " + b.getPostionString());
     const moveSuccessful = game.move(a.getPosition(), b);
     console.log("move successful: " + moveSuccessful);
-    dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "board state after move: " + a.getPostionString() + " to " + b.getPostionString());
+    game.printBoardStateToConsole();
 }
-
-function dispalyBoardState(whitePieces: Piece[], blackPieces: Piece[], message: string) {
-    console.log(whitePieces.length + " white pieces");
-    console.log(blackPieces.length + " black pieces");
-    console.log(message);
-    let boardArray: String[][][];
-    boardArray = [];
-    // console.log(boardArray[0][0][0]);
-    for (let i = 0; i < 5; i++) {
-        boardArray[i] = [];
-        for (let j = 0; j < 5; j++) {
-            boardArray[i][j] = [];
-            for (let k = 0; k < 5; k++) {
-                boardArray[i][j][k] = new String();
-                boardArray[i][j][k] = "_____";
-            }
-        }
-    }
-    for (let i = 0; i < whitePieces.length; i++) {
-        const a = whitePieces[i].getPosition();
-        boardArray[a.getX() - 1][a.getY() - 1][a.getZ() - 1] = getPieceNotation(whitePieces[i]);
-    }
-    for (let i = 0; i < blackPieces.length; i++) {
-        const b = blackPieces[i].getPosition();
-        boardArray[b.getX() - 1][b.getY() - 1][b.getZ() - 1] = getPieceNotation(blackPieces[i]);
-    }
-    for (let z = 4; z >= 0; z--) {
-        console.log("level: " + (z + 1));
-        for (let y = 4; y >= 0; y--) {
-            let row: string = "|";
-            for (let x = 0; x < 5; x++) {
-                row += boardArray[x][y][z];
-                row += "|"
-            }
-            console.log(row);
-        }
-        console.log();
-    }
-}
-
-function getPieceNotation(piece: Piece): string {
-    if (piece.isColor("White")) {
-        if (piece instanceof Pawn) {
-            return "W_Pwn";
-        }
-        if (piece instanceof Rook) {
-            return "W_Rok";
-        }
-        if (piece instanceof Knight) {
-            return "W_Kht";
-        }
-        if (piece instanceof Bishop) {
-            return "W_Bhp";
-        }
-        if (piece instanceof Unicorn) {
-            return "W_Uni";
-        }
-        if (piece instanceof Queen) {
-            return "W_Que";
-        }
-        if (piece instanceof King) {
-            return "W_Kng";
-        }
-    } // else black
-    if (piece instanceof Pawn) {
-        return "B_Pwn";
-    }
-    if (piece instanceof Rook) {
-        return "B_Rok";
-    }
-    if (piece instanceof Knight) {
-        return "B_Kht";
-    }
-    if (piece instanceof Bishop) {
-        return "B_Bhp";
-    }
-    if (piece instanceof Unicorn) {
-        return "B_Uni";
-    }
-    if (piece instanceof Queen) {
-        return "B_Que";
-    }
-    if (piece instanceof King) {
-        return "B_Kng";
-    }
-
-}
-
 
 // validates proper space
 function validSpaceFromString(str: string): boolean {

@@ -1,11 +1,6 @@
 "use strict";
 exports.__esModule = true;
-var Piece_1 = require("../Piece");
-var Knight_1 = require("../Knight");
 var King_1 = require("../King");
-var Bishop_1 = require("../Bishop");
-var Rook_1 = require("../Rook");
-var Unicorn_1 = require("../Unicorn");
 var Pawn_1 = require("../Pawn");
 var Queen_1 = require("../Queen");
 var Game_1 = require("../Game");
@@ -24,7 +19,8 @@ var testCorneredKing = [
     new Queen_1.Queen("Black", 5, 1, 3),
     new Queen_1.Queen("Black", 4, 2, 1),
     new Queen_1.Queen("Black", 4, 2, 2),
-    new King_1.King("Black", 4, 1, 1)
+    new King_1.King("Black", 4, 1, 1),
+    new Queen_1.Queen("Black", 4, 1, 2)
 ];
 var testCorneredKingImmediateStalemate = [
     new King_1.King("White", 1, 1, 1),
@@ -41,11 +37,6 @@ function getInputFromUser(message) {
     return readlineSync.question(message);
 }
 var game = new Game_1.Game(1);
-console.log(game.getCheckMate());
-var possibleMoves = game.getPossibleMovesForPieceAtSpace(new Piece_1.Position(1, 1, 1));
-for (var i = 0; i < possibleMoves.length; i++) {
-    console.log(possibleMoves[i].getPostionString());
-}
 consoleGame();
 function consoleGame() {
     console.log("Welcome to 3D chess on the console.");
@@ -56,7 +47,7 @@ function consoleGame() {
         for (var i = 0; i < moveHistory.length; i++) {
             console.log(moveHistory[i].getPostionString());
         }
-        dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "Here is the board after " + game.getMoveCount() + " moves");
+        game.printBoardStateToConsole();
         console.log(game.getWhoseTurnItIs() + "'s turn.");
         var menu = +getInputFromUser("enter 1 to enter a move, 2 to get available moves: ");
         console.log("you entered: " + menu);
@@ -111,7 +102,7 @@ function printPossibleMovesForPiece(p) {
     var possibleMoves = [];
     possibleMoves = game.getPossibleMovesForPiece(p);
     console.log("after call to get possible moves: " + p.getPostionString());
-    console.log("listing possible moves for: " + getPieceNotation(p) + " at location " + p.getPostionString());
+    console.log("listing possible moves for piece at location " + p.getPostionString());
     for (var i = 0; i < possibleMoves.length; i++) {
         console.log(possibleMoves[i].getPostionString());
     }
@@ -120,90 +111,7 @@ function testSpecificMove(a, b) {
     console.log("Testing move:" + " " + a.getPostionString() + " to " + b.getPostionString());
     var moveSuccessful = game.move(a.getPosition(), b);
     console.log("move successful: " + moveSuccessful);
-    dispalyBoardState(game.getPiecesByColor("White"), game.getPiecesByColor("Black"), "board state after move: " + a.getPostionString() + " to " + b.getPostionString());
-}
-function dispalyBoardState(whitePieces, blackPieces, message) {
-    console.log(whitePieces.length + " white pieces");
-    console.log(blackPieces.length + " black pieces");
-    console.log(message);
-    var boardArray;
-    boardArray = [];
-    for (var i = 0; i < 5; i++) {
-        boardArray[i] = [];
-        for (var j = 0; j < 5; j++) {
-            boardArray[i][j] = [];
-            for (var k = 0; k < 5; k++) {
-                boardArray[i][j][k] = new String();
-                boardArray[i][j][k] = "_____";
-            }
-        }
-    }
-    for (var i = 0; i < whitePieces.length; i++) {
-        var a = whitePieces[i].getPosition();
-        boardArray[a.getX() - 1][a.getY() - 1][a.getZ() - 1] = getPieceNotation(whitePieces[i]);
-    }
-    for (var i = 0; i < blackPieces.length; i++) {
-        var b = blackPieces[i].getPosition();
-        boardArray[b.getX() - 1][b.getY() - 1][b.getZ() - 1] = getPieceNotation(blackPieces[i]);
-    }
-    for (var z = 4; z >= 0; z--) {
-        console.log("level: " + (z + 1));
-        for (var y = 4; y >= 0; y--) {
-            var row = "|";
-            for (var x = 0; x < 5; x++) {
-                row += boardArray[x][y][z];
-                row += "|";
-            }
-            console.log(row);
-        }
-        console.log();
-    }
-}
-function getPieceNotation(piece) {
-    if (piece.isColor("White")) {
-        if (piece instanceof Pawn_1.Pawn) {
-            return "W_Pwn";
-        }
-        if (piece instanceof Rook_1.Rook) {
-            return "W_Rok";
-        }
-        if (piece instanceof Knight_1.Knight) {
-            return "W_Kht";
-        }
-        if (piece instanceof Bishop_1.Bishop) {
-            return "W_Bhp";
-        }
-        if (piece instanceof Unicorn_1.Unicorn) {
-            return "W_Uni";
-        }
-        if (piece instanceof Queen_1.Queen) {
-            return "W_Que";
-        }
-        if (piece instanceof King_1.King) {
-            return "W_Kng";
-        }
-    }
-    if (piece instanceof Pawn_1.Pawn) {
-        return "B_Pwn";
-    }
-    if (piece instanceof Rook_1.Rook) {
-        return "B_Rok";
-    }
-    if (piece instanceof Knight_1.Knight) {
-        return "B_Kht";
-    }
-    if (piece instanceof Bishop_1.Bishop) {
-        return "B_Bhp";
-    }
-    if (piece instanceof Unicorn_1.Unicorn) {
-        return "B_Uni";
-    }
-    if (piece instanceof Queen_1.Queen) {
-        return "B_Que";
-    }
-    if (piece instanceof King_1.King) {
-        return "B_Kng";
-    }
+    game.printBoardStateToConsole();
 }
 function validSpaceFromString(str) {
     if (str.length != 3) {
