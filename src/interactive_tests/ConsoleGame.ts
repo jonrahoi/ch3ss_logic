@@ -83,10 +83,6 @@ function consoleGame() {
         let posA, posB;
         if (validSpaceFromString(a) && validSpaceFromString(b)) {
             posA = game.getPositionFromString(a);
-            if (!game.pieceLocatedAtBool(posA)) {
-                console.log("piece not located there, enter a valid starting space");
-                continue;
-            }
             posB = game.getPositionFromString(b);
         }
         else {
@@ -106,7 +102,6 @@ function consoleGame() {
                 console.log("STALEMATE, DRAW!");
                 endOfGame = true;
             }
-             // if move successful update board, messages (check, stalemate, checkmate) move number, previous moves on user interface
         }
     }
 }
@@ -115,7 +110,7 @@ function consoleGame() {
 function printPossibleMovesForPiece(p: Piece) {
     console.log("after call: " + p.getPostionString());
     let possibleMoves: Position[] = [];
-    possibleMoves = game.getPossibleMovesForPiece(p);
+    possibleMoves = game.getPossibleMovesForPieceAtSpace(p.getPosition());
     console.log("after call to get possible moves: " + p.getPostionString());
     console.log("listing possible moves for piece at location " + p.getPostionString());
     for (let i = 0; i < possibleMoves.length; i++) {
@@ -142,10 +137,3 @@ function validSpaceFromString(str: string): boolean {
     }
     return true;
 }
-
-
-
-
-
-
-

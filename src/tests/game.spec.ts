@@ -9,23 +9,23 @@ export { lab };
 describe("experiment", () => {
     before(() => {});
 
-    // it("verifies 1 equals 1", () => {
-    //     expect(1).to.equal(1);
-    // });
-    // it("returns true when 1 + 1 equals 2", () => {
-    //     expect(1 + 1).to.equal(2);
-    // });
+    it("verifies 1 equals 1", () => {
+        expect(1).to.equal(1);
+    });
+    it("returns true when 1 + 1 equals 2", () => {
+        expect(1 + 1).to.equal(2);
+    });
 
-    // it("creates game", () => {
-    //     const g = new Game(1);
-    //     expect(g.getMoveHistory().length).to.equal(0)
-    // })
+    it("creates game", () => {
+        const g = new Game(1);
+        expect(g.getMoveHistory().length).to.equal(0)
+    })
 
 
-    // it("test move pawn forward", () => {
-    //     const g = new Game(1);
-    //     expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true)
-    // })
+    it("test move pawn forward", () => {
+        const g = new Game(1);
+        expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true)
+    })
 
     
     // it("space a doesn't have a piece", () => {
@@ -59,61 +59,55 @@ describe("experiment", () => {
     //     expect((g.getPossibleMovesForPieceAtSpace(new Position(3, 1, 1))).length).to.equal(0)
     // })
 
-
-    // test stalemate
-    it("test checkmate", () => {
-        const g = new Game(1);
-        const testCorneredKing = [
-            new King("White", 1, 1, 1),
-            new Pawn("Black", 1, 3, 1),
-            new Pawn("Black", 2, 3, 1),
-            new Pawn("Black", 3, 3, 1),
-            new Pawn("Black", 1, 3, 2),
-            new Pawn("Black", 2, 2, 2),
-            new Pawn("Black", 3, 2, 2),
+    // // test stalemate
+    // it("test checkmate", () => {
+    //     const g = new Game(1);
+    //     const testCorneredKing = [
+    //         new King("White", 1, 1, 1),
+    //         new Pawn("Black", 1, 3, 1),
+    //         new Pawn("Black", 2, 3, 1),
+    //         new Pawn("Black", 3, 3, 1),
+    //         new Pawn("Black", 1, 3, 2),
+    //         new Pawn("Black", 2, 2, 2),
+    //         new Pawn("Black", 3, 2, 2),
         
-            new Queen("Black", 1, 1, 3),
-            new Queen("Black", 2, 1, 3),
-            new Queen("Black", 3, 1, 3),
-            new Queen("Black", 4, 1, 3),
-            new Queen("Black", 5, 1, 3),
+    //         new Queen("Black", 1, 1, 3),
+    //         new Queen("Black", 2, 1, 3),
+    //         new Queen("Black", 3, 1, 3),
+    //         new Queen("Black", 4, 1, 3),
+    //         new Queen("Black", 5, 1, 3),
         
-            new Queen("Black", 4, 2, 1),
-            new Queen("Black", 4, 2, 2),
-            new King("Black", 4, 1, 1),
-            new Queen("Black", 4, 1, 2)
-        ]
-        g.setPieces(testCorneredKing);
-        g.printBoardStateToConsole();
-        console.log(g.getPossibleMovesForPieceAtSpace(new Position(1, 1, 1)))
-        // g.setMoveCount(1);
-        // expect(1).to.equal(1);
-        expect(g.getPossibleMovesForPieceAtSpace(new Position(1, 1, 1)).length).to.equal(0)
-        expect(g.getCheckMate()).to.equal(true);
-    })
+    //         new Queen("Black", 4, 2, 1),
+    //         new Queen("Black", 4, 2, 2),
+    //         new King("Black", 4, 1, 1),
+    //         new Queen("Black", 4, 1, 2)
+    //     ]
+    //     g.setPieces(testCorneredKing);
+    //     g.printBoardStateToConsole();
+    //     console.log(g.getPossibleMovesForPieceAtSpace(new Position(1, 1, 1)))
+    //     // g.setMoveCount(1);
+    //     // expect(1).to.equal(1);
+    //     expect(g.getPossibleMovesForPieceAtSpace(new Position(1, 1, 1)).length).to.equal(0)
+    //     expect(g.getCheckMate()).to.equal(true);
+    // })
 
 
-    it("test king taking piece and moving into check", () => {
-        const g = new Game(1);
-        const testCorneredKing = [
-            new King("White", 1, 1, 1),
-            new Pawn("Black", 2, 2, 2),
-            new Queen("Black", 3, 2, 2),
-            new King("Black", 4, 1, 1),
-        ]
-        g.setPieces(testCorneredKing);
-        g.printBoardStateToConsole();
-        expect(g.move(new Position(1, 1, 1), new Position(2, 2, 2))).to.equal(false);
-        // g.setMoveCount(1);
-        // expect(1).to.equal(1);
-    })
+    // it("test king taking piece and moving into check", () => {
+    //     const g = new Game(1);
+    //     const testCorneredKing = [
+    //         new King("White", 1, 1, 1),
+    //         new Pawn("Black", 2, 2, 2),
+    //         new Queen("Black", 3, 2, 2),
+    //         new King("Black", 4, 1, 1),
+    //     ]
+    //     g.setPieces(testCorneredKing);
+    //     g.printBoardStateToConsole();
+    //     expect(g.move(new Position(1, 1, 1), new Position(2, 2, 2))).to.equal(false);
+    //     // g.setMoveCount(1);
+    //     // expect(1).to.equal(1);
+    // })
 
 });
-
-
-
-
-
 
 
 

@@ -71,10 +71,6 @@ function consoleGame() {
         var posA = void 0, posB = void 0;
         if (validSpaceFromString(a) && validSpaceFromString(b)) {
             posA = game.getPositionFromString(a);
-            if (!game.pieceLocatedAtBool(posA)) {
-                console.log("piece not located there, enter a valid starting space");
-                continue;
-            }
             posB = game.getPositionFromString(b);
         }
         else {
@@ -100,7 +96,7 @@ function consoleGame() {
 function printPossibleMovesForPiece(p) {
     console.log("after call: " + p.getPostionString());
     var possibleMoves = [];
-    possibleMoves = game.getPossibleMovesForPiece(p);
+    possibleMoves = game.getPossibleMovesForPieceAtSpace(p.getPosition());
     console.log("after call to get possible moves: " + p.getPostionString());
     console.log("listing possible moves for piece at location " + p.getPostionString());
     for (var i = 0; i < possibleMoves.length; i++) {
