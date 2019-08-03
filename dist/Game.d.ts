@@ -5,8 +5,6 @@ export declare class Game {
     private gameID;
     private moveCount;
     private minNumberOfPiecesBeforeDraw;
-    private white;
-    private black;
     constructor(gameID: number);
     setPieces(pieces: Piece[]): void;
     getBoardStateStringArray(): String[];
@@ -31,5 +29,5 @@ export declare class Game {
     goBackOneMove(): void;
     goForwardOneMove(): void;
     validSpace(a: Position): boolean;
-    isValidSpaceFromString(str: string): boolean;
+    isValidSpaceFromString(inputString: string): boolean;
 }

@@ -8,7 +8,6 @@ var Unicorn_1 = require("./Unicorn");
 var Pawn_1 = require("./Pawn");
 var Queen_1 = require("./Queen");
 function getRaumschachBoard(white, black) {
-    console.log("inside get board setup array.ts");
     return [
         new King_1.King(black, 3, 5, 5),
         new Rook_1.Rook(black, 1, 5, 5),

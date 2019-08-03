@@ -2,7 +2,7 @@
 import Board from "./Board"
 import { Piece, Position } from "./Piece"
 import { getBoardStateStringArraySliceByZ } from "./DisplayBoard2D"
-import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z } from "./constants"
+import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z, RA_BOARD_MIN, WHITE, BLACK } from "./constants"
 
 /**
  * Class to be instantiated by user interface for two player game of 3D chess
@@ -13,15 +13,14 @@ export class Game {
     private gameID: number;
     private moveCount: number;
     private minNumberOfPiecesBeforeDraw = 5; // less than 5 pieces causes draw
-    private white = "White";
-    private black = "Black";
+
     /**
      * constructor for class
      * @param gameID unique game ID
      */
     constructor(gameID: number) {
         this.gameID = gameID;
-        this.board = new Board(RAUMSCHACH, this.white, this.black);
+        this.board = new Board(RAUMSCHACH, WHITE, BLACK);
         this.moveHistory = [];
         this.gameID = gameID;
         this.moveCount = 0;
@@ -49,9 +48,9 @@ export class Game {
     }
     public getWhoseTurnItIs(): string {
         if (this.moveCount % 2 == 0) {
-            return this.white;
+            return WHITE;
         }
-        return this.black;
+        return BLACK;
     }
     public getCheck(): boolean {
         const playerMoving = this.getWhoseTurnItIs();
@@ -79,6 +78,7 @@ export class Game {
                 return false;
             }
         }
+        return true;
     }
     public getInsufficientMaterial(): boolean {
         if (this.board.getCopyOfPieces().length < this.minNumberOfPiecesBeforeDraw) {
@@ -101,20 +101,20 @@ export class Game {
     }
     public move(a: Position, b: Position): boolean {
         if (!this.validSpace(a) || !this.validSpace(b)) { return false; }
-        console.log("inside Game.move, both valid spaces");
-        // const kingStartedInCheck = this.board.kingInCheck(this.board.getWhoseTurn());
+        // console.log("inside Game.move, both valid spaces");
         const copyOfBoardState: Piece[] = this.board.getCopyOfPieces();
 
         const playerMoving = this.getWhoseTurnItIs();
         if (!this.board.executeMove(playerMoving, a, b)) {
+            // console.log("inside Game.move, board execute move return false");
             return false;
         }
         if (this.board.kingInCheck(playerMoving)) {
             this.board.setPieces(copyOfBoardState);
-            console.log("move not executed, king still in check")
+            // console.log("move not executed, king still in check")
             return false;
         }
-        console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
+        // console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
         this.moveCount++;
         this.moveHistory.push(a);
         this.moveHistory.push(b);
@@ -122,6 +122,7 @@ export class Game {
     }
     public getPossibleMovesForPieceAtSpace(a: Position): Position[] {
         const possibleMoves: Position[] = [];
+        // console.log("getting possible moves for piece at: " + a.getPostionString());
         if (!this.board.pieceLocatedAtBool(a)) {
             // console.log("inside game.possibleMoves, no piece located there")
             return possibleMoves;
@@ -134,9 +135,18 @@ export class Game {
                     // create a position with the three iterators
                     const b: Position = new Position(x, y, z);
                     this.board.setPieces(this.getCopyOfPieces(copyOfBoardState));
-                    if (this.board.executeMove(playerMoving, a, b) && !this.board.kingInCheck(playerMoving)) {
+                    // if (this.board.executeMove(playerMoving, a, b) && !this.board.kingInCheck(playerMoving)) {
+                    //     possibleMoves.push(b);
+                    // }
+                    if (!this.board.executeMove(playerMoving, a, b)) {
+                        // console.log("inside game.getPossibleMoves, piece could not move to: " + b.getPostionString())
+                        continue;
+                    }
+                    if (!this.board.kingInCheck(playerMoving)) {
+                        // console.log("inside game.getPossibleMoves, piece could not move to: " + b.getPostionString() + " because king in check")
                         possibleMoves.push(b);
                     }
+                    this.board.setPieces(copyOfBoardState);
                 }
             }
         }
@@ -194,25 +204,30 @@ export class Game {
         // TODO
     }
 
+    /**
+     * Determines if a position is on the board
+     * @param a 
+     */
     public validSpace(a: Position): boolean {
         return this.board.spaceOnBoard(a);
     }
 
-
-    // kingsPresentOnBoardDebug(): boolean {
-    //     return this.board.kingsPresentOnBoardDebug();
-    // }
-
-    // TODO fix magic numbers
-    public isValidSpaceFromString(str: string): boolean {
-        if (str.length != 3) {
+    /**
+     * Returns boolean for if a string can be converted to a valid space
+     * @param inputString
+     */
+    public isValidSpaceFromString(inputString: string): boolean {
+        if (inputString.length != 3) {
             return false
         }
-        RA_SIZE_BOARD_X
-        for (let i = 0; i < 3; i++) {
-            if (str.charAt(i) < "1" || str.charAt(i) > "5") {
-                return false;
-            }
+        if (inputString.charAt(0) < RA_BOARD_MIN.toLocaleString().charAt(0) || inputString.charAt(0) > RA_SIZE_BOARD_X.toLocaleString().charAt(0)) {
+            return false;
+        }
+        if (inputString.charAt(1) < RA_BOARD_MIN.toLocaleString().charAt(0) || inputString.charAt(1) > RA_SIZE_BOARD_Y.toLocaleString().charAt(0)) {
+            return false;
+        }
+        if (inputString.charAt(2) < RA_BOARD_MIN.toLocaleString().charAt(0) || inputString.charAt(2) > RA_SIZE_BOARD_Z.toLocaleString().charAt(0)) {
+            return false;
         }
         return true;
     }

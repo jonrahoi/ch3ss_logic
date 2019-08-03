@@ -8,7 +8,7 @@ import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
 import { threadId } from "worker_threads";
 import { getRaumschachBoard } from "./BoardSetupArrays"
-import { RAUMSCHACH } from "./constants"
+import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z, RA_BOARD_MIN } from "./constants"
 
 /**
  * Class for 2 player 3D chess. Board knows the geometry of the board and the location of pieces
@@ -39,10 +39,10 @@ export default class Board {
         if (gameVersion === RAUMSCHACH) {
             this.pieces = getRaumschachBoard(white, black);
             // these are the rules for Raumschach
-            this.sizeOfBoardX = 5;
-            this.sizeOfBoardY = 5;
-            this.sizeOfBoardZ = 5;
-            this.boardCoordinateMinimum = 1;
+            this.sizeOfBoardX = RA_SIZE_BOARD_X;
+            this.sizeOfBoardY = RA_SIZE_BOARD_Y;
+            this.sizeOfBoardZ = RA_SIZE_BOARD_Z;
+            this.boardCoordinateMinimum = RA_BOARD_MIN;
             this.white = white;
             this.black = black;
             this.enPassant = false;
@@ -90,29 +90,29 @@ export default class Board {
             return false;
         }
         if (!this.pieceMoveFollowsMovementRules(movePiece, b)) {
-            // console.log("inside board.executeMove, move is not legal")
+            // console.log("inside board.executeMove, move does not follow movement rules")
             return false;
         }
         // console.log("inside board.executeMove, right color, move legal")
         // Queening of pawn
         if (this.queeningTwoBackRows && movePiece instanceof Pawn && this.checkForQueeningTwoBackRows(movePiece, b)) {
-            console.log("queening pawn")
+            // console.log("queening pawn")
             this.deletePieceAtPosition(a);
             const newQueen = new Queen(movePiece.getColor(), b.getX(), b.getY(), b.getZ());
             this.pieces.push(newQueen);
-            console.log("inside board.executeMove, pawn queened, move executed")
+            // console.log("inside board.executeMove, pawn queened, move executed")
             return true;
         }
         // is there a piece at space B?, delete piece if there
         if (this.pieceLocatedAtBool(b)) {
             this.piecesTaken.push(this.getPieceLocatedAt(b));
             this.deletePieceAtPosition(b);
-            console.log("inside board.executeMove deleting piece at " + b.getPostionString());
+            // console.log("inside board.executeMove deleting piece at " + b.getPostionString());
         }
         // move piece
         movePiece.moveTo(b);
 
-        console.log("inside board.executeMove, move executed")
+        // console.log("inside board.executeMove, move executed")
         return true; // move executed successfully
         // castling, en passant not available in RUAMSCHACH
     }
@@ -125,30 +125,30 @@ export default class Board {
     private pieceMoveFollowsMovementRules(movePiece: Piece, b: Position): boolean {
         // check if move shape correct
         if (!movePiece.canMoveTo(b)) {
-            // console.log("inside moveIsLegal, move shape incorrect")
+            // console.log("inside board.pieceMoveFollowsMovementRules, move shape incorrect")
             return false;
         }
         // check if piece at b and if same color
         if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).sameColor(movePiece)) {
-            console.log("inside moveIsLegal, move space has piece of same color")
+            // console.log("inside board.pieceMoveFollowsMovementRules, move space has piece of same color")
             return false;
         }
         // if a knight no need to check if pawn or piece in way
         if (movePiece instanceof Knight) {
-            // console.log("inside moveIsLegal")
+            // console.log("inside board.pieceMoveFollowsMovementRules, returning true because instance of knight")
             return true;
         }
         // if pawn moving in right direction, no need to check piece in way (only one space)
         if (movePiece instanceof Pawn) {
             if (!this.pawnMoveDirectionCorrect(movePiece.getColor(), movePiece.getPosition(), b)) {
-                // console.log("inside moveIsLegal, pawn incorrect direction")
+                // console.log("inside board.pieceMoveFollowsMovementRules, pawn incorrect direction")
                 return false;
             }
             return true
         }
         // console.log("2: inside moveIsLegal in board.ts: checking for piece located at: " + movePiece.getPostionString());
         if (this.pieceInWay(movePiece.getPosition(), b)) {
-            console.log("inside moveIsLegal, piece is in way")
+            // console.log("inside board.pieceMoveFollowsMovementRules, piece is in way")
             return false;
         }
         // console.log("inside moveIsLegal, returning move legal")
@@ -212,6 +212,7 @@ export default class Board {
         for (let i = 0; i < this.pieces.length; i++) {
             if (!this.pieces[i].isColor(colorOfKingToCheckIfInCheck)) {
                 if (this.pieceMoveFollowsMovementRules(this.pieces[i], kingLocation)) {
+                    // console.log("board.king in check: king is in check")
                     return true;
                 }
             }

@@ -13,10 +13,10 @@ var Board = (function () {
         this.piecesTaken = [];
         if (gameVersion === constants_1.RAUMSCHACH) {
             this.pieces = BoardSetupArrays_1.getRaumschachBoard(white, black);
-            this.sizeOfBoardX = 5;
-            this.sizeOfBoardY = 5;
-            this.sizeOfBoardZ = 5;
-            this.boardCoordinateMinimum = 1;
+            this.sizeOfBoardX = constants_1.RA_SIZE_BOARD_X;
+            this.sizeOfBoardY = constants_1.RA_SIZE_BOARD_Y;
+            this.sizeOfBoardZ = constants_1.RA_SIZE_BOARD_Z;
+            this.boardCoordinateMinimum = constants_1.RA_BOARD_MIN;
             this.white = white;
             this.black = black;
             this.enPassant = false;
@@ -52,20 +52,16 @@ var Board = (function () {
             return false;
         }
         if (this.queeningTwoBackRows && movePiece instanceof Pawn_1.Pawn && this.checkForQueeningTwoBackRows(movePiece, b)) {
-            console.log("queening pawn");
             this.deletePieceAtPosition(a);
             var newQueen = new Queen_1.Queen(movePiece.getColor(), b.getX(), b.getY(), b.getZ());
             this.pieces.push(newQueen);
-            console.log("inside board.executeMove, pawn queened, move executed");
             return true;
         }
         if (this.pieceLocatedAtBool(b)) {
             this.piecesTaken.push(this.getPieceLocatedAt(b));
             this.deletePieceAtPosition(b);
-            console.log("inside board.executeMove deleting piece at " + b.getPostionString());
         }
         movePiece.moveTo(b);
-        console.log("inside board.executeMove, move executed");
         return true;
     };
     Board.prototype.pieceMoveFollowsMovementRules = function (movePiece, b) {
@@ -73,7 +69,6 @@ var Board = (function () {
             return false;
         }
         if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).sameColor(movePiece)) {
-            console.log("inside moveIsLegal, move space has piece of same color");
             return false;
         }
         if (movePiece instanceof Knight_1.Knight) {
@@ -86,7 +81,6 @@ var Board = (function () {
             return true;
         }
         if (this.pieceInWay(movePiece.getPosition(), b)) {
-            console.log("inside moveIsLegal, piece is in way");
             return false;
         }
         return true;
