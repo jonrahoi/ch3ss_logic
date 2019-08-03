@@ -2,7 +2,7 @@
 import Board from "./Board"
 import { Piece, Position } from "./Piece"
 import { getBoardStateStringArraySliceByZ } from "./DisplayBoard2D"
-import { RUAMSCHACH } from "./constants"
+import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z } from "./constants"
 
 /**
  * Class to be instantiated by user interface for two player game of 3D chess
@@ -21,7 +21,7 @@ export class Game {
      */
     constructor(gameID: number) {
         this.gameID = gameID;
-        this.board = new Board(RUAMSCHACH, this.white, this.black);
+        this.board = new Board(RAUMSCHACH, this.white, this.black);
         this.moveHistory = [];
         this.gameID = gameID;
         this.moveCount = 0;
@@ -47,14 +47,14 @@ export class Game {
             console.log(arr[i]);
         }
     }
-    public getWhoseTurnFromMoveCount(moveCount: number): string {
-        if (moveCount % 2 == 0) {
+    public getWhoseTurnItIs(): string {
+        if (this.moveCount % 2 == 0) {
             return this.white;
         }
         return this.black;
     }
     public getCheck(): boolean {
-        const playerMoving = this.getWhoseTurnFromMoveCount(this.moveCount);
+        const playerMoving = this.getWhoseTurnItIs();
         return this.board.kingInCheck(playerMoving);
     }
     public getCheckMate(): boolean {
@@ -105,7 +105,7 @@ export class Game {
         // const kingStartedInCheck = this.board.kingInCheck(this.board.getWhoseTurn());
         const copyOfBoardState: Piece[] = this.board.getCopyOfPieces();
 
-        const playerMoving = this.getWhoseTurnFromMoveCount(this.moveCount);
+        const playerMoving = this.getWhoseTurnItIs();
         if (!this.board.executeMove(playerMoving, a, b)) {
             return false;
         }
@@ -127,7 +127,7 @@ export class Game {
             return possibleMoves;
         }
         const copyOfBoardState: Piece[] = this.board.getCopyOfPieces();
-        const playerMoving = this.getWhoseTurnFromMoveCount(this.moveCount);
+        const playerMoving = this.getWhoseTurnItIs();
         for (let x = 1; x <= this.board.getSizeOfBoardX(); x++) {
             for (let y = 1; y <= this.board.getSizeOfBoardY(); y++) {
                 for (let z = 1; z <= this.board.getSizeOfBoardZ(); z++) {
@@ -161,10 +161,6 @@ export class Game {
         else {
             return new Position(0, 0, 0);
         }
-    }
-
-    public getWhoseTurnItIs(): string {
-        return this.getWhoseTurnItIs();
     }
 
     getPiecesTaken(): Piece[] {
@@ -205,6 +201,7 @@ export class Game {
     //     return this.board.kingsPresentOnBoardDebug();
     // }
 
+    // TODO fix magic numbers
     public isValidSpaceFromString(str: string): boolean {
         if (str.length != 3) {
             return false

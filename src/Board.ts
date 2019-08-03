@@ -8,7 +8,7 @@ import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
 import { threadId } from "worker_threads";
 import { getRaumschachBoard } from "./BoardSetupArrays"
-import { RUAMSCHACH } from "./constants"
+import { RAUMSCHACH } from "./constants"
 
 /**
  * Class for 2 player 3D chess. Board knows the geometry of the board and the location of pieces
@@ -36,7 +36,7 @@ export default class Board {
     private castling: boolean;  // not used for Ruamschach
 
     constructor(gameVersion: String, white: string, black: string) {
-        if (gameVersion === RUAMSCHACH) {
+        if (gameVersion === RAUMSCHACH) {
             this.pieces = getRaumschachBoard(white, black);
             // these are the rules for Raumschach
             this.sizeOfBoardX = 5;
