@@ -144,7 +144,7 @@ export class Game {
         return possibleMoves;
     }
 
-    public pieceAtPositionCanMove(a: Position) {
+    public pieceAtPositionCanMove(a: Position): boolean {
         return this.getPossibleMovesForPieceAtSpace(a).length > 0;
     }
 
