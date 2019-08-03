@@ -135,9 +135,6 @@ var Game = (function () {
         if (this.isValidSpaceFromString(a)) {
             return new Piece_1.Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
         }
-        else {
-            return new Piece_1.Position(0, 0, 0);
-        }
     };
     Game.prototype.getPiecesTaken = function () {
         return this.board.getCopyOfPiecesTaken();
@@ -164,6 +161,7 @@ var Game = (function () {
         if (str.length != 3) {
             return false;
         }
+        constants_1.RA_SIZE_BOARD_X;
         for (var i = 0; i < 3; i++) {
             if (str.charAt(i) < "1" || str.charAt(i) > "5") {
                 return false;

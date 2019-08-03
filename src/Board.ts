@@ -79,27 +79,27 @@ export default class Board {
      */
     executeMove(playerMoving: string, a: Position, b: Position): boolean {
         const initialPiecesCopy = this.getCopyOfPieces();
-        console.log("inside board.executeMove")
+        // console.log("inside board.executeMove")
         if (!this.pieceLocatedAtBool(a)) {
-            console.log("inside board.executeMove, no piece located at " + a.getPostionString());
+            // console.log("inside board.executeMove, no piece located at " + a.getPostionString());
             return false;
         }
         const movePiece = this.getPieceLocatedAt(a);
         if (!movePiece.isColor(playerMoving)) {
-            console.log("inside board.executeMove, wrong color, move not executed")
+            // console.log("inside board.executeMove, wrong color, move not executed")
             return false;
         }
         if (!this.pieceMoveFollowsMovementRules(movePiece, b)) {
-            console.log("inside board.executeMove, move is not legal")
+            // console.log("inside board.executeMove, move is not legal")
             return false;
         }
-        console.log("inside board.executeMove, right color, move legal")
+        // console.log("inside board.executeMove, right color, move legal")
         // Queening of pawn
         if (this.queeningTwoBackRows && movePiece instanceof Pawn && this.checkForQueeningTwoBackRows(movePiece, b)) {
+            console.log("queening pawn")
             this.deletePieceAtPosition(a);
-            const newQueen = new Queen(movePiece.getColor(), a.getX(), a.getY(), a.getZ());
+            const newQueen = new Queen(movePiece.getColor(), b.getX(), b.getY(), b.getZ());
             this.pieces.push(newQueen);
-            newQueen.moveTo(b);
             console.log("inside board.executeMove, pawn queened, move executed")
             return true;
         }

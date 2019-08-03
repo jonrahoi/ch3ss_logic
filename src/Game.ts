@@ -158,9 +158,6 @@ export class Game {
         if (this.isValidSpaceFromString(a)) {
             return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
         }
-        else {
-            return new Position(0, 0, 0);
-        }
     }
 
     getPiecesTaken(): Piece[] {
@@ -206,6 +203,7 @@ export class Game {
         if (str.length != 3) {
             return false
         }
+        RA_SIZE_BOARD_X
         for (let i = 0; i < 3; i++) {
             if (str.charAt(i) < "1" || str.charAt(i) > "5") {
                 return false;
