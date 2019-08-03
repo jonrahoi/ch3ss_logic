@@ -108,17 +108,17 @@ describe("experiment", () => {
     //     expect(g.move(new Position(1, 1, 1), new Position(2, 2, 2))).to.equal(false);
     // })
 
-    // // test queening
-    // it("test queening", () => {
-    //     const g = new Game(1);
-    //     let pieces = [new Pawn("White", 3, 4, 4)]
-    //     g.setPieces(pieces)
-    //     expect(g.move(new Position(3, 4, 4), new Position(3, 4, 5))).to.equal(true);
-    //     // pieces = g.getPieces();
-    //     // expect(pieces.length).to.equal(1);
-    //     // expect(pieces[0] instanceof Queen).to.equal(true);
-    //     // expect((g.getPossibleMovesForPieceAtSpace(new Position(3, 1, 1))).length).to.equal(0)
-    // })
+    // test queening
+    it("test queening", () => {
+        const g = new Game(1);
+        let pieces = [new Pawn("White", 3, 4, 4)]
+        g.setPieces(pieces)
+        expect(g.move(new Position(3, 4, 4), new Position(3, 4, 5))).to.equal(true);
+        // pieces = g.getPieces();
+        // expect(pieces.length).to.equal(1);
+        // expect(pieces[0] instanceof Queen).to.equal(true);
+        // expect((g.getPossibleMovesForPieceAtSpace(new Position(3, 1, 1))).length).to.equal(0)
+    })
 
 });
 

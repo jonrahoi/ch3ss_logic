@@ -21,6 +21,7 @@ export declare class Game {
     getMoveCount(): number;
     move(a: Position, b: Position): boolean;
     getPossibleMovesForPieceAtSpace(a: Position): Position[];
+    pieceAtPositionCanMove(a: Position): boolean;
     private getCopyOfPieces;
     gameIsDrawn(): boolean;
     getPositionFromString(a: string): Position;

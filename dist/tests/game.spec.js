@@ -28,5 +28,11 @@ describe("experiment", function () {
             console.log(history[i].getPostionString());
         }
     });
+    it("test queening", function () {
+        var g = new Game_1.Game(1);
+        var pieces = [new __1.Pawn("White", 3, 4, 4)];
+        g.setPieces(pieces);
+        expect(g.move(new __1.Position(3, 4, 4), new __1.Position(3, 4, 5))).to.equal(true);
+    });
 });
 //# sourceMappingURL=game.spec.js.map

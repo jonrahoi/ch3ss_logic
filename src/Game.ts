@@ -143,6 +143,11 @@ export class Game {
         this.board.setPieces(copyOfBoardState);
         return possibleMoves;
     }
+
+    public pieceAtPositionCanMove(a: Position) {
+        return this.getPossibleMovesForPieceAtSpace(a).length > 0;
+    }
+
     private getCopyOfPieces(pieces: Piece[]): Piece[] {
         const copy: Piece[] = [];
         for (let i = 0; i < pieces.length; i++) {

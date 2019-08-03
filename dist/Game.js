@@ -121,6 +121,9 @@ var Game = (function () {
         this.board.setPieces(copyOfBoardState);
         return possibleMoves;
     };
+    Game.prototype.pieceAtPositionCanMove = function (a) {
+        return this.getPossibleMovesForPieceAtSpace(a).length > 0;
+    };
     Game.prototype.getCopyOfPieces = function (pieces) {
         var copy = [];
         for (var i = 0; i < pieces.length; i++) {
