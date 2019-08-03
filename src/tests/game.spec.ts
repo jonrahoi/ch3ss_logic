@@ -16,23 +16,19 @@ describe("experiment", () => {
     it("returns true when 1 + 1 equals 2", () => {
         expect(1 + 1).to.equal(2);
     });
-
     it("creates game", () => {
         const g = new Game(1);
         expect(g.getMoveHistory().length).to.equal(0)
     })
-
     it("space a doesn't have a piece", () => {
         const g = new Game(1);
         expect(g.move(new Position(3, 3, 3), new Position(1, 2, 3))).to.equal(false)
     })
-
     // space a has piece of wrong color, not their turn
     it("piece of wrong color", () => {
         const g = new Game(1);
         expect(g.move(new Position(1, 2, 4), new Position(1, 2, 3))).to.equal(false)
     })
-
     // test get move history
     it("test get move history", () => {
         const g = new Game(1);
