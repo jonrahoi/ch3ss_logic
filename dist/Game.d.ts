@@ -11,7 +11,7 @@ export declare class Game {
     setPieces(pieces: Piece[]): void;
     getBoardStateStringArray(): String[];
     printBoardStateToConsole(): void;
-    getWhoseTurnFromMoveCount(moveCount: number): string;
+    getWhoseTurnItIs(): string;
     getCheck(): boolean;
     getCheckMate(): boolean;
     getStaleMate(): boolean;
@@ -24,7 +24,6 @@ export declare class Game {
     private getCopyOfPieces;
     gameIsDrawn(): boolean;
     getPositionFromString(a: string): Position;
-    getWhoseTurnItIs(): string;
     getPiecesTaken(): Piece[];
     loadGame(): void;
     saveGame(): void;

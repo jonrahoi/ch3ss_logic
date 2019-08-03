@@ -10,7 +10,7 @@ var Game = (function () {
         this.white = "White";
         this.black = "Black";
         this.gameID = gameID;
-        this.board = new Board_1["default"](constants_1.RUAMSCHACH, this.white, this.black);
+        this.board = new Board_1["default"](constants_1.RAUMSCHACH, this.white, this.black);
         this.moveHistory = [];
         this.gameID = gameID;
         this.moveCount = 0;
@@ -27,14 +27,14 @@ var Game = (function () {
             console.log(arr[i]);
         }
     };
-    Game.prototype.getWhoseTurnFromMoveCount = function (moveCount) {
-        if (moveCount % 2 == 0) {
+    Game.prototype.getWhoseTurnItIs = function () {
+        if (this.moveCount % 2 == 0) {
             return this.white;
         }
         return this.black;
     };
     Game.prototype.getCheck = function () {
-        var playerMoving = this.getWhoseTurnFromMoveCount(this.moveCount);
+        var playerMoving = this.getWhoseTurnItIs();
         return this.board.kingInCheck(playerMoving);
     };
     Game.prototype.getCheckMate = function () {
@@ -85,7 +85,7 @@ var Game = (function () {
         }
         console.log("inside Game.move, both valid spaces");
         var copyOfBoardState = this.board.getCopyOfPieces();
-        var playerMoving = this.getWhoseTurnFromMoveCount(this.moveCount);
+        var playerMoving = this.getWhoseTurnItIs();
         if (!this.board.executeMove(playerMoving, a, b)) {
             return false;
         }
@@ -106,7 +106,7 @@ var Game = (function () {
             return possibleMoves;
         }
         var copyOfBoardState = this.board.getCopyOfPieces();
-        var playerMoving = this.getWhoseTurnFromMoveCount(this.moveCount);
+        var playerMoving = this.getWhoseTurnItIs();
         for (var x = 1; x <= this.board.getSizeOfBoardX(); x++) {
             for (var y = 1; y <= this.board.getSizeOfBoardY(); y++) {
                 for (var z = 1; z <= this.board.getSizeOfBoardZ(); z++) {
@@ -138,9 +138,6 @@ var Game = (function () {
         else {
             return new Piece_1.Position(0, 0, 0);
         }
-    };
-    Game.prototype.getWhoseTurnItIs = function () {
-        return this.getWhoseTurnItIs();
     };
     Game.prototype.getPiecesTaken = function () {
         return this.board.getCopyOfPiecesTaken();

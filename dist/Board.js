@@ -11,7 +11,7 @@ var Board = (function () {
     function Board(gameVersion, white, black) {
         this.pieces = [];
         this.piecesTaken = [];
-        if (gameVersion === constants_1.RUAMSCHACH) {
+        if (gameVersion === constants_1.RAUMSCHACH) {
             this.pieces = BoardSetupArrays_1.getRaumschachBoard(white, black);
             this.sizeOfBoardX = 5;
             this.sizeOfBoardY = 5;
