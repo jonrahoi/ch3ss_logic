@@ -1,4 +1,3 @@
-
 import { Knight } from "./Knight"
 import { King } from "./King"
 import { Bishop } from "./Bishop"
@@ -8,7 +7,7 @@ import { Pawn } from "./Pawn"
 import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
 
-    /** Piece Notations for display on 2D space, number of spaces in notation is 4 */
+/** Piece Notations for display on 2D space, number of spaces in notation is 4 */
 const boardEmptySpace = "_____";
 const whiteNotation = "W_";
 const blackNotation = "B_";
@@ -30,7 +29,7 @@ const kingNotation = "Kng";
  */
 export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: number, sizeOfBoardY: number, sizeOfBoardZ: number, boardCoordinateMinimum: number): String[] {
     const arrToDisplay = [];
-    arrToDisplay.push("Board currently");
+    arrToDisplay.push("Board state, sliced by Z coordinate value:");
     const board: string[][][] = [];
     for (let i = 0; i < sizeOfBoardX; i++) {
         board[i] = [];
@@ -43,10 +42,10 @@ export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: 
     }
     for (let i = 0; i < pieces.length; i++) {
         const a = pieces[i].getPosition();
-        board[a.getX() - 1][a.getY() - 1][a.getZ() - 1] = getPieceNotation(pieces[i]);
+        board[a.getX() - boardCoordinateMinimum][a.getY() - boardCoordinateMinimum][a.getZ() - boardCoordinateMinimum] = getPieceNotation(pieces[i]);
     }
     for (let z = sizeOfBoardZ - boardCoordinateMinimum; z >= 0; z--) {
-        arrToDisplay.push("level/Z: " + (z + boardCoordinateMinimum));
+        arrToDisplay.push("level(Z): " + (z + boardCoordinateMinimum));
         for (let y = sizeOfBoardY - boardCoordinateMinimum; y >= 0; y--) {
             let row = "";
             row += "|";
@@ -60,8 +59,11 @@ export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: 
     }
     return arrToDisplay;
 }
-
-export function getPieceNotation(piece: Piece): string {
+/**
+ * Function to get a string to represent a piece
+ * @param piece piece to get notation of
+ */
+function getPieceNotation(piece: Piece): string {
     let a = whiteNotation;
     if (piece.isColor("Black")) {
         a = blackNotation;

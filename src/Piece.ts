@@ -1,5 +1,8 @@
-// export type Color = "Black" | "White"
+import { WHITE, BLACK } from "./constants"
 
+/**
+ * Position class that represents position on board with an x, y, and z coordinate
+ */
 export class Position {
     x: number;
     y: number;
@@ -9,6 +12,10 @@ export class Position {
         this.y = y;
         this.z = z;
      }
+    /**
+     * Method to return distance from another position
+     * @param position other position
+     */
     distanceFrom(position: Position): {x: number, y: number, z: number} {
         return {
             x: Math.abs(position.x  - this.x),
@@ -16,38 +23,51 @@ export class Position {
             z: Math.abs(position.z - this.z)
         }
     }
-    getX(): number {
+    public getX(): number {
         return this.x;
     }
-    getY(): number {
+    public getY(): number {
         return this.y;
     }
-    getZ(): number {
+    public getZ(): number {
         return this.z;
     }
-    setX(x: number) {
+    public setX(x: number) {
         this.x = x;
     }
-    setY(y: number) {
+    public setY(y: number) {
         this.y = y;
     }
-    setZ(z: number) {
+    public setZ(z: number) {
         this.z = z;
     }
-    getPostionString(): string {
+    /**
+     * Returns a string in the format xyz as in 111
+     */
+    public getPostionString(): string {
         return this.getX().toString() + this.getY().toString() + this.getZ().toString();
     }
-    samePosition(a: Position): boolean {
+    /**
+     * Checks if position is same
+     * @param a 
+     */
+    public samePosition(a: Position): boolean {
         if (a.getX() == this.x && a.getY() == this.getY() && a.getZ() == this.getZ()) {
             return true;
         }
         return false;
     }
-    getCopy(): Position {
+    /**
+     * Returns a copy of the position
+     */
+    public getCopy(): Position {
         return new Position(this.getX(), this.getY(), this.getZ());
     }
 }
-
+/**
+ * abstract class for pieces, piece has position and color. Pieces know what spaces they can move
+ * relative to their own by calculating absolute distance in each coordinate axis
+ */
 export abstract class Piece {
     protected position: Position;
     protected color: string;
@@ -62,40 +82,57 @@ export abstract class Piece {
         this.color = color;
         this.position = new Position(x, y, z)
     }
-    moveTo(position: Position) {
+    /**
+     * Sets position
+     * @param position new position
+     */
+    public setPosition(position: Position) {
         this.position = position;
     }
-
-    getPosition(): Position {
+    /**
+     * Returns a copy of the current position
+     */
+    public getPosition(): Position {
         // return new Position(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
         return this.position.getCopy();
     }
-
-    getPostionString(): string {
+    /**
+     * Returns a string in the format xyz as in 111
+     */
+    public getPostionString(): string {
         const loc: string = "";
         return this.position.getPostionString();
     }
-
-    getColor(): string {
-        if (this.color.localeCompare("White") == 0) {
-            return "White";
+    /**
+     * Returns the color of piece
+     */
+    public getColor(): string {
+        if (this.color.localeCompare(WHITE) == 0) {
+            return WHITE;
         }
-        return "Black";
+        return BLACK;
     }
-
-    getOppositeColor(): string {
-        if (this.color.localeCompare("Black") == 0) {
-            return "White";
+    /**
+     * Gets the opposite color of the piece
+     */
+    public getOppositeColor(): string {
+        if (this.color.localeCompare(BLACK) == 0) {
+            return WHITE;
         }
-        return "Black";
+        return WHITE;
     }
-
-
-    isColor(color: string): boolean {
+    /**
+     * Checks if the color of the piece is the same as the passed parameter
+     * @param color string for color
+     */
+    public isColor(color: string): boolean {
         return this.color.localeCompare(color) == 0;
     }
-
-    isAtPosition(position: Position): boolean {
+    /**
+     * checks if piece is at position
+     * @param position position to compare to
+     */
+    public isAtPosition(position: Position): boolean {
         if (position == undefined) {
             return false;
         }
@@ -106,10 +143,13 @@ export abstract class Piece {
         }
         return false;
     }
-    sameColor(b: Piece): boolean {
-        return (this.color.localeCompare(b.getColor()) == 0);
-    }
-    abstract canMoveTo(position: Position): boolean
-
+    /**
+     * checks if position is a legal geometric change
+     * @param position
+     */
+    abstract moveShapeCorrect(position: Position): boolean
+    /**
+     * gets a copy of a piece
+     */
     abstract makeCopy(): Piece
 }

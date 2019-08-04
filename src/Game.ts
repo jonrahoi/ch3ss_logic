@@ -9,21 +9,24 @@ import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z, RA_BOARD
  */
 export class Game {
     private moveHistory: Position[];
-    private board: Board;
-    private gameID: number;
-    private moveCount: number;
-    private minNumberOfPiecesBeforeDraw = 5; // less than 5 pieces causes draw
-
+    private board: Board; // every game has a board which has pieces and determines if pieces can move to other parts of the board
+    private gameID: number; // unique id for game
+    private moveCount: number; // how many moves have been executed
+    private minNumberOfPiecesBeforeDraw: number; // less than 5 pieces causes draw
+    private numberPlayers: number; // set to whatever the right number is for the rule set
+    private boardStateMoveCount = 0; // pieces are in position after this many moves (can recreate board after differnet numbers of moves)
     /**
      * constructor for class
      * @param gameID unique game ID
      */
     constructor(gameID: number) {
         this.gameID = gameID;
-        this.board = new Board(RAUMSCHACH, WHITE, BLACK);
+        this.board = new Board(RAUMSCHACH, WHITE, BLACK); // parameters are constant strings
         this.moveHistory = [];
         this.gameID = gameID;
         this.moveCount = 0;
+        this.numberPlayers = 2; // Raumscach is 2 player
+        this.minNumberOfPiecesBeforeDraw = 5; // a guess at what the minimum is
     }
     /**
      * Sets pieces for board, used for testing
@@ -33,29 +36,46 @@ export class Game {
        this.board.setPieces(pieces);
     }
     /**
-     * 
+     * Returns an array of strings where each line is a row
      */
     public getBoardStateStringArray(): String[] {
-        return getBoardStateStringArraySliceByZ(this.board.getCopyOfPieces(), this.board.getSizeOfBoardX(), 
+        return getBoardStateStringArraySliceByZ(this.board.getCopyOfPieces(), this.board.getSizeOfBoardX(),
             this.board.getSizeOfBoardY(), this.board.getSizeOfBoardZ(), this.board.getBoardCoordinateMinimum());
     }
+    /**
+     * Prints board state to console
+     */
     public printBoardStateToConsole() {
-        const arr = getBoardStateStringArraySliceByZ(this.board.getCopyOfPieces(), this.board.getSizeOfBoardX(), 
+        const arr = getBoardStateStringArraySliceByZ(this.board.getCopyOfPieces(), this.board.getSizeOfBoardX(),
             this.board.getSizeOfBoardY(), this.board.getSizeOfBoardZ(), this.board.getBoardCoordinateMinimum());
         for (let i = 0; i < arr.length; i++) {
             console.log(arr[i]);
         }
     }
+    /**
+     * Returns a string for whose turn it is
+     */
     public getWhoseTurnItIs(): string {
-        if (this.moveCount % 2 == 0) {
+        if (this.moveCount % this.numberPlayers == 0) {
             return WHITE;
         }
         return BLACK;
     }
+    /**
+     * Checks if the king is in check based on whose turn it is.
+     * Game.ts keeps track of incrementing the movecount
+     * In game.ts a it uses this method to make sure that a player doesn't move into check
+     * Once game.ts determines that a player didn't move into check, it increments the move count and
+     * then checks if the move created a check for the other player using this method
+     */
     public getCheck(): boolean {
         const playerMoving = this.getWhoseTurnItIs();
         return this.board.kingInCheck(playerMoving);
     }
+    /**
+     * Determines if checkmate occurs by seeing if the player is in check and there are no legal moves
+     * this.getPossibleMovesForPieceAtSpace does not return moves that don't interfere with a check or checkmate
+     */
     public getCheckMate(): boolean {
         if (!this.getCheck()) {
             return false;
@@ -68,7 +88,13 @@ export class Game {
         }
         return true;
     }
+    /**
+     * Determines if there is a stalemate, the player's king isn't in check but the player's pieces have no legal moves
+     */
     public getStaleMate(): boolean {
+        if (this.insufficientMaterial()) {
+            return true;
+        }
         if (this.getCheck()) {
             return false;
         }
@@ -80,12 +106,21 @@ export class Game {
         }
         return true;
     }
-    public getInsufficientMaterial(): boolean {
+    /**
+     * checks if there aren't enough pieces to create a check and thus it is a stalemate
+     * this is just a baseline and needs research for what is the minimum material needed for checkmate
+     */
+    private insufficientMaterial(): boolean {
         if (this.board.getCopyOfPieces().length < this.minNumberOfPiecesBeforeDraw) {
             return true;
         }
         return false;
     }
+    /**
+     * Returns the move history array, first player space a index 0, first player space b index 1, 
+     * second player space a index 2, second player space a index 3
+     * use index % 0, % 1, % 2, % 3, to find the spaces for each player's movement
+     */
     public getMoveHistory(): Position[] {
         const moves: Position[] = [];
         for (let i = 0; i < this.moveHistory.length; i++) {
@@ -100,6 +135,9 @@ export class Game {
         return this.getMoveCount();
     }
     public move(a: Position, b: Position): boolean {
+        if (this.boardStateMoveCount < this.moveCount) {
+            this.setBoardToAfterAllMoves();
+        }
         if (!this.validSpace(a) || !this.validSpace(b)) { return false; }
         // console.log("inside Game.move, both valid spaces");
         const copyOfBoardState: Piece[] = this.board.getCopyOfPieces();
@@ -116,6 +154,7 @@ export class Game {
         }
         // console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
         this.moveCount++;
+        this.boardStateMoveCount = this.moveCount;
         this.moveHistory.push(a);
         this.moveHistory.push(b);
         return true;
@@ -153,11 +192,6 @@ export class Game {
         this.board.setPieces(copyOfBoardState);
         return possibleMoves;
     }
-
-    public pieceAtPositionCanMove(a: Position): boolean {
-        return this.getPossibleMovesForPieceAtSpace(a).length > 0;
-    }
-
     private getCopyOfPieces(pieces: Piece[]): Piece[] {
         const copy: Piece[] = [];
         for (let i = 0; i < pieces.length; i++) {
@@ -168,50 +202,18 @@ export class Game {
     public gameIsDrawn(): boolean {
         return this.getStaleMate();
     }
-
     public getPositionFromString(a: string): Position {
         if (this.isValidSpaceFromString(a)) {
             return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
         }
     }
-
-    getPiecesTaken(): Piece[] {
-        return this.board.getCopyOfPiecesTaken();
-    }
-
-    loadGame() {
-        // go through moves array and move the board each space
-        this.moveHistory = JSON.parse("moveHistory");
-        // for (let i = 0; i < this.moveHistory.length; i += 2) {
-        //     this.board.executeMoveNoLegalCheck(this.moveHistory[i], this.moveHistory[i + 1]);
-        //     this.board.moveCount++;
-        // }
-    }
-
-    saveGame() {
-        JSON.stringify(this.moveHistory);
-    }
-
-    goBackOneMove() {
-        JSON.stringify(this.moveHistory);
-        this.moveHistory = JSON.parse("moveHistory");
-        for (let i = 0; i < this.moveHistory.length - 2; i += 2) {
-            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
-        }
-    }
-
-    goForwardOneMove() {
-        // TODO
-    }
-
     /**
      * Determines if a position is on the board
-     * @param a 
+     * @param a
      */
     public validSpace(a: Position): boolean {
         return this.board.spaceOnBoard(a);
     }
-
     /**
      * Returns boolean for if a string can be converted to a valid space
      * @param inputString
@@ -230,5 +232,62 @@ export class Game {
             return false;
         }
         return true;
+    }
+    public getPiecesTaken(): Piece[] {
+        return this.board.getCopyOfPiecesTaken();
+    }
+
+    public loadGame() {
+        // go through moves array and move the board each space
+        this.moveHistory = JSON.parse("moveHistory");
+        this.setBoardToAfterAllMoves();
+    }
+
+    public saveGame() {
+        JSON.stringify(this.moveHistory);
+    }
+
+    public takeBackLastMove() {
+        // JSON.stringify(this.moveHistory);
+        // this.moveHistory = JSON.parse("moveHistory");
+        if (this.moveCount == 0) {
+            return;
+        }
+        this.board.resetPiecesToStartingPositions();
+        for (let i = 0; i < this.moveHistory.length - this.numberPlayers; i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        }
+        this.moveHistory.pop();
+        this.moveHistory.pop();
+        this.moveCount--;
+    }
+
+    public setBoardStateToBackOneMoveButNotATakeback() {
+        if (this.moveCount == 0) {
+            return;
+        }
+        this.board.resetPiecesToStartingPositions();
+        const displayMoves = this.boardStateMoveCount - this.numberPlayers;
+        for (let i = 0; i < this.moveHistory.length - (this.numberPlayers * displayMoves); i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        }
+        this.boardStateMoveCount--;
+    }
+
+    public displayForwardOneMove() {
+        this.board.resetPiecesToStartingPositions();
+        const displayMoves = this.boardStateMoveCount + this.numberPlayers;
+        for (let i = 0; i < this.moveHistory.length - (this.numberPlayers * displayMoves); i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        }
+        this.boardStateMoveCount++;
+    }
+
+    public setBoardToAfterAllMoves() {
+        this.board.resetPiecesToStartingPositions();
+        for (let i = 0; i < this.moveHistory.length; i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        }
+        this.boardStateMoveCount = this.moveCount;
     }
 }

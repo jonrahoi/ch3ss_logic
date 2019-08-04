@@ -1,12 +1,11 @@
 import { Knight } from "./Knight"
 import { King } from "./King"
-import { Bishop } from "./Bishop"
-import { Rook } from "./Rook"
-import { Unicorn } from "./Unicorn"
+// import { Bishop } from "./Bishop"
+// import { Rook } from "./Rook"
+// import { Unicorn } from "./Unicorn"
 import { Pawn } from "./Pawn"
 import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
-import { threadId } from "worker_threads";
 import { getRaumschachBoard } from "./BoardSetupArrays"
 import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z, RA_BOARD_MIN } from "./constants"
 
@@ -54,6 +53,11 @@ export default class Board {
         // if (gameVersion.localeCompare("insert another version")) {
         // size of board could be (8x8x8)
     }
+    public resetPiecesToStartingPositions() {
+        if (this.gameVersion === RAUMSCHACH) {
+            this.pieces = getRaumschachBoard(this.white, this.black);
+        }
+    }
     public getSizeOfBoardX() {
         return this.sizeOfBoardX;
     }
@@ -66,11 +70,13 @@ export default class Board {
     public getBoardCoordinateMinimum() {
         return this.boardCoordinateMinimum;
     }
-
-    setPieces(newPieces: Piece[]) {
+    /**
+     * sets the board to a new set of pieces
+     * @param newPieces 
+     */
+    public setPieces(newPieces: Piece[]) {
         this.pieces = newPieces;
     }
-
     /**
      * Executes move if possible: checks if piece at pos A, if move is legal (separate method),
      * if pawn needs to be queened, deletes piece at B if necessary, does not check for king moving into check
@@ -110,13 +116,12 @@ export default class Board {
             // console.log("inside board.executeMove deleting piece at " + b.getPostionString());
         }
         // move piece
-        movePiece.moveTo(b);
+        movePiece.setPosition(b);
 
         // console.log("inside board.executeMove, move executed")
         return true; // move executed successfully
         // castling, en passant not available in RUAMSCHACH
     }
-
     /**
      * move shape, piece not attacking same team, pawn movement direction, piece in way
      * @param movePiece
@@ -124,12 +129,12 @@ export default class Board {
      */
     private pieceMoveFollowsMovementRules(movePiece: Piece, b: Position): boolean {
         // check if move shape correct
-        if (!movePiece.canMoveTo(b)) {
+        if (!movePiece.moveShapeCorrect(b)) {
             // console.log("inside board.pieceMoveFollowsMovementRules, move shape incorrect")
             return false;
         }
         // check if piece at b and if same color
-        if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).sameColor(movePiece)) {
+        if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).isColor(movePiece.getColor())) {
             // console.log("inside board.pieceMoveFollowsMovementRules, move space has piece of same color")
             return false;
         }
@@ -154,19 +159,26 @@ export default class Board {
         // console.log("inside moveIsLegal, returning move legal")
         return true;
     }
-
-    private checkForQueeningTwoBackRows(movePiece: Piece, b: Position): boolean {
+    /**
+     * Checks if pawn needs to be queened based on Raumschach rules which is that if a pawn reaches 
+     * the two back rows of the opposite corner from where they started then they turn into an additional queen for that player
+     * @param pawn Pawn
+     * @param b where the piece is being moved
+     */
+    private checkForQueeningTwoBackRows(pawn: Piece, b: Position): boolean {
         // moving to position
-        if (!(movePiece instanceof Pawn)) {
+        if (!(pawn instanceof Pawn)) {
             return false;
         }
         // - 1 and + 1 are to determine if pawn in two far rows (max row - 1) for white and (min row + 1) for black
-        if (movePiece.isColor(this.white) && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
-        movePiece.isColor("Black") && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
+        if (pawn.isColor(this.white) && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
+        pawn.isColor("Black") && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
         return true;
         }
     }
-
+    /**
+     * Returns a copys of the set of pieces on the board (prevents outside adjustment of board state)
+     */
     public getCopyOfPieces(): Piece[] {
         const copy: Piece[] = [];
         for (let i = 0; i < this.pieces.length; i++) {
@@ -174,7 +186,9 @@ export default class Board {
         }
         return copy;
     }
-
+    /**
+     * Returns a copys of the set of pieces taken off the board (prevents outside adjustment of board state)
+     */
     public getCopyOfPiecesTaken(): Piece[] {
         const copy: Piece[] = [];
         for (let i = 0; i < this.piecesTaken.length; i++) {
@@ -182,12 +196,17 @@ export default class Board {
         }
         return copy;
     }
-
+    /**
+     * Checks if pawn is moving in corrent direction based on Raumschach rules (up/across for white, down/across for black)
+     * @param colorOfPawn
+     * @param a space moving from
+     * @param b space moving to
+     */
     private pawnMoveDirectionCorrect(colorOfPawn: string, a: Position, b: Position): boolean {
         // if white needs to move up(dz is positive) or across (dy is positive)
         // if black needs to move down(dz is negative) or across (dy is positive)
-        const dy = this.getSlope(a.getY(), b.getY());
-        const dz = this.getSlope(a.getZ(), b.getZ());
+        const dy = this.coordinateCompare(a.getY(), b.getY());
+        const dz = this.coordinateCompare(a.getZ(), b.getZ());
         if (colorOfPawn.localeCompare("White") == 0 && dy >= 0 && dz >= 0) {
             return true;
         }
@@ -196,7 +215,10 @@ export default class Board {
         }
         return false;
     }
-
+    /**
+     * Deletes a piece at the given position
+     * @param b giving position
+     */
     private deletePieceAtPosition(b: Position) {
         const newPieces: Piece[] = [];
         for (let i = 0; i < this.pieces.length; i++) {
@@ -206,7 +228,10 @@ export default class Board {
         }
         this.pieces = newPieces;
     }
-
+    /**
+     * Checks if any pieces are checking/attacking their opponent's king
+     * @param colorOfKingToCheckIfInCheck 
+     */
     public kingInCheck(colorOfKingToCheckIfInCheck: string): boolean {
         const kingLocation = this.getLocationOfKingGivenColor(colorOfKingToCheckIfInCheck);
         for (let i = 0; i < this.pieces.length; i++) {
@@ -219,7 +244,10 @@ export default class Board {
         }
         return false;
     }
-
+    /**
+     * Gets the location of a king given a color
+     * @param color
+     */
     private getLocationOfKingGivenColor(color: string): Position {
         for (let i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i] instanceof King && this.pieces[i].isColor(color)) {
@@ -227,7 +255,10 @@ export default class Board {
             }
         }
     }
-
+    /**
+     * Determines if a piece exists at a given location
+     * @param a position
+     */
     public pieceLocatedAtBool(a: Position): boolean {
         for (let i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].isAtPosition(a)) {
@@ -236,7 +267,10 @@ export default class Board {
         }
         return false;
     }
-
+    /**
+     * gets a piece given at a specific position
+     * @param a position
+     */
     private getPieceLocatedAt(a: Position): Piece {
         for (let i = 0; i < this.pieces.length; i++) {
             if (this.pieces[i].isAtPosition(a)) {
@@ -244,7 +278,10 @@ export default class Board {
             }
         }
     }
-
+    /**
+     * determines if a space is on the board
+     * @param a position
+     */
     public spaceOnBoard(a: Position): boolean {
         if (a.getX() < this.boardCoordinateMinimum || a.getX() > this.sizeOfBoardX) {
             return false;
@@ -257,12 +294,16 @@ export default class Board {
         }
         return true;
     }
-
+    /**
+     * Determines if a piece is between two spaces, iterates to each space after getting the direction to go in from coordinateCompare
+     * @param a space a
+     * @param b space b
+     */
     private pieceInWay(a: Position, b: Position): boolean {
         // iterate through all the places between position a and position b
-        const dx = this.getSlope(a.getX(), b.getX());
-        const dy = this.getSlope(a.getY(), b.getY());
-        const dz = this.getSlope(a.getZ(), b.getZ());
+        const dx = this.coordinateCompare(a.getX(), b.getX());
+        const dy = this.coordinateCompare(a.getY(), b.getY());
+        const dz = this.coordinateCompare(a.getZ(), b.getZ());
         // console.log("slopes: " + dx, dy, dz)
         const c = new Position(a.getX(), a.getY(), a.getZ());
         c.setX(c.getX() + dx);
@@ -279,8 +320,12 @@ export default class Board {
         }
         return false;
     }
-
-    private getSlope(a: number, b: number): number {
+    /**
+     * Determines the change along a coordinate axis, 1, 0, or -1
+     * @param a coordinate for space b
+     * @param b coordinate for space a
+     */
+    private coordinateCompare(a: number, b: number): number {
         if (a < b) {
             return 1;
         }
