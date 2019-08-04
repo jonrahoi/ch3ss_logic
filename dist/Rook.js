@@ -19,7 +19,7 @@ var Rook = (function (_super) {
     function Rook() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Rook.prototype.canMoveTo = function (position) {
+    Rook.prototype.moveShapeCorrect = function (position) {
         var distance = this.position.distanceFrom(position);
         if (distance.y == distance.x && distance.x == distance.z) {
             return false;

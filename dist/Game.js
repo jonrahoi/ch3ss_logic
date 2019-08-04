@@ -6,12 +6,14 @@ var DisplayBoard2D_1 = require("./DisplayBoard2D");
 var constants_1 = require("./constants");
 var Game = (function () {
     function Game(gameID) {
-        this.minNumberOfPiecesBeforeDraw = 5;
+        this.boardStateMoveCount = 0;
         this.gameID = gameID;
         this.board = new Board_1["default"](constants_1.RAUMSCHACH, constants_1.WHITE, constants_1.BLACK);
         this.moveHistory = [];
         this.gameID = gameID;
         this.moveCount = 0;
+        this.numberPlayers = 2;
+        this.minNumberOfPiecesBeforeDraw = 5;
     }
     Game.prototype.setPieces = function (pieces) {
         this.board.setPieces(pieces);
@@ -26,7 +28,7 @@ var Game = (function () {
         }
     };
     Game.prototype.getWhoseTurnItIs = function () {
-        if (this.moveCount % 2 == 0) {
+        if (this.moveCount % this.numberPlayers == 0) {
             return constants_1.WHITE;
         }
         return constants_1.BLACK;
@@ -48,6 +50,9 @@ var Game = (function () {
         return true;
     };
     Game.prototype.getStaleMate = function () {
+        if (this.insufficientMaterial()) {
+            return true;
+        }
         if (this.getCheck()) {
             return false;
         }
@@ -59,7 +64,7 @@ var Game = (function () {
         }
         return true;
     };
-    Game.prototype.getInsufficientMaterial = function () {
+    Game.prototype.insufficientMaterial = function () {
         if (this.board.getCopyOfPieces().length < this.minNumberOfPiecesBeforeDraw) {
             return true;
         }
@@ -79,6 +84,9 @@ var Game = (function () {
         return this.getMoveCount();
     };
     Game.prototype.move = function (a, b) {
+        if (this.boardStateMoveCount < this.moveCount) {
+            this.setBoardToAfterAllMoves();
+        }
         if (!this.validSpace(a) || !this.validSpace(b)) {
             return false;
         }
@@ -92,6 +100,7 @@ var Game = (function () {
             return false;
         }
         this.moveCount++;
+        this.boardStateMoveCount = this.moveCount;
         this.moveHistory.push(a);
         this.moveHistory.push(b);
         return true;
@@ -121,9 +130,6 @@ var Game = (function () {
         this.board.setPieces(copyOfBoardState);
         return possibleMoves;
     };
-    Game.prototype.pieceAtPositionCanMove = function (a) {
-        return this.getPossibleMovesForPieceAtSpace(a).length > 0;
-    };
     Game.prototype.getCopyOfPieces = function (pieces) {
         var copy = [];
         for (var i = 0; i < pieces.length; i++) {
@@ -138,24 +144,6 @@ var Game = (function () {
         if (this.isValidSpaceFromString(a)) {
             return new Piece_1.Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
         }
-    };
-    Game.prototype.getPiecesTaken = function () {
-        return this.board.getCopyOfPiecesTaken();
-    };
-    Game.prototype.loadGame = function () {
-        this.moveHistory = JSON.parse("moveHistory");
-    };
-    Game.prototype.saveGame = function () {
-        JSON.stringify(this.moveHistory);
-    };
-    Game.prototype.goBackOneMove = function () {
-        JSON.stringify(this.moveHistory);
-        this.moveHistory = JSON.parse("moveHistory");
-        for (var i = 0; i < this.moveHistory.length - 2; i += 2) {
-            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
-        }
-    };
-    Game.prototype.goForwardOneMove = function () {
     };
     Game.prototype.validSpace = function (a) {
         return this.board.spaceOnBoard(a);
@@ -174,6 +162,54 @@ var Game = (function () {
             return false;
         }
         return true;
+    };
+    Game.prototype.getPiecesTaken = function () {
+        return this.board.getCopyOfPiecesTaken();
+    };
+    Game.prototype.loadGame = function () {
+        this.moveHistory = JSON.parse("moveHistory");
+        this.setBoardToAfterAllMoves();
+    };
+    Game.prototype.saveGame = function () {
+        JSON.stringify(this.moveHistory);
+    };
+    Game.prototype.takeBackLastMove = function () {
+        if (this.moveCount == 0) {
+            return;
+        }
+        this.board.resetPiecesToStartingPositions();
+        for (var i = 0; i < this.moveHistory.length - this.numberPlayers; i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        }
+        this.moveHistory.pop();
+        this.moveHistory.pop();
+        this.moveCount--;
+    };
+    Game.prototype.setBoardStateToBackOneMoveButNotATakeback = function () {
+        if (this.moveCount == 0) {
+            return;
+        }
+        this.board.resetPiecesToStartingPositions();
+        var displayMoves = this.boardStateMoveCount - this.numberPlayers;
+        for (var i = 0; i < this.moveHistory.length - (this.numberPlayers * displayMoves); i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        }
+        this.boardStateMoveCount--;
+    };
+    Game.prototype.displayForwardOneMove = function () {
+        this.board.resetPiecesToStartingPositions();
+        var displayMoves = this.boardStateMoveCount + this.numberPlayers;
+        for (var i = 0; i < this.moveHistory.length - (this.numberPlayers * displayMoves); i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        }
+        this.boardStateMoveCount++;
+    };
+    Game.prototype.setBoardToAfterAllMoves = function () {
+        this.board.resetPiecesToStartingPositions();
+        for (var i = 0; i < this.moveHistory.length; i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        }
+        this.boardStateMoveCount = this.moveCount;
     };
     return Game;
 }());

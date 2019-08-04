@@ -13,6 +13,7 @@ export default class Board {
     private enPassant;
     private castling;
     constructor(gameVersion: String, white: string, black: string);
+    resetPiecesToStartingPositions(): void;
     getSizeOfBoardX(): number;
     getSizeOfBoardY(): number;
     getSizeOfBoardZ(): number;
@@ -31,5 +32,5 @@ export default class Board {
     private getPieceLocatedAt;
     spaceOnBoard(a: Position): boolean;
     private pieceInWay;
-    private getSlope;
+    private coordinateCompare;
 }

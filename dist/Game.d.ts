@@ -5,6 +5,8 @@ export declare class Game {
     private gameID;
     private moveCount;
     private minNumberOfPiecesBeforeDraw;
+    private numberPlayers;
+    private boardStateMoveCount;
     constructor(gameID: number);
     setPieces(pieces: Piece[]): void;
     getBoardStateStringArray(): String[];
@@ -13,21 +15,22 @@ export declare class Game {
     getCheck(): boolean;
     getCheckMate(): boolean;
     getStaleMate(): boolean;
-    getInsufficientMaterial(): boolean;
+    private insufficientMaterial;
     getMoveHistory(): Position[];
     getPieces(): Piece[];
     getMoveCount(): number;
     move(a: Position, b: Position): boolean;
     getPossibleMovesForPieceAtSpace(a: Position): Position[];
-    pieceAtPositionCanMove(a: Position): boolean;
     private getCopyOfPieces;
     gameIsDrawn(): boolean;
     getPositionFromString(a: string): Position;
+    validSpace(a: Position): boolean;
+    isValidSpaceFromString(inputString: string): boolean;
     getPiecesTaken(): Piece[];
     loadGame(): void;
     saveGame(): void;
-    goBackOneMove(): void;
-    goForwardOneMove(): void;
-    validSpace(a: Position): boolean;
-    isValidSpaceFromString(inputString: string): boolean;
+    takeBackLastMove(): void;
+    setBoardStateToBackOneMoveButNotATakeback(): void;
+    displayForwardOneMove(): void;
+    setBoardToAfterAllMoves(): void;
 }

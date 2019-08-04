@@ -15,6 +15,9 @@ Give examples
 ```
 
 ### Installing
+npm install -g typescript
+
+npm run build; node dist/interactive_tests/ConsoleGame.js
 
 A step by step series of examples that tell you how to get a development env running
 
@@ -34,32 +37,17 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+npm run build; lab ./dist/tests/
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Deployment
 
 Install node and run tests/ConsoleGame.js
-Alternatively Game.ts
+Alternatively download and instantiate a Game object in your own project
 
 ## Built With
 
-* [Typescript](https://www.typescriptlang.org/) - Language used
+* [Typescript](https://www.typescriptlang.org/) 
 
 <!-- ## Contributing
 

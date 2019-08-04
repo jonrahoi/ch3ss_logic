@@ -11,7 +11,7 @@ export class Game {
     private moveHistory: Position[];
     private board: Board; // every game has a board which has pieces and determines if pieces can move to other parts of the board
     private gameID: number; // unique id for game
-    private moveCount: number; // how many moves have been executed
+    private moveCount: number; // how many moves have been executed, same as moveHistory.length/2
     private minNumberOfPiecesBeforeDraw: number; // less than 5 pieces causes draw
     private numberPlayers: number; // set to whatever the right number is for the rule set
     private boardStateMoveCount = 0; // pieces are in position after this many moves (can recreate board after differnet numbers of moves)
@@ -21,10 +21,10 @@ export class Game {
      */
     constructor(gameID: number) {
         this.gameID = gameID;
-        this.board = new Board(RAUMSCHACH, WHITE, BLACK); // parameters are constant strings
-        this.moveHistory = [];
+        this.board = new Board(RAUMSCHACH);
+        this.moveHistory = []; // move history arrray of positions
         this.gameID = gameID;
-        this.moveCount = 0;
+        this.moveCount = 0; // how many moves have been executed
         this.numberPlayers = 2; // Raumscach is 2 player
         this.minNumberOfPiecesBeforeDraw = 5; // a guess at what the minimum is
     }
@@ -64,7 +64,7 @@ export class Game {
     /**
      * Checks if the king is in check based on whose turn it is.
      * Game.ts keeps track of incrementing the movecount
-     * In game.ts a it uses this method to make sure that a player doesn't move into check
+     * In game.ts move method uses this method to make sure that a player doesn't move into check
      * Once game.ts determines that a player didn't move into check, it increments the move count and
      * then checks if the move created a check for the other player using this method
      */
@@ -117,7 +117,7 @@ export class Game {
         return false;
     }
     /**
-     * Returns the move history array, first player space a index 0, first player space b index 1, 
+     * Returns the move history array, first player space a index 0, first player space b index 1,
      * second player space a index 2, second player space a index 3
      * use index % 0, % 1, % 2, % 3, to find the spaces for each player's movement
      */
@@ -159,6 +159,11 @@ export class Game {
         this.moveHistory.push(b);
         return true;
     }
+    /**
+     * Gets all possible moves for a piece given the current state of the game.
+     * This method accounts for whose turn it is as well as if a player's king is in check
+     * @param a
+     */
     public getPossibleMovesForPieceAtSpace(a: Position): Position[] {
         const possibleMoves: Position[] = [];
         // console.log("getting possible moves for piece at: " + a.getPostionString());
@@ -192,6 +197,10 @@ export class Game {
         this.board.setPieces(copyOfBoardState);
         return possibleMoves;
     }
+    /**
+     * Returns a copy of the pieces on the board
+     * @param pieces 
+     */
     private getCopyOfPieces(pieces: Piece[]): Piece[] {
         const copy: Piece[] = [];
         for (let i = 0; i < pieces.length; i++) {
@@ -199,9 +208,16 @@ export class Game {
         }
         return copy;
     }
+    /**
+     * Determines if game is a draw based on stalemate
+     */
     public gameIsDrawn(): boolean {
         return this.getStaleMate();
     }
+    /**
+     * Creates a position from a VALID string
+     * @param a
+     */
     public getPositionFromString(a: string): Position {
         if (this.isValidSpaceFromString(a)) {
             return new Position(+a.charAt(0), +a.charAt(1), +a.charAt(2));
@@ -233,20 +249,29 @@ export class Game {
         }
         return true;
     }
+    /**
+     * Returns a copy of an array of piece ojects that represent the pieces taken off the board
+     */
     public getPiecesTaken(): Piece[] {
         return this.board.getCopyOfPiecesTaken();
     }
-
+    /**
+     * Loads a game saved in JSON file
+     */
     public loadGame() {
         // go through moves array and move the board each space
         this.moveHistory = JSON.parse("moveHistory");
         this.setBoardToAfterAllMoves();
     }
-
+    /**
+     * Saves game to JSON file
+     */
     public saveGame() {
         JSON.stringify(this.moveHistory);
     }
-
+    /**
+     * takes back the last move
+     */
     public takeBackLastMove() {
         // JSON.stringify(this.moveHistory);
         // this.moveHistory = JSON.parse("moveHistory");
@@ -261,7 +286,9 @@ export class Game {
         this.moveHistory.pop();
         this.moveCount--;
     }
-
+    /**
+     * Method to move the board state back one move but does not delete the move from the move history
+     */
     public setBoardStateToBackOneMoveButNotATakeback() {
         if (this.moveCount == 0) {
             return;
@@ -273,8 +300,13 @@ export class Game {
         }
         this.boardStateMoveCount--;
     }
-
+    /**
+     * Changes the board state to be one move ahead if possible
+     */
     public displayForwardOneMove() {
+        if (this.boardStateMoveCount == this.moveCount) {
+            return; // game already caught up
+        }
         this.board.resetPiecesToStartingPositions();
         const displayMoves = this.boardStateMoveCount + this.numberPlayers;
         for (let i = 0; i < this.moveHistory.length - (this.numberPlayers * displayMoves); i += this.numberPlayers) {

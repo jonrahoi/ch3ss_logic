@@ -19,7 +19,7 @@ var King = (function (_super) {
     function King() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    King.prototype.canMoveTo = function (position) {
+    King.prototype.moveShapeCorrect = function (position) {
         var distance = this.position.distanceFrom(position);
         if (distance.y == 0 && distance.x == 0 && distance.z == 0) {
             return false;

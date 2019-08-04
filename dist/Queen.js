@@ -19,7 +19,7 @@ var Queen = (function (_super) {
     function Queen() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Queen.prototype.canMoveTo = function (position) {
+    Queen.prototype.moveShapeCorrect = function (position) {
         var distance = this.position.distanceFrom(position);
         if (distance.y == 0 && distance.x == 0 && distance.z == 0) {
             return false;

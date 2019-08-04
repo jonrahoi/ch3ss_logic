@@ -19,7 +19,7 @@ var Pawn = (function (_super) {
     function Pawn() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Pawn.prototype.canMoveTo = function (position) {
+    Pawn.prototype.moveShapeCorrect = function (position) {
         var distance = this.position.distanceFrom(position);
         if (distance.x != 0) {
             return false;

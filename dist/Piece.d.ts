@@ -22,14 +22,13 @@ export declare abstract class Piece {
     protected position: Position;
     protected color: string;
     constructor(color: string, x: number, y: number, z: number);
-    moveTo(position: Position): void;
+    setPosition(position: Position): void;
     getPosition(): Position;
     getPostionString(): string;
     getColor(): string;
     getOppositeColor(): string;
     isColor(color: string): boolean;
     isAtPosition(position: Position): boolean;
-    sameColor(b: Piece): boolean;
-    abstract canMoveTo(position: Position): boolean;
+    abstract moveShapeCorrect(position: Position): boolean;
     abstract makeCopy(): Piece;
 }

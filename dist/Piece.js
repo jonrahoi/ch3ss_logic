@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+var constants_1 = require("./constants");
 var Position = (function () {
     function Position(x, y, z) {
         this.x = x;
@@ -51,7 +52,7 @@ var Piece = (function () {
         this.color = color;
         this.position = new Position(x, y, z);
     }
-    Piece.prototype.moveTo = function (position) {
+    Piece.prototype.setPosition = function (position) {
         this.position = position;
     };
     Piece.prototype.getPosition = function () {
@@ -62,16 +63,16 @@ var Piece = (function () {
         return this.position.getPostionString();
     };
     Piece.prototype.getColor = function () {
-        if (this.color.localeCompare("White") == 0) {
-            return "White";
+        if (this.color.localeCompare(constants_1.WHITE) == 0) {
+            return constants_1.WHITE;
         }
-        return "Black";
+        return constants_1.BLACK;
     };
     Piece.prototype.getOppositeColor = function () {
-        if (this.color.localeCompare("Black") == 0) {
-            return "White";
+        if (this.color.localeCompare(constants_1.BLACK) == 0) {
+            return constants_1.WHITE;
         }
-        return "Black";
+        return constants_1.WHITE;
     };
     Piece.prototype.isColor = function (color) {
         return this.color.localeCompare(color) == 0;
@@ -86,9 +87,6 @@ var Piece = (function () {
             return true;
         }
         return false;
-    };
-    Piece.prototype.sameColor = function (b) {
-        return (this.color.localeCompare(b.getColor()) == 0);
     };
     return Piece;
 }());

@@ -19,7 +19,7 @@ var Unicorn = (function (_super) {
     function Unicorn() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Unicorn.prototype.canMoveTo = function (position) {
+    Unicorn.prototype.moveShapeCorrect = function (position) {
         var distance = this.position.distanceFrom(position);
         if (distance.y < 1 && distance.x < 1 && distance.z < 1) {
             return false;

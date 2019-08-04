@@ -6,8 +6,8 @@ import { King } from "./King"
 import { Pawn } from "./Pawn"
 import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
-import { getRaumschachBoard } from "./BoardSetupArrays"
-import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z, RA_BOARD_MIN } from "./constants"
+import { getRaumschachBoardSetup } from "./BoardSetupArrays"
+import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z, RA_BOARD_MIN, WHITE, BLACK } from "./constants"
 
 /**
  * Class for 2 player 3D chess. Board knows the geometry of the board and the location of pieces
@@ -18,7 +18,7 @@ import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z, RA_BOARD
 export default class Board {
 
     private pieces: Piece[] = [];
-    // private moveCount: number;  // white's turn at beginning
+    // private moveCount: number;  // WHITE's turn at beginning
     private piecesTaken: Piece[] = []; // no pieces taken at beginning
     private sizeOfBoardX: number;  // number of spaces in x axis
     private sizeOfBoardY: number; // number of spaces in y axis
@@ -26,24 +26,20 @@ export default class Board {
     private boardCoordinateMinimum: number; // corner of board e.g. 1,1,1 or 0,0,0
 
     private gameVersion: string;
-    // first player to make a move is white
-    private white: string;
-    private black: string;
+    // first player to make a move is WHITE
 
     private queeningTwoBackRows: boolean;
     private enPassant: boolean;  // not used for Raumschach
     private castling: boolean;  // not used for Ruamschach
 
-    constructor(gameVersion: String, white: string, black: string) {
+    constructor(gameVersion: String) {
         if (gameVersion === RAUMSCHACH) {
-            this.pieces = getRaumschachBoard(white, black);
+            this.pieces = getRaumschachBoardSetup();
             // these are the rules for Raumschach
             this.sizeOfBoardX = RA_SIZE_BOARD_X;
             this.sizeOfBoardY = RA_SIZE_BOARD_Y;
             this.sizeOfBoardZ = RA_SIZE_BOARD_Z;
             this.boardCoordinateMinimum = RA_BOARD_MIN;
-            this.white = white;
-            this.black = black;
             this.enPassant = false;
             this.castling = false;
             this.queeningTwoBackRows = true;
@@ -55,7 +51,7 @@ export default class Board {
     }
     public resetPiecesToStartingPositions() {
         if (this.gameVersion === RAUMSCHACH) {
-            this.pieces = getRaumschachBoard(this.white, this.black);
+            this.pieces = getRaumschachBoardSetup();
         }
     }
     public getSizeOfBoardX() {
@@ -72,7 +68,7 @@ export default class Board {
     }
     /**
      * sets the board to a new set of pieces
-     * @param newPieces 
+     * @param newPieces
      */
     public setPieces(newPieces: Piece[]) {
         this.pieces = newPieces;
@@ -160,7 +156,7 @@ export default class Board {
         return true;
     }
     /**
-     * Checks if pawn needs to be queened based on Raumschach rules which is that if a pawn reaches 
+     * Checks if pawn needs to be queened based on Raumschach rules which is that if a pawn reaches
      * the two back rows of the opposite corner from where they started then they turn into an additional queen for that player
      * @param pawn Pawn
      * @param b where the piece is being moved
@@ -170,9 +166,9 @@ export default class Board {
         if (!(pawn instanceof Pawn)) {
             return false;
         }
-        // - 1 and + 1 are to determine if pawn in two far rows (max row - 1) for white and (min row + 1) for black
-        if (pawn.isColor(this.white) && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
-        pawn.isColor("Black") && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
+        // - 1 and + 1 are to determine if pawn in two far rows (max row - 1) for WHITE and (min row + 1) for BLACK
+        if (pawn.isColor(WHITE) && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
+        pawn.isColor(BLACK) && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
         return true;
         }
     }
@@ -197,20 +193,20 @@ export default class Board {
         return copy;
     }
     /**
-     * Checks if pawn is moving in corrent direction based on Raumschach rules (up/across for white, down/across for black)
+     * Checks if pawn is moving in corrent direction based on Raumschach rules (up/across for WHITE, down/across for BLACK)
      * @param colorOfPawn
      * @param a space moving from
      * @param b space moving to
      */
     private pawnMoveDirectionCorrect(colorOfPawn: string, a: Position, b: Position): boolean {
-        // if white needs to move up(dz is positive) or across (dy is positive)
-        // if black needs to move down(dz is negative) or across (dy is positive)
+        // if WHITE needs to move up(dz is positive) or across (dy is positive)
+        // if BLACK needs to move down(dz is negative) or across (dy is positive)
         const dy = this.coordinateCompare(a.getY(), b.getY());
         const dz = this.coordinateCompare(a.getZ(), b.getZ());
-        if (colorOfPawn.localeCompare("White") == 0 && dy >= 0 && dz >= 0) {
+        if (colorOfPawn.localeCompare(WHITE) == 0 && dy >= 0 && dz >= 0) {
             return true;
         }
-        if (colorOfPawn.localeCompare("Black") == 0 && dy <= 0 && dz <= 0) {
+        if (colorOfPawn.localeCompare(BLACK) == 0 && dy <= 0 && dz <= 0) {
             return true;
         }
         return false;
@@ -230,7 +226,7 @@ export default class Board {
     }
     /**
      * Checks if any pieces are checking/attacking their opponent's king
-     * @param colorOfKingToCheckIfInCheck 
+     * @param colorOfKingToCheckIfInCheck
      */
     public kingInCheck(colorOfKingToCheckIfInCheck: string): boolean {
         const kingLocation = this.getLocationOfKingGivenColor(colorOfKingToCheckIfInCheck);

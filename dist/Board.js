@@ -24,6 +24,11 @@ var Board = (function () {
             this.queeningTwoBackRows = true;
         }
     }
+    Board.prototype.resetPiecesToStartingPositions = function () {
+        if (this.gameVersion === constants_1.RAUMSCHACH) {
+            this.pieces = BoardSetupArrays_1.getRaumschachBoard(this.white, this.black);
+        }
+    };
     Board.prototype.getSizeOfBoardX = function () {
         return this.sizeOfBoardX;
     };
@@ -61,14 +66,14 @@ var Board = (function () {
             this.piecesTaken.push(this.getPieceLocatedAt(b));
             this.deletePieceAtPosition(b);
         }
-        movePiece.moveTo(b);
+        movePiece.setPosition(b);
         return true;
     };
     Board.prototype.pieceMoveFollowsMovementRules = function (movePiece, b) {
-        if (!movePiece.canMoveTo(b)) {
+        if (!movePiece.moveShapeCorrect(b)) {
             return false;
         }
-        if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).sameColor(movePiece)) {
+        if (this.pieceLocatedAtBool(b) && this.getPieceLocatedAt(b).isColor(movePiece.getColor())) {
             return false;
         }
         if (movePiece instanceof Knight_1.Knight) {
@@ -85,12 +90,12 @@ var Board = (function () {
         }
         return true;
     };
-    Board.prototype.checkForQueeningTwoBackRows = function (movePiece, b) {
-        if (!(movePiece instanceof Pawn_1.Pawn)) {
+    Board.prototype.checkForQueeningTwoBackRows = function (pawn, b) {
+        if (!(pawn instanceof Pawn_1.Pawn)) {
             return false;
         }
-        if (movePiece.isColor(this.white) && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
-            movePiece.isColor("Black") && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
+        if (pawn.isColor(this.white) && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
+            pawn.isColor("Black") && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
             return true;
         }
     };
@@ -109,8 +114,8 @@ var Board = (function () {
         return copy;
     };
     Board.prototype.pawnMoveDirectionCorrect = function (colorOfPawn, a, b) {
-        var dy = this.getSlope(a.getY(), b.getY());
-        var dz = this.getSlope(a.getZ(), b.getZ());
+        var dy = this.coordinateCompare(a.getY(), b.getY());
+        var dz = this.coordinateCompare(a.getZ(), b.getZ());
         if (colorOfPawn.localeCompare("White") == 0 && dy >= 0 && dz >= 0) {
             return true;
         }
@@ -174,9 +179,9 @@ var Board = (function () {
         return true;
     };
     Board.prototype.pieceInWay = function (a, b) {
-        var dx = this.getSlope(a.getX(), b.getX());
-        var dy = this.getSlope(a.getY(), b.getY());
-        var dz = this.getSlope(a.getZ(), b.getZ());
+        var dx = this.coordinateCompare(a.getX(), b.getX());
+        var dy = this.coordinateCompare(a.getY(), b.getY());
+        var dz = this.coordinateCompare(a.getZ(), b.getZ());
         var c = new Piece_1.Position(a.getX(), a.getY(), a.getZ());
         c.setX(c.getX() + dx);
         c.setY(c.getY() + dy);
@@ -191,7 +196,7 @@ var Board = (function () {
         }
         return false;
     };
-    Board.prototype.getSlope = function (a, b) {
+    Board.prototype.coordinateCompare = function (a, b) {
         if (a < b) {
             return 1;
         }

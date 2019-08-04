@@ -19,7 +19,7 @@ var Knight = (function (_super) {
     function Knight() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Knight.prototype.canMoveTo = function (position) {
+    Knight.prototype.moveShapeCorrect = function (position) {
         var distance = this.position.distanceFrom(position);
         var distances = [];
         distances.push(distance.x);

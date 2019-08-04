@@ -49,7 +49,7 @@ export class Position {
     }
     /**
      * Checks if position is same
-     * @param a 
+     * @param a
      */
     public samePosition(a: Position): boolean {
         if (a.getX() == this.x && a.getY() == this.getY() && a.getZ() == this.getZ()) {

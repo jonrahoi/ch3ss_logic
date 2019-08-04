@@ -18,7 +18,7 @@ var queenNotation = "Que";
 var kingNotation = "Kng";
 function getBoardStateStringArraySliceByZ(pieces, sizeOfBoardX, sizeOfBoardY, sizeOfBoardZ, boardCoordinateMinimum) {
     var arrToDisplay = [];
-    arrToDisplay.push("Board currently");
+    arrToDisplay.push("Board state, sliced by Z coordinate value:");
     var board = [];
     for (var i = 0; i < sizeOfBoardX; i++) {
         board[i] = [];
@@ -31,10 +31,10 @@ function getBoardStateStringArraySliceByZ(pieces, sizeOfBoardX, sizeOfBoardY, si
     }
     for (var i = 0; i < pieces.length; i++) {
         var a = pieces[i].getPosition();
-        board[a.getX() - 1][a.getY() - 1][a.getZ() - 1] = getPieceNotation(pieces[i]);
+        board[a.getX() - boardCoordinateMinimum][a.getY() - boardCoordinateMinimum][a.getZ() - boardCoordinateMinimum] = getPieceNotation(pieces[i]);
     }
     for (var z = sizeOfBoardZ - boardCoordinateMinimum; z >= 0; z--) {
-        arrToDisplay.push("level/Z: " + (z + boardCoordinateMinimum));
+        arrToDisplay.push("level(Z): " + (z + boardCoordinateMinimum));
         for (var y = sizeOfBoardY - boardCoordinateMinimum; y >= 0; y--) {
             var row = "";
             row += "|";
@@ -74,5 +74,4 @@ function getPieceNotation(piece) {
     }
     return a + kingNotation;
 }
-exports.getPieceNotation = getPieceNotation;
 //# sourceMappingURL=DisplayBoard2D.js.map

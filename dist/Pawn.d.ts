@@ -1,5 +1,5 @@
 import { Piece, Position } from "./Piece";
 export declare class Pawn extends Piece {
-    canMoveTo(position: Position): boolean;
+    moveShapeCorrect(position: Position): boolean;
     makeCopy(): Piece;
 }

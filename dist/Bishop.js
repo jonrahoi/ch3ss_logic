@@ -19,7 +19,7 @@ var Bishop = (function (_super) {
     function Bishop() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Bishop.prototype.canMoveTo = function (position) {
+    Bishop.prototype.moveShapeCorrect = function (position) {
         var distance = this.position.distanceFrom(position);
         if (distance.y == 0 && distance.x == 0 && distance.z == 0) {
             return false;
