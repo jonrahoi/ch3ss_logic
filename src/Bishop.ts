@@ -1,7 +1,7 @@
 import { Piece, Position } from "./Piece"
 
 export class Bishop extends Piece {
-    canMoveTo(position: Position) {
+    moveShapeCorrect(position: Position) {
         const distance = this.position.distanceFrom(position)
         if (distance.y == 0 && distance.x == 0 && distance.z == 0) {
             return false; // same postion

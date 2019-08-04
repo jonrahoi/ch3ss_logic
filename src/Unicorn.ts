@@ -1,7 +1,7 @@
 import { Piece, Position } from "./Piece"
 
 export class Unicorn extends Piece {
-    canMoveTo(position: Position) {
+    moveShapeCorrect(position: Position) {
         const distance = this.position.distanceFrom(position)
 
         if (distance.y < 1 && distance.x < 1 && distance.z < 1) {

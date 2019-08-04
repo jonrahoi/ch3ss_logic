@@ -1,7 +1,7 @@
 import { Piece, Position } from "./Piece"
 
 export class Knight extends Piece {
-    canMoveTo(position: Position) {
+    moveShapeCorrect(position: Position) {
         const distance = this.position.distanceFrom(position)
         const distances: number[] = [];
         distances.push(distance.x);

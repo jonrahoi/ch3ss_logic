@@ -19,7 +19,7 @@ simulateGame(numberOfMovesToSimulate);
 
 function simulateGame(maxMoves: number) {
     let endOfGame = false;
-    let pieces: Piece[] = [];
+    const pieces: Piece[] = [];
     let piece;
     let moveSpace;
     let moveIterationCount = 1;

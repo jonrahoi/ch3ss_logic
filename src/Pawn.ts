@@ -1,7 +1,7 @@
 import { Piece, Position } from "./Piece"
 
 export class Pawn extends Piece {
-    canMoveTo(position: Position) {
+    moveShapeCorrect(position: Position) {
 
         const distance = this.position.distanceFrom(position);
         if (distance.x != 0) {

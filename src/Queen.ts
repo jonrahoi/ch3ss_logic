@@ -2,7 +2,7 @@ import { Piece, Position } from "./Piece"
 
 
 export class Queen extends Piece {
-    canMoveTo(position: Position) {
+    moveShapeCorrect(position: Position) {
         // Rook like move
         const distance = this.position.distanceFrom(position)
         if (distance.y == 0 && distance.x == 0 && distance.z == 0) {

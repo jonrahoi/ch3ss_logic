@@ -1,7 +1,7 @@
 import { Piece, Position } from "./Piece"
 
 export class Rook extends Piece {
-    canMoveTo(position: Position) {
+    moveShapeCorrect(position: Position) {
         // if change along one direction like a rook
         const distance = this.position.distanceFrom(position)
         if (distance.y == distance.x && distance.x == distance.z) {
