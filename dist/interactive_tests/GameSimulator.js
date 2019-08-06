@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var Game_1 = require("../Game");
-var numberOfMovesToSimulate = 100;
+var numberOfMovesToSimulate = 1000;
 var game = new Game_1.Game(1);
 simulateGame(numberOfMovesToSimulate);
 function simulateGame(maxMoves) {
@@ -29,10 +29,7 @@ function simulateGame(maxMoves) {
             moveFound = true;
             moveLookCounter++;
         }
-        console.log("trying move piece at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         var moveSuccessful = game.move(piece.getPosition(), moveSpace);
-        console.log("move successful: " + moveSuccessful + ", " + game.getMoveCount() + " move count, ", "piece at " + piece.getPostionString());
-        game.printBoardStateToConsole();
         moveIterationCount++;
         console.log("move count: " + moveIterationCount);
         if (game.getCheckMate()) {
@@ -49,5 +46,6 @@ function simulateGame(maxMoves) {
             console.log("CHECK!");
         }
     }
+    game.printBoardStateToConsole();
 }
 //# sourceMappingURL=GameSimulator.js.map

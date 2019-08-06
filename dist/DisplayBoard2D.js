@@ -6,16 +6,14 @@ var Rook_1 = require("./Rook");
 var Unicorn_1 = require("./Unicorn");
 var Pawn_1 = require("./Pawn");
 var Queen_1 = require("./Queen");
-var boardEmptySpace = "_____";
-var whiteNotation = "W_";
-var blackNotation = "B_";
-var pawnNotation = "Pwn";
-var rookNoation = "Rok";
-var knightNotation = "Kht";
-var bishopNotation = "Bhp";
-var unicornNotation = "Uni";
-var queenNotation = "Que";
-var kingNotation = "Kng";
+var boardEmptySpace = ".";
+var pawnNotation = "p";
+var rookNoation = "r";
+var knightNotation = "h";
+var bishopNotation = "b";
+var unicornNotation = "u";
+var queenNotation = "q";
+var kingNotation = "k";
 function getBoardStateStringArraySliceByZ(pieces, sizeOfBoardX, sizeOfBoardY, sizeOfBoardZ, boardCoordinateMinimum) {
     var arrToDisplay = [];
     arrToDisplay.push("Board state, sliced by Z coordinate value:");
@@ -37,10 +35,9 @@ function getBoardStateStringArraySliceByZ(pieces, sizeOfBoardX, sizeOfBoardY, si
         arrToDisplay.push("level(Z): " + (z + boardCoordinateMinimum));
         for (var y = sizeOfBoardY - boardCoordinateMinimum; y >= 0; y--) {
             var row = "";
-            row += "|";
             for (var x = 0; x <= sizeOfBoardX - boardCoordinateMinimum; x++) {
                 row += board[x][y][z];
-                row += "|";
+                row += " ";
             }
             arrToDisplay.push(row);
         }
@@ -50,28 +47,28 @@ function getBoardStateStringArraySliceByZ(pieces, sizeOfBoardX, sizeOfBoardY, si
 }
 exports.getBoardStateStringArraySliceByZ = getBoardStateStringArraySliceByZ;
 function getPieceNotation(piece) {
-    var a = whiteNotation;
-    if (piece.isColor("Black")) {
-        a = blackNotation;
-    }
+    var str = kingNotation;
     if (piece instanceof Pawn_1.Pawn) {
-        return a + pawnNotation;
+        str = pawnNotation;
     }
     if (piece instanceof Rook_1.Rook) {
-        return a + rookNoation;
+        str = rookNoation;
     }
     if (piece instanceof Knight_1.Knight) {
-        return a + knightNotation;
+        str = knightNotation;
     }
     if (piece instanceof Bishop_1.Bishop) {
-        return a + bishopNotation;
+        str = bishopNotation;
     }
     if (piece instanceof Unicorn_1.Unicorn) {
-        return a + unicornNotation;
+        str = unicornNotation;
     }
     if (piece instanceof Queen_1.Queen) {
-        return a + queenNotation;
+        str = queenNotation;
     }
-    return a + kingNotation;
+    if (!piece.isColor("Black")) {
+        str = str.toUpperCase();
+    }
+    return str;
 }
 //# sourceMappingURL=DisplayBoard2D.js.map

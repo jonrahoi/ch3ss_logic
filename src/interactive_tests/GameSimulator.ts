@@ -10,7 +10,7 @@ import { Pawn } from "../Pawn"
 import { Queen } from "../Queen"
 import Board from "../Board";
 
-const numberOfMovesToSimulate = 100;
+const numberOfMovesToSimulate = 1000;
 
 
 const game = new Game(1);
@@ -50,10 +50,10 @@ function simulateGame(maxMoves: number) {
             moveFound = true;
             moveLookCounter++;
         }
-        console.log("trying move piece at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
+        // console.log("trying move piece at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         const moveSuccessful = game.move(piece.getPosition(), moveSpace);
-        console.log("move successful: " + moveSuccessful + ", " + game.getMoveCount() + " move count, ", "piece at " + piece.getPostionString());
-        game.printBoardStateToConsole();
+        // console.log("move successful: " + moveSuccessful + ", " + game.getMoveCount() + " move count, ", "piece at " + piece.getPostionString());
+        // game.printBoardStateToConsole();
         moveIterationCount++;
         console.log("move count: " + moveIterationCount);
         if (game.getCheckMate()) {
@@ -70,9 +70,5 @@ function simulateGame(maxMoves: number) {
             console.log("CHECK!")
         }
 }
-
-
-
-
-
-
+    game.printBoardStateToConsole();
+}

@@ -8,16 +8,14 @@ import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
 
 /** Piece Notations for display on 2D space, number of spaces in notation is 4 */
-const boardEmptySpace = "_____";
-const whiteNotation = "W_";
-const blackNotation = "B_";
-const pawnNotation = "Pwn";
-const rookNoation = "Rok";
-const knightNotation = "Kht";
-const bishopNotation = "Bhp";
-const unicornNotation = "Uni";
-const queenNotation = "Que";
-const kingNotation = "Kng";
+const boardEmptySpace = ".";
+const pawnNotation = "p";
+const rookNoation = "r";
+const knightNotation = "h";
+const bishopNotation = "b";
+const unicornNotation = "u";
+const queenNotation = "q";
+const kingNotation = "k";
 
 /**
  * Displays board by slicing along z axis and put in array where each line is an element of the array
@@ -48,10 +46,10 @@ export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: 
         arrToDisplay.push("level(Z): " + (z + boardCoordinateMinimum));
         for (let y = sizeOfBoardY - boardCoordinateMinimum; y >= 0; y--) {
             let row = "";
-            row += "|";
+            // row += "|";
             for (let x = 0; x <= sizeOfBoardX - boardCoordinateMinimum; x++) {
                 row += board[x][y][z];
-                row += "|";
+                row += " ";
             }
             arrToDisplay.push(row);
         }
@@ -59,21 +57,23 @@ export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: 
     }
     return arrToDisplay;
 }
+
 /**
  * Function to get a string to represent a piece
  * @param piece piece to get notation of
  */
 function getPieceNotation(piece: Piece): string {
-    let a = whiteNotation;
-    if (piece.isColor("Black")) {
-        a = blackNotation;
+    let str = kingNotation
+    if (piece instanceof Pawn) { str = pawnNotation }
+    if (piece instanceof Rook) { str = rookNoation }
+    if (piece instanceof Knight) { str = knightNotation }
+    if (piece instanceof Bishop) { str = bishopNotation }
+    if (piece instanceof Unicorn) { str = unicornNotation }
+    if (piece instanceof Queen) { str = queenNotation }
+
+    if (!piece.isColor("Black")) {
+        str = str.toUpperCase()
     }
-    if (piece instanceof Pawn) { return a + pawnNotation }
-    if (piece instanceof Rook) { return a + rookNoation }
-    if (piece instanceof Knight) { return a + knightNotation }
-    if (piece instanceof Bishop) { return a + bishopNotation }
-    if (piece instanceof Unicorn) { return a + unicornNotation }
-    if (piece instanceof Queen) { return a + queenNotation }
-    // if (piece instanceof King) { return a + this.kingNotation }
-    return a + kingNotation;
+
+    return str
 }
