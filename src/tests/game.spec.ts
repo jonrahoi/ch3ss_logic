@@ -131,8 +131,8 @@ describe("experiment", () => {
         expect(pieces[0] instanceof Queen).to.equal(true);
     })
     it("test white and black turns", () => {
-        let g = new Game(1);
-        expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true); //white's turn
+        const g = new Game(1);
+        expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true); // white's turn
         expect(g.move(new Position(3, 2, 2), new Position(3, 2, 3))).to.equal(false); // not white's turn
         expect(g.move(new Position(1, 4, 4), new Position(1, 3, 4))).to.equal(true); // black's turn
         expect(g.move(new Position(3, 4, 4), new Position(3, 3, 4))).to.equal(false); // not black's turn

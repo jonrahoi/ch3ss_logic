@@ -7,12 +7,10 @@ export default class Board {
     private sizeOfBoardZ;
     private boardCoordinateMinimum;
     private gameVersion;
-    private white;
-    private black;
     private queeningTwoBackRows;
     private enPassant;
     private castling;
-    constructor(gameVersion: String, white: string, black: string);
+    constructor(gameVersion: String);
     resetPiecesToStartingPositions(): void;
     getSizeOfBoardX(): number;
     getSizeOfBoardY(): number;

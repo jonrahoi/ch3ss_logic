@@ -8,17 +8,15 @@ var Piece_1 = require("./Piece");
 var BoardSetupArrays_1 = require("./BoardSetupArrays");
 var constants_1 = require("./constants");
 var Board = (function () {
-    function Board(gameVersion, white, black) {
+    function Board(gameVersion) {
         this.pieces = [];
         this.piecesTaken = [];
         if (gameVersion === constants_1.RAUMSCHACH) {
-            this.pieces = BoardSetupArrays_1.getRaumschachBoard(white, black);
+            this.pieces = BoardSetupArrays_1.getRaumschachBoardSetup();
             this.sizeOfBoardX = constants_1.RA_SIZE_BOARD_X;
             this.sizeOfBoardY = constants_1.RA_SIZE_BOARD_Y;
             this.sizeOfBoardZ = constants_1.RA_SIZE_BOARD_Z;
             this.boardCoordinateMinimum = constants_1.RA_BOARD_MIN;
-            this.white = white;
-            this.black = black;
             this.enPassant = false;
             this.castling = false;
             this.queeningTwoBackRows = true;
@@ -26,7 +24,7 @@ var Board = (function () {
     }
     Board.prototype.resetPiecesToStartingPositions = function () {
         if (this.gameVersion === constants_1.RAUMSCHACH) {
-            this.pieces = BoardSetupArrays_1.getRaumschachBoard(this.white, this.black);
+            this.pieces = BoardSetupArrays_1.getRaumschachBoardSetup();
         }
     };
     Board.prototype.getSizeOfBoardX = function () {
@@ -94,8 +92,8 @@ var Board = (function () {
         if (!(pawn instanceof Pawn_1.Pawn)) {
             return false;
         }
-        if (pawn.isColor(this.white) && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
-            pawn.isColor("Black") && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
+        if (pawn.isColor(constants_1.WHITE) && b.getY() == this.sizeOfBoardY && b.getZ() >= this.sizeOfBoardZ - 1 ||
+            pawn.isColor(constants_1.BLACK) && b.getY() == this.boardCoordinateMinimum && b.getZ() <= (this.boardCoordinateMinimum + 1)) {
             return true;
         }
     };
@@ -116,10 +114,10 @@ var Board = (function () {
     Board.prototype.pawnMoveDirectionCorrect = function (colorOfPawn, a, b) {
         var dy = this.coordinateCompare(a.getY(), b.getY());
         var dz = this.coordinateCompare(a.getZ(), b.getZ());
-        if (colorOfPawn.localeCompare("White") == 0 && dy >= 0 && dz >= 0) {
+        if (colorOfPawn.localeCompare(constants_1.WHITE) == 0 && dy >= 0 && dz >= 0) {
             return true;
         }
-        if (colorOfPawn.localeCompare("Black") == 0 && dy <= 0 && dz <= 0) {
+        if (colorOfPawn.localeCompare(constants_1.BLACK) == 0 && dy <= 0 && dz <= 0) {
             return true;
         }
         return false;

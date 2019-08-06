@@ -8,7 +8,7 @@ var Game = (function () {
     function Game(gameID) {
         this.boardStateMoveCount = 0;
         this.gameID = gameID;
-        this.board = new Board_1["default"](constants_1.RAUMSCHACH, constants_1.WHITE, constants_1.BLACK);
+        this.board = new Board_1["default"](constants_1.RAUMSCHACH);
         this.moveHistory = [];
         this.gameID = gameID;
         this.moveCount = 0;
@@ -197,6 +197,9 @@ var Game = (function () {
         this.boardStateMoveCount--;
     };
     Game.prototype.displayForwardOneMove = function () {
+        if (this.boardStateMoveCount == this.moveCount) {
+            return;
+        }
         this.board.resetPiecesToStartingPositions();
         var displayMoves = this.boardStateMoveCount + this.numberPlayers;
         for (var i = 0; i < this.moveHistory.length - (this.numberPlayers * displayMoves); i += this.numberPlayers) {
