@@ -15,6 +15,15 @@ describe("experiment", () => {
     it("returns true when 1 + 1 equals 2", () => {
         expect(1 + 1).to.equal(2);
     });
+    // test piece class
+    it("creates game", () => {
+        const p = new Pawn(WHITE, 1, 1, 1);
+        expect(p.getColor()).to.equal(WHITE);
+        expect(p.getPosition().getX()).to.equal(1);
+        expect(p.getPosition().getY()).to.equal(1);
+        expect(p.getPosition().getZ()).to.equal(1);
+        expect(p.getPosition().getPostionString()).to.equal("111");
+    })
     it("creates game", () => {
         const g = new Game(1);
         expect(g.getMoveHistory().length).to.equal(0)

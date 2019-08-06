@@ -107,7 +107,7 @@ export abstract class Piece {
      * Returns the color of piece
      */
     public getColor(): string {
-        if (this.color.localeCompare(WHITE) == 0) {
+        if (this.color == WHITE) {
             return WHITE;
         }
         return BLACK;

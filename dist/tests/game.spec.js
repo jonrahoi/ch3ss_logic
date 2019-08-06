@@ -17,6 +17,14 @@ describe("experiment", function () {
         expect(1 + 1).to.equal(2);
     });
     it("creates game", function () {
+        var p = new __1.Pawn(constants_1.WHITE, 1, 1, 1);
+        expect(p.getColor()).to.equal(constants_1.WHITE);
+        expect(p.getPosition().getX()).to.equal(1);
+        expect(p.getPosition().getY()).to.equal(1);
+        expect(p.getPosition().getZ()).to.equal(1);
+        expect(p.getPosition().getPostionString()).to.equal("111");
+    });
+    it("creates game", function () {
         var g = new Game_1.Game(1);
         expect(g.getMoveHistory().length).to.equal(0);
     });

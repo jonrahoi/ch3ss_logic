@@ -63,7 +63,7 @@ var Piece = (function () {
         return this.position.getPostionString();
     };
     Piece.prototype.getColor = function () {
-        if (this.color.localeCompare(constants_1.WHITE) == 0) {
+        if (this.color == constants_1.WHITE) {
             return constants_1.WHITE;
         }
         return constants_1.BLACK;
