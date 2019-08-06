@@ -14,7 +14,7 @@ export class Game {
     private minNumberOfPiecesBeforeDraw: number; // less than 5 pieces causes draw
     private numberPlayers: number; // set to whatever the right number is for the rule set
     private boardStateMoveCount: number; // pieces are in position after this many moves (can recreate board after differnet numbers of moves)
-    private gameID: number; // unique id for game
+    private gameID: number = 0; // unique id for game
     /**
      * constructor for class
      * @param gameID unique game ID

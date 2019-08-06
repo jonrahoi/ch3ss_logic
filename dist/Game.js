@@ -6,6 +6,7 @@ var DisplayBoard2D_1 = require("./DisplayBoard2D");
 var constants_1 = require("./constants");
 var Game = (function () {
     function Game(id) {
+        this.gameID = 0;
         this.gameID = id;
         this.board = new Board_1["default"](constants_1.RAUMSCHACH);
         this.moveHistory = [];
