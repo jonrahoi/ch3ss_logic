@@ -1,7 +1,6 @@
 # ch3ss_logic
 
-project description:
-
+Project description: This repo is part of a team project to build an online 3D chess.  The game is 3D chess in the sense that the board has 3 dimensions instead of the normal 2.  We settled on using Raumschach chess rules which include using a 5x5x5 board and starting with a total of 40 pieces, 20 per player, where all the pieces can move in three dimensions. Raumscach pieces move similarly to regular chess pieces, however, there is an additional piece called a unicorn that must move the same distance in all three dimensions, which can be described as moving through the corners of a cube. In Raumschach chess there is queening of the pawn that reaches the back rows of the opponent but there is no en passant or castling. This is a useful website for more information: https://www.chessvariants.com/3d.dir/3d5.html
 
 ## Using the project
 
@@ -13,7 +12,7 @@ download node: https://nodejs.org/en/download/
 ```
 install npm: npm install npm@latest -g
 install typescript: npm install -g typescript
-install lab for testing: npm install --save-dev lab
+install lab for testing: npm install --save-dev lab -g
 ```
 
 ### Build process
@@ -28,7 +27,7 @@ node dist/interactive_tests/GameSimulator.js  // runs game simulator
 Note: GameSimulator is experimental and only moves randomly, it is not meant to be a game engine.  It will print the board to the console much like the ConsoleGame.ts
 
 ## Deployment
-Two options: playing in the console or using Game object in your own project.
+#### Two options: playing in the console or using Game object in your own project
 
 ### Console Game:
 npm run build; node dist/interactive_tests/ConsoleGame.js
@@ -53,7 +52,7 @@ if (!executed) {
     message to user "move invalid" 
 } 
 ```
-##### Check for check, checkmate, stalemate and show message to users
+#### Check for check, checkmate, stalemate and show message to users
 ```
 if (executed) { 
     if (game.getCheckMate()) { 
