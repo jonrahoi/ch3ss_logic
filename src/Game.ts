@@ -199,7 +199,7 @@ export class Game {
     }
     /**
      * Returns a copy of the pieces on the board
-     * @param pieces 
+     * @param pieces
      */
     private getCopyOfPieces(pieces: Piece[]): Piece[] {
         const copy: Piece[] = [];
