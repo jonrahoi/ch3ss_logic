@@ -2,12 +2,12 @@ import { Piece, Position } from "./Piece";
 export declare class Game {
     private moveHistory;
     private board;
-    private gameID;
     private moveCount;
     private minNumberOfPiecesBeforeDraw;
     private numberPlayers;
     private boardStateMoveCount;
-    constructor(gameID: number);
+    private gameID;
+    constructor(id: number);
     setPieces(pieces: Piece[]): void;
     getBoardStateStringArray(): String[];
     printBoardStateToConsole(): void;
@@ -17,6 +17,7 @@ export declare class Game {
     getStaleMate(): boolean;
     private insufficientMaterial;
     getMoveHistory(): Position[];
+    getGameID(): number;
     getPieces(): Piece[];
     getMoveCount(): number;
     move(a: Position, b: Position): boolean;

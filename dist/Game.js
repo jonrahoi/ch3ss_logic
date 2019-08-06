@@ -5,11 +5,10 @@ var Piece_1 = require("./Piece");
 var DisplayBoard2D_1 = require("./DisplayBoard2D");
 var constants_1 = require("./constants");
 var Game = (function () {
-    function Game(gameID) {
-        this.gameID = gameID;
+    function Game(id) {
+        this.gameID = id;
         this.board = new Board_1["default"](constants_1.RAUMSCHACH);
         this.moveHistory = [];
-        this.gameID = gameID;
         this.moveCount = 0;
         this.numberPlayers = 2;
         this.minNumberOfPiecesBeforeDraw = 5;
@@ -76,6 +75,9 @@ var Game = (function () {
             moves.push(this.moveHistory[i]);
         }
         return moves;
+    };
+    Game.prototype.getGameID = function () {
+        return this.gameID;
     };
     Game.prototype.getPieces = function () {
         return this.board.getCopyOfPieces();

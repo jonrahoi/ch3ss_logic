@@ -10,20 +10,19 @@ import { RAUMSCHACH, RA_SIZE_BOARD_X, RA_SIZE_BOARD_Y, RA_SIZE_BOARD_Z, RA_BOARD
 export class Game {
     private moveHistory: Position[];
     private board: Board; // every game has a board which has pieces and determines if pieces can move to other parts of the board
-    private gameID: number; // unique id for game
     private moveCount: number; // how many moves have been executed, same as moveHistory.length/2
     private minNumberOfPiecesBeforeDraw: number; // less than 5 pieces causes draw
     private numberPlayers: number; // set to whatever the right number is for the rule set
     private boardStateMoveCount: number; // pieces are in position after this many moves (can recreate board after differnet numbers of moves)
+    private gameID: number; // unique id for game
     /**
      * constructor for class
      * @param gameID unique game ID
      */
-    constructor(gameID: number) {
-        this.gameID = gameID;
+    constructor(id: number) {
+        this.gameID = id;
         this.board = new Board(RAUMSCHACH);
         this.moveHistory = []; // move history arrray of positions
-        this.gameID = gameID;
         this.moveCount = 0; // how many moves have been executed
         this.numberPlayers = 2; // Raumscach is 2 player
         this.minNumberOfPiecesBeforeDraw = 5; // a guess at what the minimum is
@@ -128,6 +127,9 @@ export class Game {
             moves.push(this.moveHistory[i]);
         }
         return moves;
+    }
+    public getGameID() {
+        return this.gameID;
     }
     public getPieces(): Piece[] {
         return this.board.getCopyOfPieces();
