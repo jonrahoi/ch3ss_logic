@@ -6,7 +6,6 @@ var DisplayBoard2D_1 = require("./DisplayBoard2D");
 var constants_1 = require("./constants");
 var Game = (function () {
     function Game(gameID) {
-        this.boardStateMoveCount = 0;
         this.gameID = gameID;
         this.board = new Board_1["default"](constants_1.RAUMSCHACH);
         this.moveHistory = [];
@@ -14,6 +13,7 @@ var Game = (function () {
         this.moveCount = 0;
         this.numberPlayers = 2;
         this.minNumberOfPiecesBeforeDraw = 5;
+        this.boardStateMoveCount = 0;
     }
     Game.prototype.setPieces = function (pieces) {
         this.board.setPieces(pieces);

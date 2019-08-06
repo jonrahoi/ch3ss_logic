@@ -14,7 +14,7 @@ export class Game {
     private moveCount: number; // how many moves have been executed, same as moveHistory.length/2
     private minNumberOfPiecesBeforeDraw: number; // less than 5 pieces causes draw
     private numberPlayers: number; // set to whatever the right number is for the rule set
-    private boardStateMoveCount = 0; // pieces are in position after this many moves (can recreate board after differnet numbers of moves)
+    private boardStateMoveCount: number; // pieces are in position after this many moves (can recreate board after differnet numbers of moves)
     /**
      * constructor for class
      * @param gameID unique game ID
@@ -27,6 +27,7 @@ export class Game {
         this.moveCount = 0; // how many moves have been executed
         this.numberPlayers = 2; // Raumscach is 2 player
         this.minNumberOfPiecesBeforeDraw = 5; // a guess at what the minimum is
+        this.boardStateMoveCount = 0;
     }
     /**
      * Sets pieces for board, used for testing
