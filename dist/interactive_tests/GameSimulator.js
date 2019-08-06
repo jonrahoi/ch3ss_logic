@@ -14,21 +14,17 @@ function simulateGame(maxMoves) {
     while (!endOfGame && moveIterationCount < maxMoves) {
         var moveFound = false;
         var moveLookCounter = 0;
+        pieces = game.getPieces();
         while (!moveFound && moveLookCounter < 1000) {
             var randomPieceNum = Math.floor(Math.random() * pieces.length);
-            console.log("random piece located at: " + pieces[randomPieceNum].getPostionString());
             piece = pieces[randomPieceNum];
             var possibleMoves = game.getPossibleMovesForPieceAtSpace(piece.getPosition());
-            console.log("number of moves from position: " + piece.getPostionString() + ": " + possibleMoves.length);
             if (possibleMoves.length == 0) {
                 moveLookCounter++;
                 continue;
             }
-            console.log("possible moves: ");
             for (var i = 0; i < possibleMoves.length; i++) {
-                console.log(possibleMoves[i].getPostionString());
             }
-            console.log();
             moveSpace = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
             moveFound = true;
             moveLookCounter++;
@@ -48,6 +44,9 @@ function simulateGame(maxMoves) {
             console.log("STALEMATE, DRAW!");
             endOfGame = true;
             break;
+        }
+        else if (game.getCheck()) {
+            console.log("CHECK!");
         }
     }
 }

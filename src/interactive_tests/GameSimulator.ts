@@ -19,7 +19,7 @@ simulateGame(numberOfMovesToSimulate);
 
 function simulateGame(maxMoves: number) {
     let endOfGame = false;
-    const pieces: Piece[] = [];
+    let pieces: Piece[] = [];
     let piece;
     let moveSpace;
     let moveIterationCount = 1;
@@ -28,23 +28,24 @@ function simulateGame(maxMoves: number) {
     while (!endOfGame && moveIterationCount < maxMoves) {
         let moveFound = false;
         let moveLookCounter = 0;
+        pieces = game.getPieces();
         while (!moveFound && moveLookCounter < 1000) {
             const randomPieceNum = Math.floor(Math.random() * pieces.length);
             // console.log("random number: " + randomPieceNum);
-            console.log("random piece located at: " + pieces[randomPieceNum].getPostionString());
+            // console.log("random piece located at: " + pieces[randomPieceNum].getPostionString());
             piece = pieces[randomPieceNum];
             const possibleMoves: Position[] = game.getPossibleMovesForPieceAtSpace(piece.getPosition());
-            console.log("number of moves from position: " + piece.getPostionString() + ": " + possibleMoves.length);
+            // console.log("number of moves from position: " + piece.getPostionString() + ": " + possibleMoves.length);
             if (possibleMoves.length == 0) {
                 moveLookCounter++;
                 continue; // try with different piece
             }
             // list possible moves
-            console.log("possible moves: ");
+            // console.log("possible moves: ");
             for (let i = 0; i < possibleMoves.length; i++) {
-                console.log(possibleMoves[i].getPostionString())
+                // console.log(possibleMoves[i].getPostionString())
             }
-            console.log();
+            // console.log();
             moveSpace = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
             moveFound = true;
             moveLookCounter++;
@@ -52,10 +53,6 @@ function simulateGame(maxMoves: number) {
         console.log("trying move piece at " + piece.getPostionString(), " to ", moveSpace.getPostionString());
         const moveSuccessful = game.move(piece.getPosition(), moveSpace);
         console.log("move successful: " + moveSuccessful + ", " + game.getMoveCount() + " move count, ", "piece at " + piece.getPostionString());
-        // if (!moveSuccessful) {
-        //     endOfGame = true;
-        //     break;
-        // }
         game.printBoardStateToConsole();
         moveIterationCount++;
         console.log("move count: " + moveIterationCount);
@@ -69,7 +66,9 @@ function simulateGame(maxMoves: number) {
             endOfGame = true;
             break;
         }
-    }
+        else if (game.getCheck()) {
+            console.log("CHECK!")
+        }
 }
 
 

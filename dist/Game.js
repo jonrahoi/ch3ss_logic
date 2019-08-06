@@ -81,7 +81,7 @@ var Game = (function () {
         return this.board.getCopyOfPieces();
     };
     Game.prototype.getMoveCount = function () {
-        return this.getMoveCount();
+        return this.moveCount;
     };
     Game.prototype.move = function (a, b) {
         if (this.boardStateMoveCount < this.moveCount) {

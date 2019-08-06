@@ -21,8 +21,8 @@ npm run build
 
 ## Running the tests
 ```
-lab ./dist/tests/     // tests all the methods in the project
-node dist/interactive_tests/GameSimulator.js  // runs game simulator
+npm run build; lab ./dist/tests/     // tests all the methods in the project
+npm run build; node dist/interactive_tests/GameSimulator.js  // runs game simulator
 ```
 Note: GameSimulator is experimental and only moves randomly, it is not meant to be a game engine.  It will print the board to the console much like the ConsoleGame.ts
 

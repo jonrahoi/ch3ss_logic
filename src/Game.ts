@@ -132,7 +132,7 @@ export class Game {
         return this.board.getCopyOfPieces();
     }
     public getMoveCount(): number {
-        return this.getMoveCount();
+        return this.moveCount;
     }
     public move(a: Position, b: Position): boolean {
         if (this.boardStateMoveCount < this.moveCount) {
