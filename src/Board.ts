@@ -50,9 +50,10 @@ export default class Board {
         // size of board could be (8x8x8)
     }
     public resetPiecesToStartingPositions() {
-        if (this.gameVersion === RAUMSCHACH) {
+        // if (this.gameVersion === RAUMSCHACH) {
             this.pieces = getRaumschachBoardSetup();
-        }
+            console.log("board.resetPiecesToStartingPositions() reseting board inside board")
+        // }
     }
     public getSizeOfBoardX() {
         return this.sizeOfBoardX;

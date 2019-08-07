@@ -6,8 +6,10 @@ import { Unicorn } from "./Unicorn"
 import { Pawn } from "./Pawn"
 import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
+import { BLACK, WHITE } from "./Constants";
 
 /** Piece Notations for display on 2D space, number of spaces in notation is 4 */
+// black is lower case, white is upper case
 const boardEmptySpace = ".";
 const pawnNotation = "p";
 const rookNoation = "r";
@@ -29,6 +31,7 @@ export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: 
     const arrToDisplay = [];
     arrToDisplay.push("Board state, sliced by Z coordinate value:");
     const board: string[][][] = [];
+    // initialize all spaces to empty space
     for (let i = 0; i < sizeOfBoardX; i++) {
         board[i] = [];
         for (let j = 0; j < sizeOfBoardY; j++) {
@@ -38,10 +41,12 @@ export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: 
             }
         }
     }
+    // put piece notiations into array
     for (let i = 0; i < pieces.length; i++) {
         const a = pieces[i].getPosition();
         board[a.getX() - boardCoordinateMinimum][a.getY() - boardCoordinateMinimum][a.getZ() - boardCoordinateMinimum] = getPieceNotation(pieces[i]);
     }
+    // create lines for the array to be displayed
     for (let z = sizeOfBoardZ - boardCoordinateMinimum; z >= 0; z--) {
         arrToDisplay.push("level(Z): " + (z + boardCoordinateMinimum));
         for (let y = sizeOfBoardY - boardCoordinateMinimum; y >= 0; y--) {
@@ -57,9 +62,8 @@ export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: 
     }
     return arrToDisplay;
 }
-
 /**
- * Function to get a string to represent a piece
+ * Function to get a string to represent a piece, white is upper case, black is lower case
  * @param piece piece to get notation of
  */
 function getPieceNotation(piece: Piece): string {
@@ -70,10 +74,8 @@ function getPieceNotation(piece: Piece): string {
     if (piece instanceof Bishop) { str = bishopNotation }
     if (piece instanceof Unicorn) { str = unicornNotation }
     if (piece instanceof Queen) { str = queenNotation }
-
-    if (!piece.isColor("Black")) {
+    if (piece.isColor(WHITE)) {
         str = str.toUpperCase()
     }
-
     return str
 }

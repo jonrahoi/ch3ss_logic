@@ -138,6 +138,7 @@ export class Game {
         return this.moveCount;
     }
     public move(a: Position, b: Position): boolean {
+
         if (this.boardStateMoveCount < this.moveCount) {
             this.setBoardToAfterAllMoves();
         }
@@ -261,16 +262,49 @@ export class Game {
     /**
      * Loads a game saved in JSON file
      */
-    public loadGame() {
+    public loadGameFromFile() {
         // go through moves array and move the board each space
-        this.moveHistory = JSON.parse("moveHistory");
+        // const readlineSync = require("readline-sync");
+        // const homie = JSON.parse(fs.readFileSync("./game1.json").toString())
+        const fs = require("fs");
+        const rawData = fs.readFileSync("./game1.json");
+        const moves: string[] = JSON.parse(rawData);
+        this.moveHistory = [];
+        for (let i = 0; i < moves.length; i++) {
+            console.log("add move space to history " + moves[i]);
+            this.moveHistory.push(this.getPositionFromString(moves[i]));
+        }
+        this.moveCount = 0; // two spaces per move, not a magic number
         this.setBoardToAfterAllMoves();
+    }
+    /**
+     * Sets board state to be after all moves
+     */
+    public setBoardToAfterAllMoves() {
+        this.board.resetPiecesToStartingPositions();
+        console.log("printing inside setBoardToAfterAllMoves after reset")
+        this.printBoardStateToConsole();
+        this.moveCount = 0;
+        for (let i = 0; i < this.moveHistory.length; i += this.numberPlayers) {
+            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+            console.log("setBoardToAfterAllMoves moving ");
+            this.moveCount++;
+        }
+        this.boardStateMoveCount = this.moveCount;
+        console.log("printing inside setBoardToAfterAllMoves")
+        this.printBoardStateToConsole();
     }
     /**
      * Saves game to JSON file
      */
-    public saveGame() {
-        JSON.stringify(this.moveHistory);
+    public saveGameToFile() {
+        const fs = require("fs");
+        // create an array of strings for each move
+        const moveStrings: string[] = [];
+        for (let i = 0; i < this.moveHistory.length; i++) {
+            moveStrings.push(this.moveHistory[i].getPostionString());
+        }
+        fs.writeFileSync("./game1.json", JSON.stringify(moveStrings))
     }
     /**
      * takes back the last move
@@ -281,18 +315,16 @@ export class Game {
         if (this.moveCount == 0) {
             return;
         }
-        this.board.resetPiecesToStartingPositions();
-        for (let i = 0; i < this.moveHistory.length - this.numberPlayers; i += this.numberPlayers) {
-            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
-        }
+        console.log("move history length before pops " + this.moveHistory.length)
         this.moveHistory.pop();
         this.moveHistory.pop();
-        this.moveCount--;
+        console.log("move history length after pops " + this.moveHistory.length)
+        this.setBoardToAfterAllMoves();
     }
     /**
      * Method to move the board state back one move but does not delete the move from the move history
      */
-    public setBoardStateToBackOneMoveButNotATakeback() {
+    public setBoardStateBackOneMoveButNotATakeback() {
         if (this.moveCount == 0) {
             return;
         }
@@ -316,13 +348,5 @@ export class Game {
             this.move(this.moveHistory[i], this.moveHistory[i + 1]);
         }
         this.boardStateMoveCount++;
-    }
-
-    public setBoardToAfterAllMoves() {
-        this.board.resetPiecesToStartingPositions();
-        for (let i = 0; i < this.moveHistory.length; i += this.numberPlayers) {
-            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
-        }
-        this.boardStateMoveCount = this.moveCount;
     }
 }

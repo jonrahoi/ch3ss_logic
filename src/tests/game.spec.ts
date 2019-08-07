@@ -8,6 +8,7 @@ export { lab };
 import { WHITE, BLACK } from "../constants"
 
 describe("experiment", () => {
+    /*
     before(() => {});
     it("verifies 1 equals 1", () => {
         expect(1).to.equal(1);
@@ -147,7 +148,7 @@ describe("experiment", () => {
         expect(g.move(new Position(3, 4, 4), new Position(3, 3, 4))).to.equal(false); // not black's turn
     })
 
-    // /***** test piece movement *****/
+    // TEST PIECE MOVEMENT:
     it("pawn possible moves", () => {
         let g = new Game(1);
         // g.printBoardStateToConsole();
@@ -253,6 +254,27 @@ describe("experiment", () => {
         expect(g.isValidSpaceFromString("831")).to.equal(false);
         expect(g.isValidSpaceFromString("230")).to.equal(false);
         expect(g.isValidSpaceFromString("111")).to.equal(true);
+    })
+    */
+    // it("test save and load game", () => {
+    //     let g = new Game(1);
+    //     expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
+    //     g.saveGameToFile();
+    //     g = new Game(1);
+    //     g.loadGameFromFile();
+    //     // g.printBoardStateToConsole();
+    //     expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(true);
+    //     expect(g.move(new Position(1, 3, 2), new Position(1, 4, 2))).to.equal(true);
+    //     // g.printBoardStateToConsole();
+    // })
+    it("test take back a move", () => {
+        const g = new Game(1);
+        expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
+        g.takeBackLastMove();
+        // g.printBoardStateToConsole();
+        // expect(g.getMoveCount()).to.equal(0);
+        // expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true);
+        // g.printBoardStateToConsole();
     })
 });
 

@@ -23,9 +23,8 @@ var Board = (function () {
         }
     }
     Board.prototype.resetPiecesToStartingPositions = function () {
-        if (this.gameVersion === constants_1.RAUMSCHACH) {
-            this.pieces = BoardSetupArrays_1.getRaumschachBoardSetup();
-        }
+        this.pieces = BoardSetupArrays_1.getRaumschachBoardSetup();
+        console.log("board.resetPiecesToStartingPositions() reseting board inside board");
     };
     Board.prototype.getSizeOfBoardX = function () {
         return this.sizeOfBoardX;

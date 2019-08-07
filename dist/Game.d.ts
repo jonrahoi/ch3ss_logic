@@ -28,10 +28,10 @@ export declare class Game {
     validSpace(a: Position): boolean;
     isValidSpaceFromString(inputString: string): boolean;
     getPiecesTaken(): Piece[];
-    loadGame(): void;
-    saveGame(): void;
-    takeBackLastMove(): void;
-    setBoardStateToBackOneMoveButNotATakeback(): void;
-    displayForwardOneMove(): void;
+    loadGameFromFile(): void;
     setBoardToAfterAllMoves(): void;
+    saveGameToFile(): void;
+    takeBackLastMove(): void;
+    setBoardStateBackOneMoveButNotATakeback(): void;
+    displayForwardOneMove(): void;
 }
