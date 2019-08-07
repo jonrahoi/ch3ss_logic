@@ -33,4 +33,5 @@ export declare class Game {
     saveGameToFile(fileName: string): void;
     takeBackLastMove(): void;
     changeBoardStateNumberMoves(moveChange: number): void;
+    private printMoveHistoryToConsole;
 }

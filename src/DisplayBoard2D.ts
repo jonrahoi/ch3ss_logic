@@ -6,7 +6,7 @@ import { Unicorn } from "./Unicorn"
 import { Pawn } from "./Pawn"
 import { Queen } from "./Queen"
 import { Piece, Position } from "./Piece"
-import { BLACK, WHITE } from "./Constants";
+import { BLACK, WHITE } from "./constants";
 
 /** Piece Notations for display on 2D space, number of spaces in notation is 4 */
 // black is lower case, white is upper case

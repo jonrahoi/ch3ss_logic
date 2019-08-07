@@ -322,6 +322,7 @@ export class Game {
     public changeBoardStateNumberMoves(moveChange: number) {
         console.log("changeBoardStateNumberMoves() called with moveChange: " + moveChange)
         console.log("changeBoardStateNumberMoves(), moveHistory: " + this.moveHistory)
+        this.printMoveHistoryToConsole();
         console.log("changeBoardStateNumberMoves(), moveCount: " + this.moveCount)
         console.log("changeBoardStateNumberMoves(), boardStateMoveCount: " + this.boardStateMoveCount)
 
@@ -347,5 +348,13 @@ export class Game {
         }
         this.moveHistory = moveHistoryCopy;
         this.moveCount = +copyMoveCountString; // + converts string to number
+    }
+    /**
+     * Prints move history to console
+     */
+    private printMoveHistoryToConsole() {
+        for (let i = 0; i < this.moveHistory.length; i++) {
+            console.log(this.moveHistory[i].getPostionString());
+        }
     }
 }

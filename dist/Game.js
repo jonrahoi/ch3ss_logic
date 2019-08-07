@@ -207,6 +207,7 @@ var Game = (function () {
     Game.prototype.changeBoardStateNumberMoves = function (moveChange) {
         console.log("changeBoardStateNumberMoves() called with moveChange: " + moveChange);
         console.log("changeBoardStateNumberMoves(), moveHistory: " + this.moveHistory);
+        this.printMoveHistoryToConsole();
         console.log("changeBoardStateNumberMoves(), moveCount: " + this.moveCount);
         console.log("changeBoardStateNumberMoves(), boardStateMoveCount: " + this.boardStateMoveCount);
         if (moveChange == 0 || this.moveCount == 0) {
@@ -230,6 +231,11 @@ var Game = (function () {
         }
         this.moveHistory = moveHistoryCopy;
         this.moveCount = +copyMoveCountString;
+    };
+    Game.prototype.printMoveHistoryToConsole = function () {
+        for (var i = 0; i < this.moveHistory.length; i++) {
+            console.log(this.moveHistory[i].getPostionString());
+        }
     };
     return Game;
 }());

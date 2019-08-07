@@ -287,10 +287,12 @@ describe("experiment", () => {
         expect(g.getMoveCount()).to.equal(1);
         expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(true);
         g.printBoardStateToConsole(); // should look like both players moved once
-        
         g.changeBoardStateNumberMoves(-1);
-        g.changeBoardStateNumberMoves(1);
-        g.printBoardStateToConsole(); // should look like both players moved once
+        expect(g.getMoveCount()).to.equal(2);
+        expect(g.getMoveHistory().length).to.equal(4);
+        g.printBoardStateToConsole(); // should look like one player moved once
+        // g.changeBoardStateNumberMoves(1);
+        // g.printBoardStateToConsole(); // should look like both players moved once
 
         // expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true);
         // g.printBoardStateToConsole();

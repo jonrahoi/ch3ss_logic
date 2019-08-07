@@ -17,7 +17,8 @@ describe("experiment", function () {
         expect(g.move(new __1.Position(1, 4, 4), new __1.Position(1, 4, 3))).to.equal(true);
         g.printBoardStateToConsole();
         g.changeBoardStateNumberMoves(-1);
-        g.changeBoardStateNumberMoves(1);
+        expect(g.getMoveCount()).to.equal(2);
+        expect(g.getMoveHistory().length).to.equal(4);
         g.printBoardStateToConsole();
     });
 });
