@@ -256,24 +256,24 @@ describe("experiment", () => {
         expect(g.isValidSpaceFromString("111")).to.equal(true);
     })
     */
-    // it("test save and load game", () => {
-    //     let g = new Game(1);
-    //     expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
-    //     g.saveGameToFile();
-    //     g = new Game(1);
-    //     g.loadGameFromFile();
-    //     // g.printBoardStateToConsole();
-    //     expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(true);
-    //     expect(g.move(new Position(1, 3, 2), new Position(1, 4, 2))).to.equal(true);
-    //     // g.printBoardStateToConsole();
-    // })
+    it("test save and load game", () => {
+        let g = new Game(1);
+        expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
+        g.saveGameToFile("./game1.json");
+        g = new Game(1);
+        g.loadGameFromFile("./game1.json");
+        // g.printBoardStateToConsole();
+        expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(true);
+        expect(g.move(new Position(1, 3, 2), new Position(1, 4, 2))).to.equal(true);
+        // g.printBoardStateToConsole();
+    })
     it("test take back a move", () => {
         const g = new Game(1);
         expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
         g.takeBackLastMove();
-        // g.printBoardStateToConsole();
-        // expect(g.getMoveCount()).to.equal(0);
-        // expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true);
+        expect(g.getMoveCount()).to.equal(0);
+        expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(false);
+        expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true);
         // g.printBoardStateToConsole();
     })
 });

@@ -169,13 +169,12 @@ var Game = (function () {
     Game.prototype.getPiecesTaken = function () {
         return this.board.getCopyOfPiecesTaken();
     };
-    Game.prototype.loadGameFromFile = function () {
+    Game.prototype.loadGameFromFile = function (fileName) {
         var fs = require("fs");
-        var rawData = fs.readFileSync("./game1.json");
+        var rawData = fs.readFileSync(fileName);
         var moves = JSON.parse(rawData);
         this.moveHistory = [];
         for (var i = 0; i < moves.length; i++) {
-            console.log("add move space to history " + moves[i]);
             this.moveHistory.push(this.getPositionFromString(moves[i]));
         }
         this.moveCount = 0;
@@ -183,34 +182,27 @@ var Game = (function () {
     };
     Game.prototype.setBoardToAfterAllMoves = function () {
         this.board.resetPiecesToStartingPositions();
-        console.log("printing inside setBoardToAfterAllMoves after reset");
-        this.printBoardStateToConsole();
         this.moveCount = 0;
         for (var i = 0; i < this.moveHistory.length; i += this.numberPlayers) {
             this.move(this.moveHistory[i], this.moveHistory[i + 1]);
-            console.log("setBoardToAfterAllMoves moving ");
             this.moveCount++;
         }
         this.boardStateMoveCount = this.moveCount;
-        console.log("printing inside setBoardToAfterAllMoves");
-        this.printBoardStateToConsole();
     };
-    Game.prototype.saveGameToFile = function () {
+    Game.prototype.saveGameToFile = function (fileName) {
         var fs = require("fs");
         var moveStrings = [];
         for (var i = 0; i < this.moveHistory.length; i++) {
             moveStrings.push(this.moveHistory[i].getPostionString());
         }
-        fs.writeFileSync("./game1.json", JSON.stringify(moveStrings));
+        fs.writeFileSync(fileName, JSON.stringify(moveStrings));
     };
     Game.prototype.takeBackLastMove = function () {
         if (this.moveCount == 0) {
             return;
         }
-        console.log("move history length before pops " + this.moveHistory.length);
         this.moveHistory.pop();
         this.moveHistory.pop();
-        console.log("move history length after pops " + this.moveHistory.length);
         this.setBoardToAfterAllMoves();
     };
     Game.prototype.setBoardStateBackOneMoveButNotATakeback = function () {

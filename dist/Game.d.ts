@@ -28,9 +28,9 @@ export declare class Game {
     validSpace(a: Position): boolean;
     isValidSpaceFromString(inputString: string): boolean;
     getPiecesTaken(): Piece[];
-    loadGameFromFile(): void;
+    loadGameFromFile(fileName: string): void;
     setBoardToAfterAllMoves(): void;
-    saveGameToFile(): void;
+    saveGameToFile(fileName: string): void;
     takeBackLastMove(): void;
     setBoardStateBackOneMoveButNotATakeback(): void;
     displayForwardOneMove(): void;

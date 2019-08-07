@@ -11,6 +11,7 @@ var Board = (function () {
     function Board(gameVersion) {
         this.pieces = [];
         this.piecesTaken = [];
+        this.gameVersion = gameVersion;
         if (gameVersion === constants_1.RAUMSCHACH) {
             this.pieces = BoardSetupArrays_1.getRaumschachBoardSetup();
             this.sizeOfBoardX = constants_1.RA_SIZE_BOARD_X;
@@ -21,10 +22,14 @@ var Board = (function () {
             this.castling = false;
             this.queeningTwoBackRows = true;
         }
+        else {
+            console.log("this game version: + " + gameVersion + " could not be found");
+        }
     }
     Board.prototype.resetPiecesToStartingPositions = function () {
-        this.pieces = BoardSetupArrays_1.getRaumschachBoardSetup();
-        console.log("board.resetPiecesToStartingPositions() reseting board inside board");
+        if (this.gameVersion === constants_1.RAUMSCHACH) {
+            this.pieces = BoardSetupArrays_1.getRaumschachBoardSetup();
+        }
     };
     Board.prototype.getSizeOfBoardX = function () {
         return this.sizeOfBoardX;

@@ -32,7 +32,8 @@ export default class Board {
     private enPassant: boolean;  // not used for Raumschach
     private castling: boolean;  // not used for Ruamschach
 
-    constructor(gameVersion: String) {
+    constructor(gameVersion: string) {
+        this.gameVersion = gameVersion;
         if (gameVersion === RAUMSCHACH) {
             this.pieces = getRaumschachBoardSetup();
             // these are the rules for Raumschach
@@ -40,20 +41,24 @@ export default class Board {
             this.sizeOfBoardY = RA_SIZE_BOARD_Y;
             this.sizeOfBoardZ = RA_SIZE_BOARD_Z;
             this.boardCoordinateMinimum = RA_BOARD_MIN;
-            this.enPassant = false;
-            this.castling = false;
+            this.enPassant = false;  // no en passant in Raumschach
+            this.castling = false; // no castling in Raumschach
             this.queeningTwoBackRows = true;
-
+        }
+        else {
+            console.log("this game version: + " + gameVersion + " could not be found")
         }
         // add other versions here
-        // if (gameVersion.localeCompare("insert another version")) {
-        // size of board could be (8x8x8)
+        // if (gameVersion === ("insert another version")) {
+        // size of board could be (8x8x8) and castling = true for example
+        // if you want to use en passant must update Pawn class and add a method that would check for that rule
+        // if you want to add castling must design rule for that and add code that implements the rule
+        //  must add castling and en passant checks to move executeMove method as well as movementRules method
     }
     public resetPiecesToStartingPositions() {
-        // if (this.gameVersion === RAUMSCHACH) {
+        if (this.gameVersion === RAUMSCHACH) {
             this.pieces = getRaumschachBoardSetup();
-            console.log("board.resetPiecesToStartingPositions() reseting board inside board")
-        // }
+        }
     }
     public getSizeOfBoardX() {
         return this.sizeOfBoardX;

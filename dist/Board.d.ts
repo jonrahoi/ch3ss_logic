@@ -10,7 +10,7 @@ export default class Board {
     private queeningTwoBackRows;
     private enPassant;
     private castling;
-    constructor(gameVersion: String);
+    constructor(gameVersion: string);
     resetPiecesToStartingPositions(): void;
     getSizeOfBoardX(): number;
     getSizeOfBoardY(): number;
