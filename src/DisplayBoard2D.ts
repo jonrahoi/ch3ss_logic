@@ -18,7 +18,7 @@ const bishopNotation = "b";
 const unicornNotation = "u";
 const queenNotation = "q";
 const kingNotation = "k";
-
+const lineIndent = " ";
 /**
  * Displays board by slicing along z axis and put in array where each line is an element of the array
  * @param pieces pieces on board
@@ -50,7 +50,7 @@ export function getBoardStateStringArraySliceByZ(pieces: Piece[], sizeOfBoardX: 
     for (let z = sizeOfBoardZ - boardCoordinateMinimum; z >= 0; z--) {
         arrToDisplay.push("level(Z): " + (z + boardCoordinateMinimum));
         for (let y = sizeOfBoardY - boardCoordinateMinimum; y >= 0; y--) {
-            let row = "";
+            let row = "" + lineIndent;
             // row += "|";
             for (let x = 0; x <= sizeOfBoardX - boardCoordinateMinimum; x++) {
                 row += board[x][y][z];
@@ -75,7 +75,7 @@ function getPieceNotation(piece: Piece): string {
     if (piece instanceof Unicorn) { str = unicornNotation }
     if (piece instanceof Queen) { str = queenNotation }
     if (piece.isColor(WHITE)) {
-        str = str.toUpperCase()
+        str = str.toUpperCase();
     }
-    return str
+    return str;
 }

@@ -32,6 +32,5 @@ export declare class Game {
     setBoardToAfterAllMoves(): void;
     saveGameToFile(fileName: string): void;
     takeBackLastMove(): void;
-    setBoardStateBackOneMoveButNotATakeback(): void;
-    displayForwardOneMove(): void;
+    changeBoardStateNumberMoves(moveChange: number): void;
 }

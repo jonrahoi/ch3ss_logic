@@ -122,11 +122,11 @@ export class Game {
      * use index % 0, % 1, % 2, % 3, to find the spaces for each player's movement
      */
     public getMoveHistory(): Position[] {
-        const moves: Position[] = [];
+        const movesCopy: Position[] = [];
         for (let i = 0; i < this.moveHistory.length; i++) {
-            moves.push(this.moveHistory[i]);
+            movesCopy.push(this.moveHistory[i]);
         }
-        return moves;
+        return movesCopy;
     }
     public getGameID() {
         return this.gameID;
@@ -137,6 +137,11 @@ export class Game {
     public getMoveCount(): number {
         return this.moveCount;
     }
+    /**
+     * Method that moves a piece from one space to another if possible, returns true if successful
+     * @param a space a, Position object
+     * @param b space b, Position object
+     */
     public move(a: Position, b: Position): boolean {
 
         if (this.boardStateMoveCount < this.moveCount) {
@@ -282,9 +287,8 @@ export class Game {
     public setBoardToAfterAllMoves() {
         this.board.resetPiecesToStartingPositions();
         this.moveCount = 0;
-        for (let i = 0; i < this.moveHistory.length; i += this.numberPlayers) {
+        for (let i = 0; i < this.moveHistory.length; i += 2) {
             this.move(this.moveHistory[i], this.moveHistory[i + 1]);
-            this.moveCount++;
         }
         this.boardStateMoveCount = this.moveCount;
     }
@@ -301,11 +305,9 @@ export class Game {
         fs.writeFileSync(fileName, JSON.stringify(moveStrings))
     }
     /**
-     * takes back the last move
+     * takes back the last move, deletes move from move history and regenerates board from previous moves starting at beginnning
      */
     public takeBackLastMove() {
-        // JSON.stringify(this.moveHistory);
-        // this.moveHistory = JSON.parse("moveHistory");
         if (this.moveCount == 0) {
             return;
         }
@@ -314,31 +316,36 @@ export class Game {
         this.setBoardToAfterAllMoves();
     }
     /**
-     * Method to move the board state back one move but does not delete the move from the move history
+     * Method to move the board state back one or forward the number of moves, positive/negative numbers
+     * Does not delete the move from the move history
      */
-    public setBoardStateBackOneMoveButNotATakeback() {
-        if (this.moveCount == 0) {
+    public changeBoardStateNumberMoves(moveChange: number) {
+        console.log("changeBoardStateNumberMoves() called with moveChange: " + moveChange)
+        console.log("changeBoardStateNumberMoves(), moveHistory: " + this.moveHistory)
+        console.log("changeBoardStateNumberMoves(), moveCount: " + this.moveCount)
+        console.log("changeBoardStateNumberMoves(), boardStateMoveCount: " + this.boardStateMoveCount)
+
+        // check if at beginning, no previous moves to view
+        if (moveChange == 0 || this.moveCount == 0) {
             return;
         }
+        if (this.boardStateMoveCount == 0 && moveChange < 0) {
+            return;
+        }
+        if (moveChange > (this.moveCount - this.boardStateMoveCount)) {
+            moveChange = this.moveCount - this.boardStateMoveCount;
+        }
+        this.boardStateMoveCount += moveChange;
+        console.log("changeBoardStateNumberMoves(), boardStateMoveCount now at: " + this.boardStateMoveCount)
+        const moveHistoryCopy = this.getMoveHistory();
+        const copyMoveCountString = this.moveCount.toString(); // deferenced storage
+        this.moveHistory = [];
+        this.moveCount = 0;
         this.board.resetPiecesToStartingPositions();
-        const displayMoves = this.boardStateMoveCount - this.numberPlayers;
-        for (let i = 0; i < this.moveHistory.length - (this.numberPlayers * displayMoves); i += this.numberPlayers) {
-            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+        for (let i = 0; i < (2 * this.boardStateMoveCount); i += 2) { // 2 is spaces in move, space a to space b
+            this.move(moveHistoryCopy[i], moveHistoryCopy[i + 1]);
         }
-        this.boardStateMoveCount--;
-    }
-    /**
-     * Changes the board state to be one move ahead if possible
-     */
-    public displayForwardOneMove() {
-        if (this.boardStateMoveCount == this.moveCount) {
-            return; // game already caught up
-        }
-        this.board.resetPiecesToStartingPositions();
-        const displayMoves = this.boardStateMoveCount + this.numberPlayers;
-        for (let i = 0; i < this.moveHistory.length - (this.numberPlayers * displayMoves); i += this.numberPlayers) {
-            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
-        }
-        this.boardStateMoveCount++;
+        this.moveHistory = moveHistoryCopy;
+        this.moveCount = +copyMoveCountString; // + converts string to number
     }
 }

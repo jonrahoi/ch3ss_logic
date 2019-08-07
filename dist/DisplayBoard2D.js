@@ -15,6 +15,7 @@ var bishopNotation = "b";
 var unicornNotation = "u";
 var queenNotation = "q";
 var kingNotation = "k";
+var lineIndent = " ";
 function getBoardStateStringArraySliceByZ(pieces, sizeOfBoardX, sizeOfBoardY, sizeOfBoardZ, boardCoordinateMinimum) {
     var arrToDisplay = [];
     arrToDisplay.push("Board state, sliced by Z coordinate value:");
@@ -35,7 +36,7 @@ function getBoardStateStringArraySliceByZ(pieces, sizeOfBoardX, sizeOfBoardY, si
     for (var z = sizeOfBoardZ - boardCoordinateMinimum; z >= 0; z--) {
         arrToDisplay.push("level(Z): " + (z + boardCoordinateMinimum));
         for (var y = sizeOfBoardY - boardCoordinateMinimum; y >= 0; y--) {
-            var row = "";
+            var row = "" + lineIndent;
             for (var x = 0; x <= sizeOfBoardX - boardCoordinateMinimum; x++) {
                 row += board[x][y][z];
                 row += " ";
