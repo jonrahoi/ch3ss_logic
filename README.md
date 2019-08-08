@@ -57,9 +57,14 @@ Download repo and instantiate a Game object in your own project
 ```
 Game game = new Game(1)  //Game takes a game ID number
 ```
-
+#### Getting list of pieces to display on board
+```
+pieces: Piece[] = game.getPieces();
+for (piece in pieces) {
+    x = piece.getX(), y = piece.getY(), z = piece.getZ()
+}
+```
 #### Moving a piece:
-
 Get two strings from the user representing spaces for moving a piece at space a to space b
 An example would be 111 to 222 (through corner of space cubve move and valid for Kings, Queens, and Unicorn).  User should not enter commas.
 ```
