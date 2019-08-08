@@ -125,10 +125,10 @@ game.loadGameFromFile("./game1.json");
 game.takeBackLastMove();
 ```
 ### View Previous/Next Board Position
-cycles through board states without changing the move history (the record of what has happened in the game).  Move can be called even if the board is in a previous state, will return to present state before the move is executed. However, getPossibleMoves for present state won't work until board state returned. Possible moves will work for previous state, whatever the user can see.
+Cycles through board states without changing the move history (the record of what has happened in the game).  Move can be called even if the board is in a previous state, will return to present state before the move is executed. However, getPossibleMoves for present state won't work until board state returned. Possible moves will work for previous state, whatever the user can see.
 ```
-game.changeBoardStateNumberMoves(-1)  //-1 is back one move
-game.changeBoardStateNumberMoves(1)  //1 is forward one move
+game.changeBoardStateNumberMoves(-1)  // -1 is back one move
+game.changeBoardStateNumberMoves(1)  // 1 is forward one move
 game.setBoardToAfterAllMoves()      // returns board to after all moves (optional for users but necessary for getting possible moves for present)
 ```
 
