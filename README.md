@@ -49,7 +49,9 @@ npm run build; node dist/interactive_tests/ConsoleGame.js
 
 ### Game.js object use psedocode
 //Download repo and instantiate a Game object in your own project
+```
 Game game = new Game(1)  //Game takes a game ID number
+```
 
 #### Moving a piece:
 
