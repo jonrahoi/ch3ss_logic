@@ -1,16 +1,16 @@
 {
-  "name": "ch3ss_logic",
-  "version": "1.0.0",
+  "name": "@rahoi/ch3ss_logic",
+  "version": "2.34.0",
   "description": "logic for 3d chess",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "run-s clean && run-p build:*",
-    "build:main": "tsc -p tsconfig.json",
+    "build_old": "run-s clean && run-p build:*",
+    "build": "rm -r dist/*; tsc --declaration",
     "build:module": "tsc -p tsconfig.module.json",
     "fix": "run-s fix:*",
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
     "fix:tslint": "tslint --fix --project .",
-    "test": "run-s build test:*",
+    "test": "npm run build; lab ./dist/tests/",
     "test:lint": "tslint --project . && prettier \"src/**/*.ts\" --list-different",
     "test:unit": "nyc --silent ava",
     "reset": "git clean -dfx && git reset --hard && npm i",
@@ -31,8 +31,15 @@
   },
   "homepage": "https://github.com/jonrahoi/ch3ss_logic#readme",
   "dependencies": {
+    "@hapi/code": "^5.3.1",
+    "@types/node": "^12.6.2",
     "javascript-state-machine": "^3.1.0",
+    "readline-sync": "^1.4.9",
     "tslint": "^5.17.0",
     "typescript": "^3.5.2"
+  },
+  "devDependencies": {
+    "@hapi/lab": "^19.1.0",
+    "lab": "^18.0.2"
   }
 }

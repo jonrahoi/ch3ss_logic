@@ -1,11 +1,14 @@
-import { Piece, PieceType } from "./Piece"
+import { Game } from "./Game"
+import Board from "./Board"
+import { Piece, Position } from "./Piece"
+import { Knight } from "./Knight"
+import { King } from "./King"
+import { Bishop } from "./Bishop"
+import { Rook } from "./Rook"
+import { Unicorn } from "./Unicorn"
+import { Pawn } from "./Pawn"
+import { Queen } from "./Queen"
 
-// this file will bring in all the logic and expose the interface that the front-end will use.
-// for example, people will instantiate this
-export class Ch3ss {
-    constructor() { }
-    play() {}
-    toJSON() {}
-    fromJSON() {}
-    toMove() {}
+export {
+    Game, Board, Piece, Position, Knight, King, Bishop, Rook, Unicorn, Pawn, Queen
 }

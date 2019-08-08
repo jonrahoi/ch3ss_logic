@@ -1,0 +1,34 @@
+import { Piece, Position } from "./Piece";
+export default class Board {
+    private pieces;
+    private piecesTaken;
+    private sizeOfBoardX;
+    private sizeOfBoardY;
+    private sizeOfBoardZ;
+    private boardCoordinateMinimum;
+    private gameVersion;
+    private queeningTwoBackRows;
+    private enPassant;
+    private castling;
+    constructor(gameVersion: string);
+    resetPiecesToStartingPositions(): void;
+    getSizeOfBoardX(): number;
+    getSizeOfBoardY(): number;
+    getSizeOfBoardZ(): number;
+    getBoardCoordinateMinimum(): number;
+    setPieces(newPieces: Piece[]): void;
+    executeMove(playerMoving: string, a: Position, b: Position): boolean;
+    private pieceMoveFollowsMovementRules;
+    private checkForQueeningTwoBackRows;
+    getCopyOfPieces(): Piece[];
+    getCopyOfPiecesTaken(): Piece[];
+    private pawnMoveDirectionCorrect;
+    private deletePieceAtPosition;
+    kingInCheck(colorOfKingToCheckIfInCheck: string): boolean;
+    private getLocationOfKingGivenColor;
+    pieceLocatedAtBool(a: Position): boolean;
+    private getPieceLocatedAt;
+    spaceOnBoard(a: Position): boolean;
+    private pieceInWay;
+    private coordinateCompare;
+}
