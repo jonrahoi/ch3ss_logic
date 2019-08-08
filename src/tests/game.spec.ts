@@ -8,7 +8,6 @@ export { lab };
 import { WHITE, BLACK } from "../constants"
 
 describe("experiment", () => {
-    /*
     before(() => {});
     it("verifies 1 equals 1", () => {
         expect(1).to.equal(1);
@@ -255,50 +254,56 @@ describe("experiment", () => {
         expect(g.isValidSpaceFromString("230")).to.equal(false);
         expect(g.isValidSpaceFromString("111")).to.equal(true);
     })
-    */
-    // it("test save and load game", () => {
-    //     let g = new Game(1);
-    //     expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
-    //     g.saveGameToFile("./game1.json");
-    //     g = new Game(1);
-    //     g.loadGameFromFile("./game1.json");
-    //     // g.printBoardStateToConsole();
-    //     expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(true);
-    //     expect(g.move(new Position(1, 3, 2), new Position(1, 4, 2))).to.equal(true);
-    //     // g.printBoardStateToConsole();
-    // })
-    // it("test take back a move", () => {
-    //     const g = new Game(1);
-    //     expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
-    //     g.takeBackLastMove();
-    //     expect(g.getMoveCount()).to.equal(0);
-    //     expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(false);
-    //     expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true);
-    //     // g.printBoardStateToConsole();
-    // })
-
+    it("test save and load game", () => {
+        let g = new Game(1);
+        expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
+        g.saveGameToFile("./game1.json");
+        g = new Game(1);
+        g.loadGameFromFile("./game1.json");
+        // g.printBoardStateToConsole();
+        expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(true);
+        expect(g.move(new Position(1, 3, 2), new Position(1, 4, 2))).to.equal(true);
+        // g.printBoardStateToConsole();
+    })
+    it("test take back a move", () => {
+        const g = new Game(1);
+        expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
+        g.takeBackLastMove();
+        expect(g.getMoveCount()).to.equal(0);
+        expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(false);
+        expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true);
+        // g.printBoardStateToConsole();
+    })
     // to use this test print out to console and check if board state is accurate
     it("test view back one move, not takeback", () => {
         const g = new Game(1);
         // g.printBoardStateToConsole();
+        // g.printMoveHistoryToConsole();
         expect(g.move(new Position(1, 2, 2), new Position(1, 3, 2))).to.equal(true);
-        g.changeBoardStateNumberMoves(-1);
-        g.printBoardStateToConsole(); // should be starting position
-        expect(g.getMoveCount()).to.equal(1);
-        expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(true);
-        g.printBoardStateToConsole(); // should look like both players moved once
-        g.changeBoardStateNumberMoves(-1);
-        expect(g.getMoveCount()).to.equal(2);
-        expect(g.getMoveHistory().length).to.equal(4);
-        g.printBoardStateToConsole(); // should look like one player moved once
-        // g.changeBoardStateNumberMoves(1);
-        // g.printBoardStateToConsole(); // should look like both players moved once
+        // g.printMoveHistoryToConsole();
 
-        // expect(g.move(new Position(1, 2, 2), new Position(1, 2, 3))).to.equal(true);
-        // g.printBoardStateToConsole();
+        // console.log("change board state -1")
+        g.changeBoardStateNumberMoves(-1);
+        expect(g.getBoardStateMoveCount()).to.equal(0);
+
+        // g.printMoveHistoryToConsole();
+        // console.log("move history before moving")
+        // g.printMoveHistoryToConsole();
+        expect(g.getMoveCount()).to.equal(1);
+        // g.printBoardStateToConsole(); // should be starting position
+        g.changeBoardStateNumberMoves(1);
+        expect(g.getBoardStateMoveCount()).to.equal(1);
+        // g.printBoardStateToConsole(); // should be one move
+        expect(g.getMoveCount()).to.equal(1);
+
+        expect(g.move(new Position(1, 4, 4), new Position(1, 4, 3))).to.equal(true);
+        expect(g.getMoveCount()).to.equal(2);
+        expect(g.getBoardStateMoveCount()).to.equal(2);
+        // g.printMoveHistoryToConsole();
+        g.changeBoardStateNumberMoves(-1);
+        expect(g.move(new Position(1, 3, 2), new Position(1, 4, 2))).to.equal(true);
     })
 });
-
 // describe.skip("failure tests", () => {
 //     // this will fail
 //     it("will fail", () => {

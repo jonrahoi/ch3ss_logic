@@ -6,7 +6,7 @@ var Rook_1 = require("./Rook");
 var Unicorn_1 = require("./Unicorn");
 var Pawn_1 = require("./Pawn");
 var Queen_1 = require("./Queen");
-var Constants_1 = require("./Constants");
+var constants_1 = require("./constants");
 var boardEmptySpace = ".";
 var pawnNotation = "p";
 var rookNoation = "r";
@@ -68,7 +68,7 @@ function getPieceNotation(piece) {
     if (piece instanceof Queen_1.Queen) {
         str = queenNotation;
     }
-    if (piece.isColor(Constants_1.WHITE)) {
+    if (piece.isColor(constants_1.WHITE)) {
         str = str.toUpperCase();
     }
     return str;

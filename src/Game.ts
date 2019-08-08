@@ -35,6 +35,9 @@ export class Game {
     public setPieces(pieces: Piece[]) {
        this.board.setPieces(pieces);
     }
+    public getBoardStateMoveCount(): number {
+        return this.boardStateMoveCount;
+    }
     /**
      * Returns an array of strings where each line is a row
      */
@@ -124,7 +127,7 @@ export class Game {
     public getMoveHistory(): Position[] {
         const movesCopy: Position[] = [];
         for (let i = 0; i < this.moveHistory.length; i++) {
-            movesCopy.push(this.moveHistory[i]);
+            movesCopy.push(this.moveHistory[i].getCopy());
         }
         return movesCopy;
     }
@@ -164,8 +167,11 @@ export class Game {
         // console.log("game.move: successfully moved piece from: " + a.getPostionString() + " to " + b.getPostionString())
         this.moveCount++;
         this.boardStateMoveCount = this.moveCount;
+        // this.printMoveHistoryToConsole();
         this.moveHistory.push(a);
+        // console.log(".move move history added " + a.getPostionString())
         this.moveHistory.push(b);
+        // console.log(".move move history added " + b.getPostionString())
         return true;
     }
     /**
@@ -271,10 +277,11 @@ export class Game {
         // go through moves array and move the board each space
         // const readlineSync = require("readline-sync");
         // const homie = JSON.parse(fs.readFileSync("./game1.json").toString())
+        // fileName = "./game1.json";
         const fs = require("fs");
         const rawData = fs.readFileSync(fileName);
         const moves: string[] = JSON.parse(rawData);
-        this.moveHistory = [];
+        this.moveHistory.length = 0;
         for (let i = 0; i < moves.length; i++) {
             this.moveHistory.push(this.getPositionFromString(moves[i]));
         }
@@ -287,8 +294,9 @@ export class Game {
     public setBoardToAfterAllMoves() {
         this.board.resetPiecesToStartingPositions();
         this.moveCount = 0;
+        this.boardStateMoveCount = 0;
         for (let i = 0; i < this.moveHistory.length; i += 2) {
-            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+            this.moveBoardState(this.moveHistory[i], this.moveHistory[i + 1]);
         }
         this.boardStateMoveCount = this.moveCount;
     }
@@ -297,6 +305,7 @@ export class Game {
      */
     public saveGameToFile(fileName: string) {
         const fs = require("fs");
+        // fileName = "./game1.json";
         // create an array of strings for each move
         const moveStrings: string[] = [];
         for (let i = 0; i < this.moveHistory.length; i++) {
@@ -320,12 +329,6 @@ export class Game {
      * Does not delete the move from the move history
      */
     public changeBoardStateNumberMoves(moveChange: number) {
-        console.log("changeBoardStateNumberMoves() called with moveChange: " + moveChange)
-        console.log("changeBoardStateNumberMoves(), moveHistory: " + this.moveHistory)
-        this.printMoveHistoryToConsole();
-        console.log("changeBoardStateNumberMoves(), moveCount: " + this.moveCount)
-        console.log("changeBoardStateNumberMoves(), boardStateMoveCount: " + this.boardStateMoveCount)
-
         // check if at beginning, no previous moves to view
         if (moveChange == 0 || this.moveCount == 0) {
             return;
@@ -337,22 +340,35 @@ export class Game {
             moveChange = this.moveCount - this.boardStateMoveCount;
         }
         this.boardStateMoveCount += moveChange;
-        console.log("changeBoardStateNumberMoves(), boardStateMoveCount now at: " + this.boardStateMoveCount)
         const moveHistoryCopy = this.getMoveHistory();
         const copyMoveCountString = this.moveCount.toString(); // deferenced storage
-        this.moveHistory = [];
+        this.moveHistory.length = 0;
         this.moveCount = 0;
         this.board.resetPiecesToStartingPositions();
         for (let i = 0; i < (2 * this.boardStateMoveCount); i += 2) { // 2 is spaces in move, space a to space b
-            this.move(moveHistoryCopy[i], moveHistoryCopy[i + 1]);
+            this.moveBoardState(moveHistoryCopy[i], moveHistoryCopy[i + 1]);
         }
-        this.moveHistory = moveHistoryCopy;
         this.moveCount = +copyMoveCountString; // + converts string to number
+        this.moveHistory = moveHistoryCopy;
+    }
+    /**
+     * Method to change this.board state, not add to move history
+     * @param a 
+     * @param b 
+     */
+    private moveBoardState(a: Position, b: Position) {
+
+        const playerMoving = this.getWhoseTurnItIs();
+        // const bool = this.board.executeMove(playerMoving, a, b);
+        this.board.executeMove(playerMoving, a, b);
+        this.moveCount++;
+        this.boardStateMoveCount = this.moveCount;
     }
     /**
      * Prints move history to console
      */
-    private printMoveHistoryToConsole() {
+    public printMoveHistoryToConsole() {
+        console.log("move history:");
         for (let i = 0; i < this.moveHistory.length; i++) {
             console.log(this.moveHistory[i].getPostionString());
         }

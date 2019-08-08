@@ -18,6 +18,9 @@ var Game = (function () {
     Game.prototype.setPieces = function (pieces) {
         this.board.setPieces(pieces);
     };
+    Game.prototype.getBoardStateMoveCount = function () {
+        return this.boardStateMoveCount;
+    };
     Game.prototype.getBoardStateStringArray = function () {
         return DisplayBoard2D_1.getBoardStateStringArraySliceByZ(this.board.getCopyOfPieces(), this.board.getSizeOfBoardX(), this.board.getSizeOfBoardY(), this.board.getSizeOfBoardZ(), this.board.getBoardCoordinateMinimum());
     };
@@ -73,7 +76,7 @@ var Game = (function () {
     Game.prototype.getMoveHistory = function () {
         var movesCopy = [];
         for (var i = 0; i < this.moveHistory.length; i++) {
-            movesCopy.push(this.moveHistory[i]);
+            movesCopy.push(this.moveHistory[i].getCopy());
         }
         return movesCopy;
     };
@@ -173,7 +176,7 @@ var Game = (function () {
         var fs = require("fs");
         var rawData = fs.readFileSync(fileName);
         var moves = JSON.parse(rawData);
-        this.moveHistory = [];
+        this.moveHistory.length = 0;
         for (var i = 0; i < moves.length; i++) {
             this.moveHistory.push(this.getPositionFromString(moves[i]));
         }
@@ -183,8 +186,9 @@ var Game = (function () {
     Game.prototype.setBoardToAfterAllMoves = function () {
         this.board.resetPiecesToStartingPositions();
         this.moveCount = 0;
+        this.boardStateMoveCount = 0;
         for (var i = 0; i < this.moveHistory.length; i += 2) {
-            this.move(this.moveHistory[i], this.moveHistory[i + 1]);
+            this.moveBoardState(this.moveHistory[i], this.moveHistory[i + 1]);
         }
         this.boardStateMoveCount = this.moveCount;
     };
@@ -205,11 +209,6 @@ var Game = (function () {
         this.setBoardToAfterAllMoves();
     };
     Game.prototype.changeBoardStateNumberMoves = function (moveChange) {
-        console.log("changeBoardStateNumberMoves() called with moveChange: " + moveChange);
-        console.log("changeBoardStateNumberMoves(), moveHistory: " + this.moveHistory);
-        this.printMoveHistoryToConsole();
-        console.log("changeBoardStateNumberMoves(), moveCount: " + this.moveCount);
-        console.log("changeBoardStateNumberMoves(), boardStateMoveCount: " + this.boardStateMoveCount);
         if (moveChange == 0 || this.moveCount == 0) {
             return;
         }
@@ -220,19 +219,25 @@ var Game = (function () {
             moveChange = this.moveCount - this.boardStateMoveCount;
         }
         this.boardStateMoveCount += moveChange;
-        console.log("changeBoardStateNumberMoves(), boardStateMoveCount now at: " + this.boardStateMoveCount);
         var moveHistoryCopy = this.getMoveHistory();
         var copyMoveCountString = this.moveCount.toString();
-        this.moveHistory = [];
+        this.moveHistory.length = 0;
         this.moveCount = 0;
         this.board.resetPiecesToStartingPositions();
         for (var i = 0; i < (2 * this.boardStateMoveCount); i += 2) {
-            this.move(moveHistoryCopy[i], moveHistoryCopy[i + 1]);
+            this.moveBoardState(moveHistoryCopy[i], moveHistoryCopy[i + 1]);
         }
-        this.moveHistory = moveHistoryCopy;
         this.moveCount = +copyMoveCountString;
+        this.moveHistory = moveHistoryCopy;
+    };
+    Game.prototype.moveBoardState = function (a, b) {
+        var playerMoving = this.getWhoseTurnItIs();
+        this.board.executeMove(playerMoving, a, b);
+        this.moveCount++;
+        this.boardStateMoveCount = this.moveCount;
     };
     Game.prototype.printMoveHistoryToConsole = function () {
+        console.log("move history:");
         for (var i = 0; i < this.moveHistory.length; i++) {
             console.log(this.moveHistory[i].getPostionString());
         }

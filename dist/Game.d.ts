@@ -9,6 +9,7 @@ export declare class Game {
     private gameID;
     constructor(id: number);
     setPieces(pieces: Piece[]): void;
+    getBoardStateMoveCount(): number;
     getBoardStateStringArray(): String[];
     printBoardStateToConsole(): void;
     getWhoseTurnItIs(): string;
@@ -33,5 +34,6 @@ export declare class Game {
     saveGameToFile(fileName: string): void;
     takeBackLastMove(): void;
     changeBoardStateNumberMoves(moveChange: number): void;
-    private printMoveHistoryToConsole;
+    private moveBoardState;
+    printMoveHistoryToConsole(): void;
 }

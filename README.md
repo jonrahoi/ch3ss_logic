@@ -2,16 +2,19 @@
 
 **Project description:** This repo is part of a team project to build an online 3D chess game.  It is 3D chess in the sense that the board has 3 dimensions instead of the normal 2.  We settled on using Raumschach chess rules which include using a 5x5x5 board. The game starts with a total of 40 pieces, 20 per player. All the pieces can move in three dimensions but not necessarily in the same turn. Overall Raumscach pieces move similarly to regular chess pieces in two of the three dimensions. There is also an additional piece called a unicorn that must move the same distance in all three dimensions, which can be described as moving through the corners of a cube (vs Bishops moving through edges of a cube). In Raumschach chess there is queening of the pawn if it reaches the two back rows of the opponent but there is no en passant or castling. This is a useful website for more information: https://www.chessvariants.com/3d.dir/3d5.html
 
+**Purpose** We're big fans of chess so we thought the idea of playing in three dimensions was really cool. We also thought that using a computer to do the move validation and provide possible moves would help players conceptualizate the board and make the game easier to play. I tried to implement some flexibility so that others could experiment with the rules.  
+
 ## Design
 
 This project was created using object-oriented design. These are the main classes and their main functions:
 **Position:** Represents a space in 3D and has an x, y, and z coordinate.  Can tell how far it is from another position.
 **Piece:** Interface that each specific piece class (King, Pawn, Bishop, etc) implements.  Has a color and a position. Each piece type knows what move shape it can execute, such as a Knight can go 2 spaces in one coordinate axis, 1 space in another, 0 spaces in the third. Piece does not know any other rules of game such as if it can jump over another piece like the Knight.
 **Board:** Knows dimensions of board. Has an array of Pieces which represents the arrragement of pieces on the board (essentially a sparse array as there are no empty pieces/spaces). Board knows the mechanical rules of chess, such as movement rules, queening, and determining if a piece is in the way of a move (if not a Knight). Can determine if a player's King is in check but doesn't know how that impacts the game. 
-**Game:** Determines whose turn it is. Has a history of moves which represent the current state of the game. Has a board which represents what array of pieces should be displayed to the users (if the player wants to show a different state, such as looking at a previous move). Determines if a potential move can create a legal game state, for example making sure a player doesn't move his own king into check (illegal). Uses this logic to determine possible moves for a given space(piece at that space), which includes consideration for whose turn it is (no possible moves if piece is wrong color). Determines if player has no possible moves and is not in check (results in stalemate/draw). Option provided to offer takebacks and to save game. Option provided for getting an array of pieces taken off the board.
+**Game:** Determines whose turn it is. Has a history of moves which represent the current state of the game. Has a board which represents what array of pieces should be displayed to the users (if the player wants to show a different state, such as looking at a previous move). Determines if a potential move can create a legal game state, for example making sure a player doesn't move his own king into check (illegal). Uses this logic to determine possible moves for a given space(piece at that space), which includes consideration for whose turn it is (no possible moves if piece is wrong color). Determines if player has no possible moves and is not in check (results in stalemate/draw). Option provided to offer takebacks and to save/load game from file. Option provided for getting an array of pieces taken off the board. Option provided for showing users previous board state with forward/backward methods.
+
 **Implementation:** Game g = new Game(gameIdNumber), g.move(Position a, Position b), g.getPossibleMoves(Position a), g.getCheckMate(), etc. See below for details on use and deployment.
 
-**Suggestion** When playing 3D chess I find it easier to mostly think of the differences in coordinate axis values for conceptualizing the board rather than imagining the relationship of two spaces to each other visually.  For example, I know a Knight at 333 can move to 534 because the final x is a change of 2, y is a change of 0, and z is a change of 1 (which is some combination of one of each of 0, 1, and 2). I find this easier to do than thinking about the start space as being in the middle of the board and then thinking about what the space 534 would look like relative to that starting space. 
+**A Suggestion for playing 3D chess** When playing 3D chess it might be easier to first think of the differences in coordinate axis values for conceptualizing a possible move rather than imagining the relationship of two spaces to each other visually.  For example,a player might know that a Knight at 333 can move to 534 without thinking too hard because the final x is a change of 2, y is a change of 0, and z is a change of 1 (which is a combination of one 0, one 1, and one 2). This math is probably easier to do than thinking about the start space as being in the middle of the board and then thinking about what the space 534 would look like relative to that starting space. The visual relationship of two spaces is important, especially when considering what other pieces are nearby, but should probably be considered after the coordinate distance relationship.  
 
 ## Using the project
 
@@ -111,6 +114,24 @@ for (var i = 0; i < moveHistory.length; i++) {
     }
 }
 ```
+### Load/Save Game
+```
+filename: string = "./game1.json"
+game.saveGameToFile(filename);
+game.loadGameFromFile("./game1.json");
+```
+### Take Back A Move
+```
+game.takeBackLastMove();
+```
+### View Previous/Next Board Position
+cycles through board states without changing the move history (the record of what has happened in the game).  Move can be called even if the board is in a previous state, will return to present state before the move is executed. However, getPossibleMoves for present state won't work until board state returned. Possible moves will work for previous state, whatever the user can see.
+```
+game.changeBoardStateNumberMoves(-1)  //-1 is back one move
+game.changeBoardStateNumberMoves(1)  //1 is forward one move
+game.setBoardToAfterAllMoves()      // returns board to after all moves (optional for users but necessary for getting possible moves for present)
+```
+
 ## Built With
 
 * [Typescript](https://www.typescriptlang.org/) 
