@@ -48,14 +48,14 @@ Note: GameSimulator is experimental and only moves randomly, it is not meant to 
 npm run build; node dist/interactive_tests/ConsoleGame.js
 
 ### Game.js object use psedocode
-//Download repo and instantiate a Game object in your own project
+Download repo and instantiate a Game object in your own project
 ```
 Game game = new Game(1)  //Game takes a game ID number
 ```
 
 #### Moving a piece:
 
-get two strings from the user representing spaces for moving a piece at space a to space b
+Get two strings from the user representing spaces for moving a piece at space a to space b
 An example would be 111 to 222 (through corner of space cubve move and valid for Kings, Queens, and Unicorn).  User should not enter commas.
 ```
 string a = input1
