@@ -2,7 +2,7 @@
 
 **Project description:** This repo is part of a team project to build an online 3D chess game.  It is 3D chess in the sense that the board has 3 dimensions instead of the normal 2.  We settled on using Raumschach chess rules which include using a 5x5x5 board. The game starts with a total of 40 pieces, 20 per player. All the pieces can move in three dimensions but not necessarily in the same turn. Overall Raumscach pieces move similarly to regular chess pieces in two of the three dimensions. There is also an additional piece called a unicorn that must move the same distance in all three dimensions, which can be described as moving through the corners of a cube (vs Bishops moving through edges of a cube). In Raumschach chess there is queening of the pawn if it reaches the two back rows of the opponent but there is no en passant or castling. This is a useful website for more information: https://www.chessvariants.com/3d.dir/3d5.html
 
-**Purpose** We're big fans of chess so we thought the idea of playing in three dimensions was really cool. We also thought that using a computer to do the move validation and provide possible moves would help players conceptualizate the board and make the game easier to play. I tried to implement some flexibility so that others could experiment with the rules.  
+**Purpose:** We're big fans of chess so we thought the idea of playing in three dimensions was really cool. We also thought that using a computer to do the move validation and provide possible moves would help players conceptualizate the board and make the game easier to play. We tried to implement some flexibility so that others could experiment with the rules.  
 
 ## Design
 
@@ -18,7 +18,8 @@ This project was created using object-oriented design. These are the main classe
 
 **Implementation:** Game g = new Game(gameIdNumber), g.move(Position a, Position b), g.getPossibleMoves(Position a), g.getCheckMate(), etc. See below for details on use and deployment.  
 
-**A suggestion for playing 3D chess:** When playing 3D chess it might be easier to first think of the differences in coordinate axis values for conceptualizing a possible move rather than imagining the relationship of two spaces to each other visually.  For example,a player might know that a Knight at 333 can move to 534 without thinking too hard because the final x is a change of 2, y is a change of 0, and z is a change of 1 (which is a combination of one 0, one 1, and one 2). This math is probably easier to do than thinking about the start space as being in the middle of the board and then thinking about what the space 534 would look like relative to that starting space. The visual relationship of two spaces is important, especially when considering what other pieces are nearby, but should probably be considered after the coordinate distance relationship.  
+### A suggestion for playing 3D chess
+ When playing 3D chess it might be easier to first think of the differences in coordinate axis values for conceptualizing a possible move rather than imagining the relationship of two spaces to each other visually.  For example,a player might know that a Knight at 333 can move to 534 without thinking too hard because the final x is a change of 2, y is a change of 0, and z is a change of 1 (which is a combination of one 0, one 1, and one 2). This math is probably easier to do than thinking about the start space as being in the middle of the board and then thinking about what the space 534 would look like relative to that starting space. The visual relationship of two spaces is important, especially when considering what other pieces are nearby, but should probably be considered after the coordinate distance relationship.  
 
 ## Using the project
 
